@@ -35,7 +35,7 @@
                                     <small class="form-text text-muted text-danger margin-top-20"><code>@name</code> {{__('will be replaced by dynamically with  name.')}}</small>
                                     <small class="form-text text-muted text-danger"><code>@old_status</code> {{__('will be replaced by dynamically with  old status.')}}</small>
                                     <small class="form-text text-muted text-danger"><code>@new_status</code> {{__('will be replaced by dynamically new status.')}}</small>
-                                    <small class="form-text text-muted text-danger"><code>@order_id</code> {{__('will be replaced by dynamically with order id.')}}</small>
+                                    <small class="form-text text-muted text-danger"><code>@order_id</code> {{__('will be replaced by dynamically with service request id.')}}</small>
                                 </div>
                             <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">{{__('Update')}}</button>
                         </form>

@@ -253,7 +253,7 @@
                                             <p><strong>{{__('Status:') }}</strong> <span class="status-{{ $ticket_details->status }}">{{ $ticket_details->status }}</span></p>
                                             <p><strong>{{__('Priority:') }}</strong> <span class="{{ $ticket_details->priority }}">{{ $ticket_details->priority }}</span></p>
                                             <p><strong>{{__('Ticket For:') }}</strong> {{ optional($ticket_details->ticket_service)->title }}</p>
-                                            <p><strong>{{__('Order ID:') }}</strong> #{{ $ticket_details->order_id }}</p>
+                                            <p><strong>{{__('Service Request ID:') }}</strong> #{{ $ticket_details->order_id }}</p>
                                         </div>
 
                                         <div class="gig-message-start-wrap">

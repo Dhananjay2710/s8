@@ -13,7 +13,7 @@
                 <!-- Report section start-->
                 <div class="dashboard_table__wrapper dashboard_border  padding-20 radius-10 bg-white">
                     <div class="dashboard_table__title__flex">
-                        <h4 class="dashboards-title"> {{ __('Decline History') }} <br> {{ __('Order ID:') }} <span class="text-info"> {{ $order_id }} </span></h4>
+                        <h4 class="dashboards-title"> {{ __('Decline History') }} <br> {{ __('Service Request ID:') }} <span class="text-info"> {{ $order_id }} </span></h4>
                         <a class="btn btn-success" href="{{ route('buyer.orders') }}">{{__('Back To Orders')}}</a>
 
                     </div>
@@ -23,7 +23,7 @@
                                 <thead>
                                 <tr>
                                     <th> {{ __('ID') }} </th>
-                                    <th> {{ __('Seller Details') }} </th>
+                                    <th> {{ __('Service Provider Details') }} </th>
                                     <th>{{ __('Status') }} ({{ __('Decline Reason') }})</th>
                                 </tr>
                                 </thead>
@@ -31,7 +31,7 @@
                                     @foreach ($decline_histories as $history)
                                         <tr>
                                             <td data-label="{{__('History ID')}}"> {{ $history->id }} </td>
-                                            <td data-label="{{__('Seller Name')}}">
+                                            <td data-label="{{__('Service Provider Name')}}">
                                                 <strong>{{ __('Name: ') }}</strong> {{ optional($history->seller)->name }} <br>
                                                 <strong>{{ __('Email: ') }}</strong>{{ optional($history->seller)->email }} <br>
                                                 <strong>{{ __('Phone: ') }}</strong>{{ optional($history->seller)->phone }} <br>

@@ -400,7 +400,7 @@ class ServiceController extends Controller
                 'seller_id' => 'required',
             ]);
 
-            $seller_country = User::select('id','service_city','country_id','email')->where('id',$request->seller_id)->first();
+            $seller_country = User::select('id','service_city','service_area','country_id','email')->where('id',$request->seller_id)->first();
             $country_tax = Tax::select('tax')->where('country_id',$seller_country->country_id)->first();
 
             $service = new Service();
@@ -415,6 +415,7 @@ class ServiceController extends Controller
             $service->video = $request->video;
             $service->seller_id = $request->seller_id;
             $service->service_city_id = $seller_country->service_city;
+            $service->service_area_id = $seller_country->service_area ?? 0;
             $service->status = 1;
             $service->tax = $country_tax->tax ?? 0;
             $service->admin_id = Auth::guard('admin')->user()->id;
@@ -482,6 +483,7 @@ class ServiceController extends Controller
                 'description' => $request->description,
                 'seller_id' =>  $request->seller_id,
                 'service_city_id' => $seller_country->service_city,
+                'service_area_id' => $seller_country->service_area,
                 'image' => $request->image ?? $old_image->image,
                 'image_gallery' => $request->image_gallery ?? $old_image->image_gallery,
                 'video' => $request->video,

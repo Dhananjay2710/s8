@@ -1,7 +1,7 @@
 @extends('frontend.frontend-page-master')
 
 @section('site-title')
-{{ __('Order Details') }}
+{{ __('Service Request Details') }}
 @endsection
 
 @section('content')
@@ -12,7 +12,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-9">
                     <div class="seller-order-view-details">
-                        <h3 class="title-seller">{{ __('Your Order Details') }}</h3>
+                        <h3 class="title-seller">{{ __('Your Service Request Details') }}</h3>
                         <div class="seller-order-view-all border-bg-1 border-2px margin-top-55">
                             <div class="single-order-views">
                                 <h4 class="common-title-two">{{ optional($order_details->service)->title }} </h4>

@@ -191,6 +191,6 @@ HTML;
 
     public function addon_title()
     {
-        return __('Start As Seller');
+        return __('Start As Service Provider');
     }
 }

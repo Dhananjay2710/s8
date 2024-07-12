@@ -225,7 +225,7 @@ class ExtraServicePaymentController extends Controller
             $message = str_replace(["@seller_name","@order_id"],[$seller_details->name,$extra_service->order_id],$message);
 
             Mail::to($seller_details->email)->send(new BasicMail([
-                'subject' => __('Extra service added in your order #').$extra_service->order_id,
+                'subject' => __('Extra service added in your service request #').$extra_service->order_id,
                 'message' => $message
             ]));
 
@@ -235,7 +235,7 @@ class ExtraServicePaymentController extends Controller
             $message = str_replace(["@buyer_name","@order_id"],[$buyer_details->name,$extra_service->order_id],$message);
 
             Mail::to($buyer_details->email)->send(new BasicMail([
-                'subject' => __('Extra service added in your order #').$extra_service->order_id,
+                'subject' => __('Extra service added in your service request #').$extra_service->order_id,
                 'message' => $message
             ]));
 

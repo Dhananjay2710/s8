@@ -8,7 +8,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{__('Package Order From')}} {{get_static_option('site_title')}}</title>
+    <title>{{__('Package Service Request From')}} {{get_static_option('site_title')}}</title>
     <style>
         .mail-container {
             max-width: 650px;
@@ -77,7 +77,7 @@
             {!! render_image_markup_by_attachment_id(get_static_option('site_logo')) !!}
         </a>
     </div>
-    <p class="wrap-para">{{__('You Have A Order Message From')}} {{get_static_option('site_title')}}</p>
+    <p class="wrap-para">{{__('You Have A Service Request Message From')}} {{get_static_option('site_title')}}</p>
     <table class="wrap-para">
         <tr>
             <td>{{__('Package Name')}}</td>

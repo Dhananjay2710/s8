@@ -1,6 +1,6 @@
 @extends('backend.admin-master')
 @section('site-title')
-    {{__('Order Complete Request Decline')}}
+    {{__('Service Request Complete Request Decline')}}
 @endsection
 
 @section('style')
@@ -20,17 +20,17 @@
                     <div class="card-body">
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
-                                <h4 class="header-title">{{__('Order Complete Request Decline List')}}  </h4>
-                                <small class="text-info py-2">{{ __('These are the order complete request decline lists decline by the buyer') }}</small>
+                                <h4 class="header-title">{{__('Service Request Complete Request Decline List')}}  </h4>
+                                <small class="text-info py-2">{{ __('These are the lists of service requests that were completed or declined by the customer') }}</small>
                             </div>
                         </div>
                         <div class="table-wrap table-responsive">
                             <table class="table table-default">
                                 <thead>
                                 <th>{{__('ID')}}</th>
-                                <th>{{__('Order ID')}}</th>
-                                <th>{{__('Seller Details')}}</th>
-                                <th>{{__('Buyer Details')}}</th>
+                                <th>{{__('Service Request ID')}}</th>
+                                <th>{{__('Service Provider Details')}}</th>
+                                <th>{{__('Customer Details')}}</th>
                                 <th>{{__('Decline Reason')}}</th>
                                 <th>{{__('Action')}}</th>
                                 </thead>
@@ -53,7 +53,7 @@
                                             <p>{{ __('Name:') }} {{ $data->decline_reason }}</p>
                                         </td>
                                         <td>
-                                            <a class="btn btn-info" href="{{ route('admin.orders.details',$data->id) }}">{{ __('Order Details') }}</a>
+                                            <a class="btn btn-info" href="{{ route('admin.orders.details',$data->id) }}">{{ __('Service Request Details') }}</a>
                                         </td>
                                     </tr>
                                 @endforeach

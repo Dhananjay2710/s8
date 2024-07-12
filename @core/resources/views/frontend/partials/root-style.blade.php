@@ -16,6 +16,10 @@
                 --main-color-one: #2163b3;
                 --main-color-one-rgb: 33, 99, 179;
               @endif
+              @if(request()->is('serviceprovider/*'))
+                --main-color-one: #2163b3;
+                --main-color-one-rgb: 33, 99, 179;
+              @endif
             @endif
             @endif
         }

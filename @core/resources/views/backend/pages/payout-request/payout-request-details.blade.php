@@ -18,7 +18,7 @@
                         <div class="card-body">
                             <div class="checkbox-inlines">
                                 <h5><strong>{{ __('Payout Request ID: ') }}</strong>#{{ $request_details->id }}</h5>
-                                <p class="text-info"><small>{{__('checkout all the info of seller before process the payment. you should get seller payout request details which payment gateway seller want to get paid, and seller payment account details should show in place of seller note. you have to check these thing and have to pay seller manually, then you will change the payment status with a screenshort of proof of payment.')}}</small></p>
+                                <p class="text-info"><small>{{__('checkout all the info of service provider before process the payment. you should get service provider payout request details which payment gateway service provider want to get paid, and service provider payment account details should show in place of service provider note. you have to check these thing and have to pay service provider manually, then you will change the payment status with a screenshort of proof of payment.')}}</small></p>
                             </div>
                         </div>
                     </div>
@@ -30,7 +30,7 @@
                         <div class="card-body">
 
                             <div class="border-bottom mb-3">
-                                <h5>{{ __('Seller Details') }}</h5>
+                                <h5>{{ __('Service Provider Details') }}</h5>
                             </div>
 
                             <div class="single-checbox">
@@ -77,7 +77,7 @@
                                 </div>
                                 <br>
                                 <div class="checkbox-inlines">
-                                    <p><strong>{{ __('Seller Note: ') }}</strong>{{ $request_details->seller_note }}</p>
+                                    <p><strong>{{ __('Service Provider Note: ') }}</strong>{{ $request_details->seller_note }}</p>
                                 </div>
                                 
                             </div>

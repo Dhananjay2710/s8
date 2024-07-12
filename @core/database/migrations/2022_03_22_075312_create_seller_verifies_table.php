@@ -18,6 +18,7 @@ class CreateSellerVerifiesTable extends Migration
             $table->string('seller_id')->nullable();
             $table->string('national_id')->nullable();
             $table->string('address')->nullable();
+            $table->string('verification_data')->nullable();
             $table->tinyInteger('status')->nullable();
             $table->timestamps();
         });

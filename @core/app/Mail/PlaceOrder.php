@@ -33,7 +33,7 @@ class PlaceOrder extends Mailable
     public function build()
     {
         $mail = $this->from(get_static_option('site_global_email'), get_static_option('site_title'))
-            ->subject('Order For '. $this->package->title.' From '.get_static_option('site_title'))
+            ->subject('Service Request For '. $this->package->title.' From '.get_static_option('site_title'))
                 ->markdown('mail.order');
 
         if (!empty($this->attachment)){

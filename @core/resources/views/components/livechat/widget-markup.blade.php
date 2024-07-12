@@ -95,7 +95,7 @@
                                             </div>
                                             <div class="col-item-4-form-style">
                                                 <p class="mt-3 error_message"></p>
-                                                <small class="please_login_text">{{ __('Please login to start chat with seller') }}</small>
+                                                <small class="please_login_text">{{ __('Please login to start chat with service provider') }}</small>
                                                 <div class="email custom-form mt-2">
                                                     <input class="form-control" type="email" placeholder="{{__('Email or Username')}}" name="user_login_email" id="user_login_email">
                                                 </div>

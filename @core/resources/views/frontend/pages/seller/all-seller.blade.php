@@ -1,15 +1,15 @@
 @extends('frontend.frontend-page-master')
 
 @section('page-meta-data')
-  <title> {{ __('All Sellers') }}</title>
+  <title> {{ __('All Service Providers') }}</title>
 @endsection
 
 @section('page-title')
-{{ __('All Sellers') }}
+{{ __('All Service Providers') }}
 @endsection 
 
 @section('inner-title')
-{{ __('All Sellers') }}
+{{ __('All Service Providers') }}
 @endsection
 
 @section('content')
@@ -50,7 +50,7 @@
                                         </span>
                                     </div>
                                 @endif
-                                <span class="order_completation">{{$seller->order->where('status', 2)->count() ?? 0}} {{__('Order Completed')}}</span> 
+                                <span class="order_completation">{{$seller->order->where('status', 2)->count() ?? 0}} {{__('Service Request Completed')}}</span> 
                             </div>
                         </div>
                     </div>

@@ -697,7 +697,7 @@ class UserController extends Controller
         $orderInfo = Order::select('seller_id','service_id')->where('id',$request->order_id)->first();
         if(is_null($orderInfo)){
             return response()->success([
-                'message'=>__('Order Not Found')
+                'message'=>__('Service Request Not Found')
             ]);
         }
         $support = SupportTicket::create([
@@ -715,7 +715,7 @@ class UserController extends Controller
         // send order ticket notification to seller
         $seller = User::where('id',$orderInfo->seller_id)->first();
         if($seller){
-            $order_ticcket_message = __('You have a new order ticket');
+            $order_ticcket_message = __('You have a new service request ticket');
             $seller ->notify(new TicketNotificationSeller($support->id , $support->seller_id, $support->seller_id,$order_ticcket_message ));
         }
 
@@ -727,7 +727,7 @@ class UserController extends Controller
 
     public function singleOrder(Request $request){
         if(empty($request->id)){
-            return response()->error(['message' => __('no order found')]);
+            return response()->error(['message' => __('no service request found')]);
         }
 
         $orderInfo = Order::where('id',$request->id)->first();
@@ -758,7 +758,7 @@ class UserController extends Controller
 
         if(is_null($orderInfo)){
             return response()->success([
-                'message'=>__('Order Not Found')
+                'message'=>__('Service Request Not Found')
             ]);
         }
 
@@ -803,13 +803,13 @@ class UserController extends Controller
                 $seller_details = User::select('name','email')->find(optional($extra_service_details->order)->seller_id);
                 $message = '<p>';
                 $message .= __('Hello').' '.$seller_details->name.','."<br>";
-                $message .= __('your extra service request has been declined for order #').$extra_service_details->order_id;
+                $message .= __('your extra service request has been declined for service request #').$extra_service_details->order_id;
                 $message .= '</p>';
 
 
 
                 Mail::to($seller_details->email)->send(new BasicMail([
-                    'subject' => __('extra service request declined in your order #').$extra_service_details->order_id,
+                    'subject' => __('extra service request declined in your service request #').$extra_service_details->order_id,
                     'message' => $message
                 ]));
 
@@ -872,11 +872,11 @@ class UserController extends Controller
             $seller_details = User::select('name','email')->find(optional($extra_service_details->order)->seller_id);
             $message = '<p>';
             $message .= __('Hello').' '.$seller_details->name.','."<br>";
-            $message .= __('your have added extra service in your order #').$extra_service_details->order_id;
+            $message .= __('your have added extra service in your service request #').$extra_service_details->order_id;
             $message .= '</p>';
 
             Mail::to($seller_details->email)->send(new BasicMail([
-                'subject' => __('Extra service added in your order #').$extra_service_details->order_id,
+                'subject' => __('Extra service added in your service request #').$extra_service_details->order_id,
                 'message' => $message
             ]));
 
@@ -884,11 +884,11 @@ class UserController extends Controller
             //send mail to buyer
             $message = '<p>';
             $message .= __('Hello').' '.$buyer_details->name.','."<br>";
-            $message .= __('seller added extra service in your order #').$extra_service_details->order_id;
+            $message .= __('service provider added extra service in your service request #').$extra_service_details->order_id;
             $message .= '</p>';
 
             Mail::to($buyer_details->email)->send(new BasicMail([
-                'subject' => __('Extra service added in your order #').$extra_service_details->order_id,
+                'subject' => __('Extra service added in your service request #').$extra_service_details->order_id,
                 'message' => $message
             ]));
 
@@ -914,11 +914,11 @@ class UserController extends Controller
         if(!empty($find_order)){
             Order::where('id',$request->order_id)->update(['order_complete_request'=>2,'status'=>2]);
             return response()->success([
-                'msg'=>__('Order complete request successfully approved.'),
+                'msg'=>__('Service complete requested successfully approved.'),
             ]);
         }else{
             return response()->error([
-                'msg'=>__('Order id does not exists.'),
+                'msg'=>__('Service Request id does not exists.'),
             ]);
         }
     }
@@ -942,26 +942,26 @@ class UserController extends Controller
 
         //Send decline mail to seller and admin
         try {
-            $message_body_admin = __('A buyer has been decline a request to complete an order. Order ID #'). $request->order_id.'</br>';
-            $message_body_seller = __('Your request to complete an order has been decline by the buyer. Order ID #'). $request->order_id.'</br>';
+            $message_body_admin = __('A customer has been decline a request to complete an order. Service Request ID #'). $request->order_id.'</br>';
+            $message_body_seller = __('Your request to complete an service request has been decline by the customer. Service Request ID #'). $request->order_id.'</br>';
             $message = get_static_option('buyer_to_admin_extra_service_message');
             $message = str_replace(["@order_id"],[$request->order_id],$message);
             Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
-                'subject' =>get_static_option('buyer_order_decline_subject') ?? __('Order Complete Decline'),
+                'subject' =>get_static_option('buyer_order_decline_subject') ?? __('Service Request Complete Decline'),
                 'message' => $message
             ]));
 
             $message = get_static_option('buyer_order_decline_message');
             $message = str_replace(["@order_id"],[$request->order_id],$message);
             Mail::to($seller_email->email)->send(new BasicMail([
-                'subject' =>get_static_option('buyer_order_decline_subject') ?? __('Order Complete Decline'),
+                'subject' =>get_static_option('buyer_order_decline_subject') ?? __('Service Request Complete Decline'),
                 'message' => $message
             ]));
         } catch (\Exception $e) {
             //
         }
         return response()->error([
-            'msg'=>__('Order complete request decline successfully'),
+            'msg'=>__('Service Request complete request decline successfully'),
         ]);
     }
     
@@ -983,7 +983,7 @@ class UserController extends Controller
             ]);
         }else{
             return response()->error([
-                'msg'=>__('Order id does not exists.'),
+                'msg'=>__('Service Request id does not exists.'),
             ]);
         }
     }

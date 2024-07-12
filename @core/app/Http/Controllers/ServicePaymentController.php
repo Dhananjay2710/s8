@@ -247,7 +247,7 @@ class ServicePaymentController extends Controller
         }
         //Send order email to buyer
         try {
-            $message_body = __('Hello a buyer just deposit to his wallet.').'</br>'.'<span class="verify-code">'.__('Deposit ID: ').$last_deposit_id.'</span>';
+            $message_body = __('Hello a customer just deposit to his wallet.').'</br>'.'<span class="verify-code">'.__('Deposit ID: ').$last_deposit_id.'</span>';
             Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
                 'subject' => __('Deposit Confirmation'),
                 'message' => $message_body
@@ -585,8 +585,8 @@ class ServicePaymentController extends Controller
         $seller_email = User::select('email')->where('id',$order_details->seller_id)->first();
         //Send order email to buyer
         try {
-            $message_for_buyer = get_static_option('new_order_buyer_message') ?? __('You have successfully placed an order #');
-            $message_for_seller_admin = get_static_option('new_order_admin_seller_message') ?? __('You have a new order #');
+            $message_for_buyer = get_static_option('new_order_buyer_message') ?? __('You have successfully requested a service #');
+            $message_for_seller_admin = get_static_option('new_order_admin_seller_message') ?? __('You have a new servie request #');
             Mail::to($order_details->email)->send(new OrderMail(strip_tags($message_for_buyer).$order_details->id,$order_details));
             Mail::to($seller_email)->send(new OrderMail(strip_tags($message_for_seller_admin).$order_details->id,$order_details));
             Mail::to(get_static_option('site_global_email'))->send(new OrderMail(strip_tags($message_for_seller_admin).$order_details->id,$order_details));
@@ -621,7 +621,7 @@ class ServicePaymentController extends Controller
                 "interests" => ["debug-seller".$orderInfo->seller_id, 'message'],
                 "fcm" =>[
                     "notification" => [
-                        "title" => "You have received a new order id #".$orderInfo->id,
+                        "title" => "You have received a new service request id #".$orderInfo->id,
                         "body" => ""
                     ]
                 ]

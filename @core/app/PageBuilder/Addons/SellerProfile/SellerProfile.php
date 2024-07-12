@@ -120,11 +120,11 @@ class SellerProfile extends \App\PageBuilder\PageBuilderBase
             $seller_rating_percentage_value = ceil($seller_rating * 20) ?? ' ';
             $service_rating = Review::where('seller_id', $seller->id)->where('type', 1)->avg('rating');
             $service_reviews = Review::where('seller_id', $seller->id)->where('type', 1)->get();
-            $verify_text = __('This seller is verified by the site admin according his national id card.');
+            $verify_text = __('This service provider is verified by the site admin according his national id card.');
             $from = __('From');
             $since = __('Seller Since');
-            $order_completed_text = __('Order Completed');
-            $seller_rating_text = __('Seller Rating');
+            $order_completed_text = __('Service Request Completed');
+            $seller_rating_text = __('Service Provider Rating');
             $profile_page = route('about.seller.profile',$seller_username);
             $seller_verify = '';
             if(optional($seller->sellerVerify)->status==1){

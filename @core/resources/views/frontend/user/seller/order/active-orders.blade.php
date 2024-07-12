@@ -21,7 +21,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="dashboard-settings margin-top-40">
-                                <h2 class="dashboards-title">{{ __('Order Status') }}</h2>
+                                <h2 class="dashboards-title">{{ __('Service Request Status') }}</h2>
                             </div>
                         </div>
                     </div>
@@ -39,32 +39,39 @@
                                     <table id="active_order_table" class="custom--table">
                                         <thead>
                                             <tr>
-                                                <th> {{ __('Order ID') }} </th>
-                                                <th> {{ __('Buyer Name') }} </th>
+                                                <th> {{ __('Service Request ID') }} </th>
+                                                <th> {{ __('Customer Name') }} </th>
                                                 @if(request()->path() == 'seller/orders/job/active-orders')
                                                     <!--job order title -->
                                                     <th> {{ __('Job Title') }} </th>
-                                                    <th> {{ __('Order Date') }} </th>
+                                                    <th> {{ __('Service Request Date') }} </th>
+                                                @elseif(request()->path() == 'serviceprovider/orders/job/active-orders')
+                                                    <!--job order title -->
+                                                    <th> {{ __('Job Title') }} </th>
+                                                <   th> {{ __('Service Request Date') }} </th>
                                                 @else
                                                     <!--Service order title -->
                                                     <th> {{ __('Service Date') }} </th>
                                                     <th> {{ __('Service Time') }} </th>
                                                 @endif
-                                                <th> {{ __('Order Pricing') }} </th>
-                                                <th> {{ __('Order Status') }} </th>
+                                                <th> {{ __('Service Request Pricing') }} </th>
+                                                <th> {{ __('Service Request Status') }} </th>
                                                 <th> {{ __('Action') }} </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($active_orders as $order)
                                                 <tr>
-                                                    <td data-label="{{ __('Order ID') }}"> {{ $order->id }} </td>
-                                                    <td data-label="{{ __('Buyer Name') }}"> {{ $order->name }} </td>
+                                                    <td data-label="{{ __('Service Request ID') }}"> {{ $order->id }} </td>
+                                                    <td data-label="{{ __('Customer Name') }}"> {{ $order->name }} </td>
 
                                                     <!--service and job order info -->
                                                     @if(request()->path() == 'seller/orders/job/active-orders')
                                                         <td data-label="Job Title"> {{ Str::limit(optional($order->job)->title,20) }} </td>
-                                                        <td data-label="Order Date"> {{ Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y') }} </td>
+                                                        <td data-label="Service Request Date"> {{ Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y') }} </td>
+                                                    @elseif(request()->path() == 'serviceprovider/orders/job/active-orders')
+                                                        <td data-label="Job Title"> {{ Str::limit(optional($order->job)->title,20) }} </td>
+                                                        <td data-label="Service Request Date"> {{ Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y') }} </td>
                                                     @else
                                                         <td data-label="{{ __('Service Date') }}">
                                                             @if($order->date === 'No Date Created')
@@ -76,9 +83,9 @@
                                                         <td data-label="{{ __('Service Time') }}"> {{ __($order->schedule) }}</td>
                                                     @endif
 
-                                                    <td data-label="{{ __('Order Pricing') }}"> {{ float_amount_with_currency_symbol($order->total) }}</td>
+                                                    <td data-label="{{ __('Service Request Pricing') }}"> {{ float_amount_with_currency_symbol($order->total) }}</td>
                                                     @if( $order->status==1)
-                                                    <td class="order-active" data-label="{{ __('Order Status') }}"><span class="">{{ __('Active') }}</span></td>@endif
+                                                    <td class="order-active" data-label="{{ __('Service Request Status') }}"><span class="">{{ __('Active') }}</span></td>@endif
                                                     <td data-label="{{ __('Action') }}">
                                                         <a href="{{ route('seller.order.details', $order->id) }}" data-toggle="tooltip" data-placement="top" title="{{ __('View Details') }}">
                                                             <span class="icon eye-icon"><i class="las la-eye"></i></span>

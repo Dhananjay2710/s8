@@ -443,7 +443,7 @@
             <div class="seller_admin_notes_wrapper">
                 @if(!is_null($payout_details->admin_note))
                 <div class="seller_admin_notes">
-                    <h6>{{ __('Seller Note') }}</h6>
+                    <h6>{{ __('Service Provider Note') }}</h6>
                     <p>{{ $payout_details->seller_note }}</p>
                 </div>
                 @endif

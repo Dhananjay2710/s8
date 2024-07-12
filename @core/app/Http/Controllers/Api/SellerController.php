@@ -231,7 +231,7 @@ class SellerController extends Controller
         });
         
         return response()->success([
-            'recent_orders' => $recent_order ?? __('No order found')
+            'recent_orders' => $recent_order ?? __('No service request found')
         ]);
 
     }
@@ -291,7 +291,7 @@ class SellerController extends Controller
     public function singleOrder(Request $request){
         
         if(empty($request->id)){
-            return response()->error(['message' => __('no order found')]);
+            return response()->error(['message' => __('no service request found')]);
         }
         
         $orderInfo = Order::with('service')->where('id',$request->id)->first();
@@ -319,7 +319,7 @@ class SellerController extends Controller
         
         if(is_null($orderInfo)){
             return response()->success([
-                'message'=>__('Order Not Found')
+                'message'=>__('Service Request Not Found')
             ]);
         }
         
@@ -701,10 +701,10 @@ class SellerController extends Controller
                 $seller_details = User::select('name','email')->find($orderDetails->seller_id);
                 $message = '<p>';
                 $message .= __('Hello').' '.$seller_details->name.','."<br>";
-                $message .= __('your have added extra service in your order #').$orderDetails->id;
+                $message .= __('your have added extra service in your service request #').$orderDetails->id;
                 $message .= '</p>';
                 Mail::to($seller_details->email)->send(new BasicMail([
-                    'subject' => __('Extra service added in your order #').$orderDetails->id,
+                    'subject' => __('Extra service added in your service request #').$orderDetails->id,
                     'message' => $message
                 ]));
 
@@ -712,10 +712,10 @@ class SellerController extends Controller
                 //send mail to buyer
                 $message = '<p>';
                 $message .= __('Hello').' '.$buyer_details->name.','."<br>";
-                $message .= __('seller added extra service in your order #').$orderDetails->id;
+                $message .= __('service provider added extra service in your service request #').$orderDetails->id;
                 $message .= '</p>';
                 Mail::to($buyer_details->email)->send(new BasicMail([
-                    'subject' => __('Extra service added in your order #').$orderDetails->id,
+                    'subject' => __('Extra service added in your service request #').$orderDetails->id,
                     'message' => $message
                 ]));
             }catch (\Exception $e){
@@ -769,10 +769,10 @@ class SellerController extends Controller
                 $seller_details = User::select('name','email')->find($orderDetails->seller_id);
                 $message = '<p>';
                 $message .= __('Hello').' '.$seller_details->name.','."<br>";
-                $message .= __('your have added extra service in your order #').$orderDetails->id;
+                $message .= __('your have added extra service in your service request #').$orderDetails->id;
                 $message .= '</p>';
                 Mail::to($seller_details->email)->send(new BasicMail([
-                    'subject' => __('Extra service added in your order #').$orderDetails->id,
+                    'subject' => __('Extra service added in your service request #').$orderDetails->id,
                     'message' => $message
                 ]));
 
@@ -780,10 +780,10 @@ class SellerController extends Controller
                 //send mail to buyer
                 $message = '<p>';
                 $message .= __('Hello').' '.$buyer_details->name.','."<br>";
-                $message .= __('seller added extra service in your order #').$orderDetails->id;
+                $message .= __('service provider added extra service in your service request #').$orderDetails->id;
                 $message .= '</p>';
                 Mail::to($buyer_details->email)->send(new BasicMail([
-                    'subject' => __('Extra service added in your order #').$orderDetails->id,
+                    'subject' => __('Extra service added in your service request #').$orderDetails->id,
                     'message' => $message
                 ]));
             }catch (\Exception $e){
@@ -811,15 +811,15 @@ class SellerController extends Controller
 
         try {
             Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
-                'subject' => __('aA order declined by the seller order ID').' '.$request->order_id,
-                'message' => sprintf(__('an order decliined by seller ID: %1$s, a reported created for refund buyer money for order ID: $2$s'),$request->report_id,$request->order_id),
+                'subject' => __('aA service request declined by the service provider service request ID').' '.$request->order_id,
+                'message' => sprintf(__('an service request decliined by service provider ID: %1$s, a reported created for refund customer money for service request ID: $2$s'),$request->report_id,$request->order_id),
             ]));
         } catch (\Exception $e) {
             //handle exception
         }
 
         return response()->success([
-            'msg'=> __('order decline success'),
+            'msg'=> __('service request decline success'),
         ],200);
 
     }
@@ -849,14 +849,14 @@ class SellerController extends Controller
     {
         if($request->status == '' || $request->order_id == ''){
             return response()->error([
-                'msg' => __('Please select both status and order id first.'),
+                'msg' => __('Please select both status and service request id first.'),
             ]);
         }
         $payment_status = Order::select('id','payment_status','status','email','name')->where('id',$request->order_id)->first();
         $cancel_order_money_return = Order::select('id','cancel_order_money_return')->where('id',$request->order_id)->first();
         if($cancel_order_money_return->cancel_order_money_return === 1){
             return response()->error([
-                'msg' => __('You can not change status because earlier you canceled the order'),
+                'msg' => __('You can not change status because earlier you canceled the service request'),
             ]);
         }
         if($payment_status->status !=2){
@@ -878,32 +878,32 @@ class SellerController extends Controller
                     ]);
                     //Send email after change status
                     try {
-                        $message_body_buyer =__('Hello, ').$payment_status->name. __('A new request is created for complete an order.').'</br>' . ' <span class="verify-code">'.__('Order ID is: ') . $payment_status->id. '</span>';
-                        $message_body_admin =__('Hello Admin A new request is created for complete an order.').'</br>' . ' <span class="verify-code">'.__('Order ID is:') . $payment_status->id. '</span>';
+                        $message_body_buyer =__('Hello, ').$payment_status->name. __('A new request is created for complete an service request.').'</br>' . ' <span class="verify-code">'.__('service request ID is: ') . $payment_status->id. '</span>';
+                        $message_body_admin =__('Hello Admin A new request is created for complete an service request.').'</br>' . ' <span class="verify-code">'.__('service request ID is:') . $payment_status->id. '</span>';
                         Mail::to($payment_status->email)->send(new BasicMail([
-                            'subject' => __('New Request For Complete an Order'),
+                            'subject' => __('New Request For Complete an Service Request'),
                             'message' => $message_body_buyer
                         ]));
                         Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
-                            'subject' => __('New Request For Complete an Order'),
+                            'subject' => __('New Request For Complete an Service Request'),
                             'message' => $message_body_admin
                         ]));
                     } catch (\Exception $e) {
                        //
                     }
                     return response()->success([
-                        'msg' => __('Your request submitted. Buyer will complete your request after review.'),
+                        'msg' => __('Your request submitted. Customer will complete your request after review.'),
                     ]);
                 }
 //                Order::where('id',$request->order_id)->update(['status'=>$request->status]);
             }else{
                 return response()->error([
-                    'msg' => __('You can not change order status due to payment status pending.'),
+                    'msg' => __('You can not change service request status due to payment status pending.'),
                 ]);
             }
         }else{
             return response()->error([
-                'msg' => __('You can not change order status because this order already completed.'),
+                'msg' => __('You can not change service request status because this service request already completed.'),
             ]);
         }
     }
@@ -926,7 +926,7 @@ class SellerController extends Controller
             ]);
         }else{
             return response()->error([
-                'msg'=>__('Order id does not exists.'),
+                'msg'=>__('Service Request id does not exists.'),
             ]);
         }
     }
@@ -936,7 +936,7 @@ class SellerController extends Controller
     {
         $orderInfo = Order::where('id',$request->id)->first();
         if(is_null($orderInfo)){
-            return response(['msg' => __("order not found")],422);
+            return response(['msg' => __("service request not found")],422);
         }
         if($orderInfo->payment_gateway === "cash_on_delivery"){
             $orderInfo->payment_status = "complete";
@@ -953,14 +953,14 @@ class SellerController extends Controller
     {
         $orderInfo = Order::where('id',$request->id)->first();
         if(is_null($orderInfo)){
-            return response(['msg' => __("order not found")],422);
+            return response(['msg' => __("service request not found")],422);
         }
         $orderInfo->status = 4;
         $orderInfo->save();
         $user_info = auth('sanctum')->user();
             $user_type =  $user_info->user_type ===  1 ? 'seller_' : '';
             
-        return response(['msg' => __("order status changed to cancel")],500);
+        return response(['msg' => __("service request status changed to cancel")],500);
     }
     
     public function availableDaysList(){

@@ -1,6 +1,6 @@
 @extends('backend.admin-master')
 @section('site-title')
-    {{__('New Order Template')}}
+    {{__('New Service Request Template')}}
 @endsection
 @section('style')
     <x-media.css/>
@@ -18,7 +18,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="header-wrapp d-flex justify-content-between">
-                            <h4 class="header-title">{{__('New Order Template')}}</h4>
+                            <h4 class="header-title">{{__('New Service Request Template')}}</h4>
                             <a class="btn btn-info" href="{{route('admin.email.template.all')}}">{{__('All Email Templates')}}</a>
                         </div>
                         <form action="{{route('admin.new.order.ad.sell.buyer.email')}}" method="post" enctype="multipart/form-data">
@@ -29,11 +29,11 @@
                                     <input type="text" name="new_order_email_subject"  class="form-control" value="{{ get_static_option('new_order_email_subject') ?? __('New Order') }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="new_order_buyer_message">{{ __('Email Message For Buyer') }}</label>
+                                    <label for="new_order_buyer_message">{{ __('Email Message For Customer') }}</label>
                                     <textarea class="form-control summernote" name="new_order_buyer_message">{!! get_static_option('new_order_buyer_message') ?? '' !!} </textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label for="new_order_admin_seller_message">{{ __('Email Message For Seller And Admin') }}</label>
+                                    <label for="new_order_admin_seller_message">{{ __('Email Message For Service Provider And Admin') }}</label>
                                     <textarea class="form-control summernote" name="new_order_admin_seller_message">{!! get_static_option('new_order_admin_seller_message') ?? '' !!} </textarea>
                                 </div>
                             </div>

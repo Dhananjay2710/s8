@@ -13,6 +13,7 @@ class SellerVerify extends Model
         'seller_id',
         'national_id',
         'address',
+        'verification_data',
         'status',
     ];
     

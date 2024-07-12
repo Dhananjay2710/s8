@@ -35,6 +35,10 @@ class AdminDashboardController extends Controller
         $pending_order = Order::where('status',0)->count();
         $pending_service = Service::where('status',0)->count();
         $pending_payout_request = PayoutRequest::where('status',0)->count();
+        $total_amount_paid = PayoutRequest::where('status',1)->sum('amount');
+        $total_payout = Order::where('status',2)->sum('total');
+        $payout_liability = Order::where('status',2)->sum('total') - Order::where('status',2)->sum('commission_amount');
+        $pending_payout_liability = $payout_liability - $total_amount_paid;
         $new_user_today = User::whereYear('created_at', Carbon::now()->year)
             ->whereMonth('created_at',Carbon::now()->month)
             ->whereDay('created_at',Carbon::now()->day)
@@ -101,6 +105,10 @@ class AdminDashboardController extends Controller
             'pending_order',
             'pending_service',
             'pending_payout_request',
+            'pending_payout_liability',
+            'payout_liability',
+            'total_payout',
+            'total_amount_paid',
             'new_user_today',
             'most_viewed_10_services',
             'most_sell_10_services',

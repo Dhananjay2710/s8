@@ -54,9 +54,9 @@
 
                             <div class="single-dashboard-input">
                                 <div class="single-info-input margin-top-30">
-                                    <label for="seller_id" class="info-title"> {{__('Select Seller*')}} </label>
+                                    <label for="seller_id" class="info-title"> {{__('Select Service Provider*')}} </label>
                                     <select name="seller_id" id="seller_id" class="form-control">
-                                        <option value="">{{__('Select Seller')}}</option>
+                                        <option value="">{{__('Select Service Provider')}}</option>
                                         @foreach($sellers as $seller)
                                             <option value="{{ $seller->id }}"  @if($seller->id==$service->seller_id) selected @endif>{{ $seller->name }}</option>
                                         @endforeach

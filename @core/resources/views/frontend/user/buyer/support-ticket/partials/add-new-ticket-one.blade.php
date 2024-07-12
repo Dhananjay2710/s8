@@ -34,7 +34,7 @@
 
                                 <div class="mt-5"> <x-msg.error/> </div>
                                 <h4 class="mb-3">{{ __('Ticket For:') }} {{ optional($order->service)->title }}</h4>
-                                <h4 class="mb-5">{{ __('Order ID:') }} #{{ $order->id }}</h4>
+                                <h4 class="mb-5">{{ __('Service Request ID:') }} #{{ $order->id }}</h4>
                                 <form action="{{route('buyer.support.ticket.new')}}" method="post" enctype="multipart/form-data">
                                     @csrf
                                     <input type="hidden" name="seller_id" value="{{ $order->seller_id }}">

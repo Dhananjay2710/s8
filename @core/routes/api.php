@@ -182,6 +182,7 @@ Route::group(['prefix'=>'v1', 'middleware' => 'setlang'],function(){
         Route::get('job/recent-jobs', [JobDetailsController::class, 'recent_jobs']);
     }
 
+    // Route::get('service/servicerequests', [ServiceController::class,'serviceProviderRequests']);
     //verify 
     Route::group(['middleware' => 'auth:sanctum'],function (){
         Route::post('service/order', [ServiceController::class,'order']);

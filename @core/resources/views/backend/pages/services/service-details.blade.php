@@ -110,14 +110,14 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="border-bottom mb-3">
-                                <h5>{{ __('Seller Details') }}</h5>
+                                <h5>{{ __('Service Provider Details') }}</h5>
                             </div>
                             <div class="single-checbox">
                                 <div class="checkbox-inlines">
-                                    <label><strong>{{ __('Seller:') }}</strong> {{ optional($service->seller)->name }}</label>
+                                    <label><strong>{{ __('Service Provider:') }}</strong> {{ optional($service->seller)->name }}</label>
                                 </div>
                                 <div class="checkbox-inlines">
-                                    <label><strong>{{ __('Seller Since:') }}</strong> {{ Carbon\Carbon::parse(optional($seller_since)->created_at)->year }}</label>
+                                    <label><strong>{{ __('Service Provider Since:') }}</strong> {{ Carbon\Carbon::parse(optional($seller_since)->created_at)->year }}</label>
                                 </div>
                                 <div class="checkbox-inlines">
                                     <label><strong>{{ __('Country:') }}</strong> {{ optional(optional($service->seller)->country)->country }}</label>

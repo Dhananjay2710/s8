@@ -1,6 +1,6 @@
 @extends('frontend.user.buyer.buyer-master')
 @section('site-title')
-    {{__('Buyer Dashboard')}}
+    {{__('Customer Dashboard')}}
 @endsection
 @section('content')
     <x-frontend.seller-buyer-preloader/>

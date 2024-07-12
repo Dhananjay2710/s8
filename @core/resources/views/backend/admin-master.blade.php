@@ -105,7 +105,7 @@
                                             <a href="{{ route('admin.orders.details', $data->order_id) }}" class="notify-item">
                                                 <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
                                                 <div class="notify-text">
-                                                    <p>{{ __('New order') }} #{{ $data->order_id ?? '' }}</p>
+                                                    <p>{{ __('New service request') }} #{{ $data->order_id ?? '' }}</p>
                                                     <span> {{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }} </span>
                                                 </div>
                                             </a>
@@ -118,7 +118,7 @@
                                             <a href="{{ route('admin.ticket.details', $data->ticket_id) }}" class="notify-item">
                                                 <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
                                                 <div class="notify-text">
-                                                    <p>{{ __('New order ticket') }} #{{ $data->ticket_id ?? '' }}</p>
+                                                    <p>{{ __('New service request ticket') }} #{{ $data->ticket_id ?? '' }}</p>
                                                     <span> {{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }} </span>
                                                 </div>
                                             </a>

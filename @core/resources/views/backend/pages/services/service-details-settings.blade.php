@@ -21,7 +21,7 @@
                                 <input type="text" name="service_details_overview_title"  class="form-control" value="{{get_static_option('service_details_overview_title')}}" id="service_details_overview_title">
                             </div>
                             <div class="form-group">
-                                <label for="service_details_about_seller_title">{{__('Service Details About Seller Title')}}</label>
+                                <label for="service_details_about_seller_title">{{__('Service Details About Service Provider Title')}}</label>
                                 <input type="text" name="service_details_about_seller_title"  class="form-control" value="{{get_static_option('service_details_about_seller_title')}}" id="service_details_about_seller_title">
                             </div>
                             <div class="form-group">
@@ -37,7 +37,7 @@
                                 <input type="text" name="service_details_benifits_title"  class="form-control" value="{{get_static_option('service_details_benifits_title')}}" id="service_details_benifits_title">
                             </div>
                             <div class="form-group">
-                                <label for="service_details_another_service_title">{{__('Service Details Another Service Of This Seller')}}</label>
+                                <label for="service_details_another_service_title">{{__('Service Details Another Service Of This Service Provider')}}</label>
                                 <input type="text" name="service_details_another_service_title"  class="form-control" value="{{get_static_option('service_details_another_service_title')}}" id="service_details_another_service_title">
                             </div>
                             <div class="form-group">

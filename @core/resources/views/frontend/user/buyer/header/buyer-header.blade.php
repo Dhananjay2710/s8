@@ -115,12 +115,13 @@
                                     @if(Auth::guard('web')->check() && Auth::guard('web')->user()->user_type==1)
                                         <a href="{{ route('buyer.profile')}}" class="dashboard__header__author__wrapper__list__item">{{ __('Profile') }}</a>
                                         <a href="{{ route('buyer.account.settings')}}" class="dashboard__header__author__wrapper__list__item">{{__('Settings')}}</a>
+                                        <a href="{{ route('buyer.logout')}}" class="dashboard__header__author__wrapper__list__item">{{__('Logout')}}</a>
                                     @endif
                                     @if(Auth::guard('web')->check() && Auth::guard('web')->user()->user_type==0)
                                         <a href="{{ route('seller.profile')}}" class="dashboard__header__author__wrapper__list__item">{{ __('Profile') }}</a>
                                         <a href="{{ route('seller.account.settings')}}" class="dashboard__header__author__wrapper__list__item">{{__('Settings')}}</a>
+                                        <a href="{{ route('seller.logout')}}" class="dashboard__header__author__wrapper__list__item">{{__('Logout')}}</a>
                                     @endif
-                                    <a href="{{ route('seller.logout')}}" class="dashboard__header__author__wrapper__list__item">{{__('Logout')}}</a>
                                 </div>
                             </div>
                         </div>

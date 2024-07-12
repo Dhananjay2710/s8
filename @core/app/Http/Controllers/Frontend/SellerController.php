@@ -53,7 +53,10 @@ use Modules\JobPost\Entities\BuyerJob;
 use Modules\JobPost\Entities\JobRequest;
 use Str;
 use DB;
-
+use App\Events\UpdateTicket;
+use App\SignzyAPI;
+use App\Helpers\StringMatchHelper;
+use App\Helpers\TokenGenrateHelper;
 
 class SellerController extends Controller
 {
@@ -584,6 +587,7 @@ class SellerController extends Controller
             $service->video = $request->video;
             $service->seller_id = Auth::guard('web')->user()->id;
             $service->service_city_id = Auth::guard('web')->user()->service_city;
+            $service->service_area_id = Auth::guard('web')->user()->service_area;
             $service->status = $service_status;
             $service->tax = $country_tax->tax ?? 0;
             $service->is_service_all_cities = $request->is_service_all_cities ?? 0;
@@ -1610,9 +1614,9 @@ class SellerController extends Controller
         $order = Order::find($id);
         if($order->payment_status == 'pending' || $order->payment_status == ''){
             Order::find($id)->delete();
-            toastr_error(__('Order Delete Success---'));
+            toastr_error(__('Service Request Delete Success---'));
         }else{
-            toastr_error(__('Order Can Not be Deleted Due to Payment Status Complete---'));
+            toastr_error(__('Service Request Can Not be Deleted Due to Payment Status Complete---'));
         }
         return redirect()->back();
     }
@@ -1677,8 +1681,73 @@ class SellerController extends Controller
         $complete_orders = Order::where('seller_id', Auth::guard('web')->user()->id)->where('job_post_id', NULL)->where('status',2);
         $deliver_orders = Order::where('seller_id', Auth::guard('web')->user()->id)->where('job_post_id', NULL)->where('status',3);
         $cancel_orders = Order::where('seller_id', Auth::guard('web')->user()->id)->where('job_post_id', NULL)->where('status',4);
+        $incompetent_orders = Order::where('seller_id', Auth::guard('web')->user()->id)->where('job_post_id', NULL)->where('status',5);
+        $isHideSideBarAndHeader = true;
+        return view('frontend.user.seller.order.orders', compact('orders','active_orders','complete_orders','deliver_orders','cancel_orders', 'incompetent_orders', 'all_orders', 'pending_orders', 'isHideSideBarAndHeader'));
+    }
 
-        return view('frontend.user.seller.order.orders', compact('orders','active_orders','complete_orders','deliver_orders','cancel_orders', 'all_orders', 'pending_orders'));
+    public function serviceProviderRequests(Request $request)
+    {
+        $serviceProviderId = $request->serviceproviderId;
+        $token = $request->token;
+        $finalToken = TokenGenrateHelper::genrateToken($serviceProviderId);
+        if($token !== $finalToken){
+            abort(401);
+        }
+
+        \Log::debug("Token Matched");
+        if(!empty($request->order_id || $request->order_date|| $request->payment_status || $request->order_status || $request->total || $request->seller_name || $request->service_title)){
+            $orders_query = Order::with('online_order_ticket')->where('seller_id', $serviceProviderId)->where('job_post_id', NULL);
+            // search by order ID
+            if (!empty($request->order_id)){
+                $orders_query->where('id', $request->order_id);
+            }
+            // search by order create date
+            if (!empty($request->order_date)){
+                $start_date = \Str::of($request->order_date)->before('to');
+                $end_date = \Str::of($request->order_date)->after('to');
+                $orders_query->whereBetween('created_at', [$start_date,$end_date]);
+            }
+            // search by payment status
+            if (!empty($request->payment_status)){
+                $orders_query->where('payment_status', $request->payment_status);
+            }
+            // search by order status
+            if (!empty($request->order_status)){
+                if ($request->order_status == 'pending'){
+                    $orders_query->where('status', 0);
+                }else{
+                    $orders_query->where('status', $request->order_status);
+                }
+            }
+            // search by order amount
+            if (!empty($request->total)){
+                $orders_query->where('payment_status', $request->total);
+            }
+            // search by service title
+            if (!empty($request->service_title)){
+                $service_id = Service::select('id', 'title')->where('title',  'LIKE', "%{$request->service_title}%")->pluck('id')->toArray();
+                $orders_query->whereIn('service_id', $service_id);
+            }
+            // search by buyer name
+            if (!empty($request->buyer_name)){
+                $buyer_id = User::select('id', 'name')->where('name',  'LIKE', "%{$request->buyer_name}%")->pluck('id')->toArray();
+                $orders_query->whereIn('buyer_id', $buyer_id);
+            }
+            $all_orders = $orders_query->latest()->paginate(10);
+        }else{
+            $all_orders = Order::with('online_order_ticket')->where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->latest()->paginate(10);
+        }
+
+        $orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->get();
+        $pending_orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->where('status',0);
+        $active_orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->where('status',1);
+        $complete_orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->where('status',2);
+        $deliver_orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->where('status',3);
+        $cancel_orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->where('status',4);
+        $incompetent_orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->where('status',5);
+        $isHideSideBarAndHeader = false;
+        return view('frontend.user.seller.order.orders', compact('orders','active_orders','complete_orders','deliver_orders','cancel_orders', 'incompetent_orders', 'all_orders', 'pending_orders', 'isHideSideBarAndHeader', 'serviceProviderId', 'token'));
     }
 
     public function sellerJobOrders(Request $request)
@@ -1744,8 +1813,9 @@ class SellerController extends Controller
         $complete_orders = Order::where('seller_id', Auth::guard('web')->user()->id)->where('job_post_id', '!=', NULL)->where('status',2);
         $deliver_orders = Order::where('seller_id', Auth::guard('web')->user()->id)->where('job_post_id', '!=', NULL)->where('status',3);
         $cancel_orders = Order::where('seller_id', Auth::guard('web')->user()->id)->where('job_post_id', '!=', NULL)->where('status',4);
-
-        return view('frontend.user.seller.order.orders', compact('orders','active_orders','complete_orders','deliver_orders','cancel_orders', 'all_orders', 'pending_orders'));
+        $incompetent_orders = Order::where('seller_id',  Auth::guard('web')->user()->id)->where('job_post_id', NULL)->where('status',5);
+        $isHideSideBarAndHeader = true;
+        return view('frontend.user.seller.order.orders', compact('orders','active_orders','complete_orders','deliver_orders','cancel_orders', 'all_orders', 'pending_orders', 'incompetent_orders', 'isHideSideBarAndHeader'));
     }
 
     public function activeOrders()
@@ -1835,7 +1905,7 @@ class SellerController extends Controller
         if(!empty($order_details)){
             $order_includes = OrderInclude::where('order_id',$id)->get();
             $order_additionals = OrderAdditional::where('order_id',$id)->get();
-            foreach(Auth::guard('web')->user()->unreadNotifications()->where('data->order_message' , 'You have a new order')->get() as $notification){
+            foreach(Auth::guard('web')->user()->unreadNotifications()->where('data->order_message' , 'You have a new service request')->get() as $notification){
                 if($order_details->id == $notification->data['order_id']){
                     $Notification = Auth::guard('web')->user()->Notifications->find($notification->id);
                     if($Notification){
@@ -1872,7 +1942,7 @@ class SellerController extends Controller
                 $order_details = Order::select(['id','seller_id','buyer_id','service_id'])->where('id',$request->order_id)->first();
                 if($request->status==2){
                     Order::where('id',$request->order_id)->update(['order_complete_request'=>1]);
-                    toastr_success(__('Your request submitted. Buyer will complete your request after review'));
+                    toastr_success(__('Your request submitted. Customer will complete your request after review'));
                     OrderCompleteDecline::create([
                         'order_id'=>$order_details->id,
                         'buyer_id'=>$order_details->buyer_id,
@@ -1881,17 +1951,22 @@ class SellerController extends Controller
                         'decline_reason'=>'Not decline yet',
                         'image' => $request->image,
                     ]);
+                   // update ticket stage to completion needs approval
+                    event(new UpdateTicket([
+                        'sr_id' => $order_details->id,
+                        'stage_name' => 'Completion Needs Approval',
+                    ]));
 
                     //Send email after change status
                     try {
-                        $message_body_buyer =__('Hello, ').$payment_status->name. __(' A new request is created for complete an order.').'</br>' . ' <span class="verify-code">'.__('Order ID is: ') . $payment_status->id. '</span>';
-                        $message_body_admin =__('Hello Admin A new request is created for complete an order.').'</br>' . ' <span class="verify-code">'.__('Order ID is: ') . $payment_status->id. '</span>';
+                        $message_body_buyer =__('Hello, ').$payment_status->name. __(' A new request is created for complete an service request.').'</br>' . ' <span class="verify-code">'.__('Service Request ID is: ') . $payment_status->id. '</span>';
+                        $message_body_admin =__('Hello Admin A new request is created for complete an service request.').'</br>' . ' <span class="verify-code">'.__('Service Request ID is: ') . $payment_status->id. '</span>';
                         Mail::to($payment_status->email)->send(new BasicMail([
-                            'subject' => __('New Request For Complete an Order'),
+                            'subject' => __('New Request For Complete an Service Request'),
                             'message' => $message_body_buyer
                         ]));
                         Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
-                            'subject' => __('New Request For Complete an Order'),
+                            'subject' => __('New Request For Complete an Service Request'),
                             'message' => $message_body_admin
                         ]));
                     } catch (\Exception $e) {
@@ -1902,11 +1977,11 @@ class SellerController extends Controller
                 }
             }else{
 
-                toastr_error(__('You can not change order status due to payment status pending'));
+                toastr_error(__('You can not change service request status due to payment status pending'));
                 return redirect()->back();
             }
         }else{
-            toastr_error(__('You can not change order status because this order already completed.'));
+            toastr_error(__('You can not change service request status because this service request already completed.'));
             return redirect()->back();
         }
 
@@ -1917,7 +1992,54 @@ class SellerController extends Controller
     public function orderCancel($id=null)
     {
         Order::where('id',$id)->update(['payment_status'=>'','status'=>4]);
-        toastr_success(__('Order successfully cancelled.'));
+        $orderData = Order::where('id',$id)->get();
+        $order_info_decode = json_decode($orderData, true);
+        $statusValue = $order_info_decode[0]['status'];
+        $SR_ID = $order_info_decode[0]['id'];
+        if ($statusValue == 4){
+            // update ticket stage to Waiting to Assign 
+            event(new UpdateTicket([
+                'sr_id' => $SR_ID,
+                'stage_name' => 'Waiting to Assign',
+            ]));
+        }
+        toastr_success(__('Service Request successfully cancelled.'));
+        return redirect()->back();
+    }
+
+    public function orderAccept($id=null)
+    {
+        Order::where('id',$id)->update(['status'=>1]);
+        $orderData = Order::where('id',$id)->get();
+        $order_info_decode = json_decode($orderData, true);
+        $statusValue = $order_info_decode[0]['status'];
+        $SR_ID = $order_info_decode[0]['id'];
+        if ($statusValue == 1){
+            // update ticket stage to accepted by service provider
+            event(new UpdateTicket([
+                'sr_id' => $SR_ID,
+                'stage_name' => 'Accepted by Service Provider',
+            ]));
+        }
+        toastr_success(__('Service Request successfully accepted.'));
+        return redirect()->back();
+    }
+
+    public function orderIncompetent($id=null)
+    {
+        Order::where('id',$id)->update(['status'=>5]);
+        $orderData = Order::where('id',$id)->get();
+        $order_info_decode = json_decode($orderData, true);
+        $statusValue = $order_info_decode[0]['status'];
+        $SR_ID = $order_info_decode[0]['id'];
+        if ($statusValue == 5){
+            // update ticket stage to Waiting to Assign 
+            event(new UpdateTicket([
+                'sr_id' => $SR_ID,
+                'stage_name' => 'Waiting to Assign',
+            ]));
+        }
+        toastr_success(__('Service Request successfully Incompetent.'));
         return redirect()->back();
     }
 
@@ -2283,7 +2405,7 @@ class SellerController extends Controller
             // send order ticket notification to buyer
             $buyer = User::where('id',$last_ticket->buyer_id)->first();
             if($buyer){
-                $order_ticcket_message = __('You have a new order ticket');
+                $order_ticcket_message = __('You have a new service request ticket');
                 $buyer ->notify(new TicketNotification($last_ticket_id , $seller_id, $last_ticket->buyer_id,$order_ticcket_message ));
             }
             // admin notification add
@@ -2294,11 +2416,11 @@ class SellerController extends Controller
                 $message = get_static_option('seller_order_ticket_message');
                 $message = str_replace(["@order_ticket_id"],[$last_ticket_id],$message);
                 Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
-                    'subject' => get_static_option('order_ticket_subject') ?? __('New Order Ticket'),
+                    'subject' => get_static_option('order_ticket_subject') ?? __('New Service Request Ticket'),
                     'message' => $message
                 ]));
                 Mail::to($buyer->email)->send(new BasicMail([
-                    'subject' => get_static_option('seller_order_ticket_subject') ?? __('New Order Ticket'),
+                    'subject' => get_static_option('seller_order_ticket_subject') ?? __('New Service Request Ticket'),
                     'message' => $message
                 ]));
             } catch (\Exception $e) {
@@ -2492,22 +2614,49 @@ class SellerController extends Controller
         if($request->isMethod('post')){
             $request->validate([
                 'national_id' => 'required|max:191',
+                'pan_number' => 'required|max:10|min:10',
+                'aadhaar_number' => 'required|max:12|min:10',
+                'account_number' => 'required|max:35|min:10',
+                'ifsc_number' => 'required|max:30|min:10',
+                'mobile_number' => 'required|max:10|min:10',
+                'name_as_per_bank_account_number' => 'required|max:500'
             ]);
 
             $old_image = SellerVerify::select('national_id','address')->where('seller_id',$user)->first();
-
-            if(is_null($old_image)){
+            $verificationData = SellerVerify::select('verification_data')->where('seller_id',$user)->first();
+            
+            if(is_null($old_image) || is_null($verificationData)){
+                $verificationOrgData = json_encode([
+                    "aadhaar_number" => "",
+                    "is_aadhaar_verified" => "",
+                    "request_id" => "",
+                    "provided_address" => "",
+                    "address_as_per_aadhaar" => "",
+                    "aadhaar_address_match_status" => "",
+                    "provided_name" => "",
+                    "name_as_per_aadhaar" => "",
+                    "aadhaar_name_match_status" => "",
+                    "pan_number" => "",
+                    "is_pan_verified" => "",
+                    "name_as_per_pan" => "",
+                    "pan_name_match_status" => "",
+                    "account_number" => "",
+                    "ifsc_number" => "",
+                    "mobile_number" => "",
+                    "name_as_per_bank_account_number" => "",
+                    "is_account_verified" => ""
+                ]);
                 SellerVerify::create([
                     'seller_id' => $user,
                     'national_id' => $request->national_id ?? optional($old_image)->national_id,
-                    'address' => $request->address ?? optional($old_image)->address,
+                    'verification_data' => $verificationOrgData
                 ]);
             }else{
                 SellerVerify::where('seller_id', $user)
                     ->update([
                         'seller_id' => $user,
                         'national_id' => $request->national_id ?? optional($old_image)->national_id,
-                        'address' => $request->address ?? optional($old_image)->address,
+                        'verification_data' => $verificationData->verification_data
                     ]);
             }
 
@@ -2525,7 +2674,32 @@ class SellerController extends Controller
             return redirect()->back();
         }
         $seller_verify_info = SellerVerify::where('seller_id',$user)->first();
-        return view('frontend.user.seller.profile-verify.seller-profile-verify',compact('seller_verify_info'));
+        
+        if ($seller_verify_info->verification_data == null) {
+            $seller_verification_data = [
+                "aadhaar_number" => "",
+                "is_aadhaar_verified" => "",
+                "request_id" => "",
+                "provided_address" => "",
+                "address_as_per_aadhaar" => "",
+                "aadhaar_address_match_status" => "",
+                "provided_name" => "",
+                "name_as_per_aadhaar" => "",
+                "aadhaar_name_match_status" => "",
+                "pan_number" => "",
+                "is_pan_verified" => "",
+                "name_as_per_pan" => "",
+                "pan_name_match_status" => "",
+                "account_number" => "",
+                "ifsc_number" => "",
+                "mobile_number" => "",
+                "name_as_per_bank_account_number" => "",
+                "is_account_verified" => ""
+            ];
+        } else {
+            $seller_verification_data = json_decode($seller_verify_info->verification_data, true);
+        }
+        return view('frontend.user.seller.profile-verify.seller-profile-verify',compact('seller_verify_info','seller_verification_data'));
     }
 
     /* Extra Service Request */
@@ -2644,10 +2818,10 @@ class SellerController extends Controller
                     $seller_details = User::select('name','email')->find($orderDetails->seller_id);
                     $message = '<p>';
                     $message .= __('Hello').' '.$seller_details->name.','."<br>";
-                    $message .= __('your have added extra service in your order #').$orderDetails->id;
+                    $message .= __('your have added extra service in your service request #').$orderDetails->id;
                     $message .= '</p>';
                     Mail::to($seller_details->email)->send(new BasicMail([
-                        'subject' => __('Extra service added in your order #').$orderDetails->id,
+                        'subject' => __('Extra service added in your service request #').$orderDetails->id,
                         'message' => $message
                     ]));
 
@@ -2655,10 +2829,10 @@ class SellerController extends Controller
                     //send mail to buyer
                     $message = '<p>';
                     $message .= __('Hello').' '.$buyer_details->name.','."<br>";
-                    $message .= __('seller added extra service in your order #').$orderDetails->id;
+                    $message .= __('seller added extra service in your service request #').$orderDetails->id;
                     $message .= '</p>';
                     Mail::to($buyer_details->email)->send(new BasicMail([
-                        'subject' => __('Extra service added in your order #').$orderDetails->id,
+                        'subject' => __('Extra service added in your service request #').$orderDetails->id,
                         'message' => $message
                     ]));
                 }catch (\Exception $e){
@@ -2773,7 +2947,7 @@ class SellerController extends Controller
         // send order ticket notification to buyer
         $buyer = User::where('id',$last_ticket->buyer_id)->first();
         if($buyer){
-            $order_ticcket_message = __('You have a new order ticket');
+            $order_ticcket_message = __('You have a new service request ticket');
             $buyer ->notify(new TicketNotification($last_ticket_id , $seller_id, $last_ticket->buyer_id,$order_ticcket_message ));
         }
         // admin notification add
@@ -2784,11 +2958,11 @@ class SellerController extends Controller
             $message = get_static_option('seller_order_ticket_message');
             $message = str_replace(["@order_ticket_id"],[$last_ticket_id],$message);
             Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
-                'subject' => get_static_option('order_ticket_subject') ?? __('New Order Ticket'),
+                'subject' => get_static_option('order_ticket_subject') ?? __('New Service Request Ticket'),
                 'message' => $message
             ]));
             Mail::to($buyer->email)->send(new BasicMail([
-                'subject' => get_static_option('seller_order_ticket_subject') ?? __('New Order Ticket'),
+                'subject' => get_static_option('seller_order_ticket_subject') ?? __('New Service Request Ticket'),
                 'message' => $message
             ]));
         } catch (\Exception $e) {
@@ -2813,4 +2987,473 @@ class SellerController extends Controller
         return redirect()->back();
     }
 
+    /*
+     * Verify Seller Pan Number 
+     */
+    public function sellerVerifyPanNumber(Request $request) {
+        $user = Auth::guard('web')->user()->id;
+    
+        if ($request->isMethod('post')) {
+            $verificationData = SellerVerify::select('verification_data')->where('seller_id', $user)->first();
+            $userData = User::find($user);
+            $verificationDataArray = [];
+            if ($verificationData) {
+                \Log::debug("Inside If 1");
+                $verificationDataArray = json_decode($verificationData->verification_data, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    $verificationDataArray = [];
+                }
+            }
+            $panNumber = $request->pan_number ?? ($verificationDataArray['pan_number'] ?? '');
+            
+            if (is_null($verificationData)) {
+                $verificationDataArray = [
+                    "aadhaar_number" => "",
+                    "is_aadhaar_verified" => "",
+                    "request_id" => "",
+                    "provided_address" => "",
+                    "address_as_per_aadhaar" => "",
+                    "aadhaar_address_match_status" => "",
+                    "provided_name" => "",
+                    "name_as_per_aadhaar" => "",
+                    "aadhaar_name_match_status" => "",
+                    "pan_number" => $panNumber,
+                    "is_pan_verified" => "",
+                    "name_as_per_pan" => "",
+                    "pan_name_match_status" => "",
+                    "account_number" => "",
+                    "ifsc_number" => "",
+                    "mobile_number" => "",
+                    "name_as_per_bank_account_number" => "",
+                    "is_account_verified" => ""
+                ];
+                $verificationPanData = json_encode($verificationDataArray);
+                SellerVerify::create([
+                    'seller_id' => $user,
+                    'verification_data' => $verificationPanData,
+                ]);
+                $responseMessage = 'Data added successfully';
+            } else {
+                $verificationDataArray['pan_number'] = $panNumber;
+                $verificationPanData = json_encode($verificationDataArray);
+                SellerVerify::where('seller_id', $user)->update([
+                    'verification_data' => $verificationPanData,
+                ]);
+                $responseMessage = 'Data updated successfully';
+            }
+
+            $panData = json_encode(["number" => $panNumber]);
+            $panResponse = SignzyAPI::fetchData("FetchPAN", $panData);
+            $panResponseData = json_decode($panResponse, true);
+            \Log::debug("Response : " . print_r($panResponseData,true));
+            if ($panResponseData && isset($panResponseData['vendorData'][0]['statusCode']) && $panResponseData['vendorData'][0]['statusCode'] === 200) {
+                $result = $panResponseData['result'];
+                $nameMatchResult = StringMatchHelper::matchNames($result['name'], $userData->name);
+                if ($panNumber == $result['number'] && $nameMatchResult) {
+                    $verificationDataArray = json_decode($verificationPanData, true);
+                    $verificationDataArray['is_pan_verified'] = 1;
+                    $verificationDataArray['name_as_per_pan'] = $result['name'];
+                    $verificationDataArray['pan_name_match_status'] = 1;
+                    $verificationPanData = json_encode($verificationDataArray);
+                    SellerVerify::where('seller_id', $user)->update([
+                        'verification_data' => $verificationPanData,
+                    ]);
+                    $response = [
+                        "status" => "success",
+                        "message" => "PAN Card Number Verified successfully",
+                        'full_name' => $result['name'],
+                        'typeOfHolder' => $result['typeOfHolder'],
+                        'panStatus' => $result['panStatus'],
+                        'aadhaarSeedingStatus' => $result['aadhaarSeedingStatus'],
+                    ];
+                } else {
+                    $verificationDataArray = json_decode($verificationPanData, true);
+                    $verificationDataArray['is_pan_verified'] = 0;
+                    $verificationDataArray['name_as_per_pan'] = "";
+                    $verificationDataArray['pan_name_match_status'] = 0;
+                    $verificationPanData = json_encode($verificationDataArray);
+                    SellerVerify::where('seller_id', $user)->update([
+                        'verification_data' => $verificationPanData,
+                    ]);
+                    $response = [
+                        "status" => "error",
+                        "message" => "Name or Pan Number not matched as per PAN records",
+                    ];
+                }
+            } elseif ($panResponseData && isset($panResponseData['error'][0]['status']) && $panResponseData['error'][0]['status'] === 404) {
+                $verificationDataArray = json_decode($verificationPanData, true);
+                $verificationDataArray['is_pan_verified'] = 0;
+                $verificationDataArray['name_as_per_pan'] = "";
+                $verificationDataArray['pan_name_match_status'] = 0;
+                $verificationPanData = json_encode($verificationDataArray);
+                SellerVerify::where('seller_id', $user)->update([
+                    'verification_data' => $verificationPanData,
+                ]);
+                $response = [
+                    'status' => 'error', 
+                    'message' => 'Fetch Pan Card Number Data ended with error'
+                ];
+            } else {
+                $verificationDataArray = json_decode($verificationPanData, true);
+                $verificationDataArray['is_pan_verified'] = 0;
+                $verificationDataArray['name_as_per_pan'] = "";
+                $verificationDataArray['pan_name_match_status'] = 0;
+                $verificationPanData = json_encode($verificationDataArray);
+                SellerVerify::where('seller_id', $user)->update([
+                    'verification_data' => $verificationPanData,
+                ]);
+                $response = [
+                    'status' => 'error', 
+                    'message' => 'Fetch Pan Card Number Data ended with error'
+                ];
+            }
+            if ($response['status'] == 'success') {
+                toastr_success(__('PAN Card Number Verified Successfully'));
+            } else {
+                toastr_error(__('PAN Card Number Verification Failed'));
+            }
+    
+            return response()->json($response);
+        }
+    }
+    
+    /*
+     * Send OTP to seller based on Aadhaar Number  
+     */
+    public function sellerVerifyAadhaarNumber(Request $request){
+        $user = Auth::guard('web')->user()->id;
+        if($request->isMethod('post')){
+            // Fetch data of verification_data column
+            $verificationData = SellerVerify::select('verification_data')->where('seller_id',$user)->first();
+            $verificationDataArray = [];
+            if ($verificationData) {
+                $verificationDataArray = json_decode($verificationData->verification_data, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    $verificationDataArray = [];
+                }
+            }
+            $aadhaarNumber = $request->aadhaar_number ?? ($verificationDataArray['aadhaar_number'] ?? '');
+            if(is_null($verificationData)){
+                $verificationDataArray = [
+                    "aadhaar_number" =>  $aadhaarNumber,
+                    "is_aadhaar_verified" => "",
+                    "request_id" => "",
+                    "provided_address" => "",
+                    "address_as_per_aadhaar" => "",
+                    "aadhaar_address_match_status" => "",
+                    "provided_name" => "",
+                    "name_as_per_aadhaar" => "",
+                    "aadhaar_name_match_status" => "",
+                    "pan_number" => "",
+                    "is_pan_verified" => "",
+                    "name_as_per_pan" => "",
+                    "pan_name_match_status" => "",
+                    "account_number" => "",
+                    "ifsc_number" => "",
+                    "mobile_number" => "",
+                    "name_as_per_bank_account_number" => "",
+                    "is_account_verified" => ""
+                ];
+                $verificationAadhaarData = json_encode($verificationDataArray);
+                $createResult = SellerVerify::create([
+                    'seller_id' => $user,
+                    'verification_data' => $verificationAadhaarData,
+                ]);
+                $responseMessage = 'Data added successfully';
+            }else{
+                $verificationDataArray['aadhaar_number'] = $aadhaarNumber;
+                $verificationAadhaarData = json_encode($verificationDataArray);
+                $updateResult = SellerVerify::where('seller_id', $user)->update([
+                    'verification_data' => $verificationAadhaarData,
+                ]);
+                $responseMessage = 'Data updated successfully';
+            }
+            $aadhaardata = json_encode(array(
+                "aadhaarNumber" => $request->aadhaar_number
+            ));
+            $aadhaarResponse = SignzyAPI::fetchData("getOkycOtp", $aadhaardata);
+            $apiResponse = json_decode($aadhaarResponse, true);
+            \Log::debug("Response Data : " . print_r($apiResponse,true) );
+            if ($apiResponse && isset($apiResponse['statusCode']) && $apiResponse['statusCode'] === 200) {
+                $requestId = $apiResponse['data']['requestId'];
+                if ($requestId != ""){
+                    $verificationDataArray = json_decode($verificationAadhaarData, true);
+                    $verificationDataArray['request_id'] = $requestId;
+                    $verificationAadhaarData = json_encode($verificationDataArray);
+                    $updateRequestIdResult =SellerVerify::where('seller_id', $user)->update([
+                        'verification_data' => $verificationAadhaarData,
+                    ]);
+                    if($updateRequestIdResult){
+                        $response = [
+                            "status" => "success",
+                            "message" => "OTP is send to your mobile number",
+                        ];
+                    } else {
+                        $response = [
+                            "status" => "error",
+                            "message" => "Error while updating request id",
+                        ];
+                    }
+                } else {
+                    $response = [
+                        "status" => "error",
+                        "message" => "Error : " . $aadhaarResponse,
+                    ];
+                }
+            } else {
+                $response = [
+                    "status" => "error",
+                    "message" => "Error : " . $aadhaarResponse,
+                ];
+            }
+            if ($response['status'] == 'success') {
+                toastr_success(__('OTP send successfully'));
+            } else {
+                toastr_error(__('OTP send failed'));
+            }
+            return response()->json($response);
+        }
+    }
+
+    /*
+     * Verify Aadhaar OTP of seller
+     */
+    public function sellerVerifyAadhaarOTP(Request $request){
+        $user = Auth::guard('web')->user()->id;
+        if($request->isMethod('post')){
+            $userData = User::find($user);
+            // Fetch data of verification_data column
+            $verificationData = SellerVerify::select('verification_data')->where('seller_id',$user)->first();
+            $verificationDataArray = [];
+            if ($verificationData) {
+                $verificationDataArray = json_decode($verificationData->verification_data, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    $verificationDataArray = [];
+                }
+            }
+        
+            if ($verificationDataArray['request_id'] != ""){
+                $otpData = json_encode(array(
+                    "requestId" => $verificationDataArray['request_id'],
+                    "otp" => $request->otp
+                ));
+                $otpVerifyResponse = SignzyAPI::fetchData("fetchOkycData", $otpData);
+                $otpVerifyResponseJsonData = json_decode($otpVerifyResponse, true);
+                \Log::debug("Response : " . print_r($otpVerifyResponseJsonData,true));
+                if ($otpVerifyResponseJsonData && isset($otpVerifyResponseJsonData['statusCode']) && $otpVerifyResponseJsonData['statusCode'] === 200) { 
+                    $data = $otpVerifyResponseJsonData['data'];
+                    $finalAddress = $otpVerifyResponseJsonData['data']['address']['house'] . " " . $otpVerifyResponseJsonData['data']['address']['street'] . " " . $otpVerifyResponseJsonData['data']['address']['loc']; 
+                    // $otpVerifyResponseJsonData['data']['address']['vtc'];
+                    // $otpVerifyResponseJsonData['data']['address']['subdist'];
+                    // $otpVerifyResponseJsonData['data']['address']['state'];
+                    // $otpVerifyResponseJsonData['data']['address']['country']; 
+                    // $otpVerifyResponseJsonData['data']['zip'];
+                    // $profile_image = $data['profile_image'];
+                    $nameMatchResult = StringMatchHelper::matchNames($data['full_name'], $userData->name);
+                    $addressMatchResult = StringMatchHelper::matchAddresses($finalAddress, $userData->address);
+                    $verificationDataArray['provided_address'] = $userData->address;
+                    $verificationDataArray['address_as_per_aadhaar'] = $finalAddress;
+                    if($addressMatchResult){
+                        $verificationDataArray['aadhaar_address_match_status'] = 1;
+                    } else {
+                        $verificationDataArray['aadhaar_address_match_status'] = 0;
+                    }
+                
+                    if ($data != null && $nameMatchResult){
+                        $verificationDataArray['is_aadhaar_verified'] = 1;
+                        $verificationDataArray['provided_name'] =  $userData->name;
+                        $verificationDataArray['name_as_per_aadhaar'] = $data['full_name'];
+                        $verificationDataArray['aadhaar_name_match_status'] = 1;
+                        $verificationAadhaarOTPData = json_encode($verificationDataArray);
+                        $updateRequestIdResult =SellerVerify::where('seller_id', $user)->update([
+                            'verification_data' => $verificationAadhaarOTPData,
+                        ]);
+
+                        $response = [
+                            "status" => "success",
+                            "message" => "OTP Verify success",
+                            "full_name" => $data['full_name'],
+                            "dob" => $data['dob'],
+                            "gender" => $data['gender'],
+                            "address" => $finalAddress,
+                        ];
+                    } else {
+                        $response = [
+                            "status" => "error",
+                            "message" => "Name or Adress isnot matched"
+                        ];
+                    }
+                    // if (!empty($profile_image)) {
+                    //     $upload = File::upload(
+                    //         $profile_image, 
+                    //         "avatar",
+                    //         array(
+                    //             "source" => "base64",
+                    //             "extension" => "png"
+                    //         )
+                    //     );
+                    //     $aadhaarprofileimage = $upload['info']['name'];
+                    // }else{
+                    //     $aadhaarprofileimage = '';
+                    // }
+                    // if($aadhaarprofileimage != ""){
+                    //     Database::table("user_kyc")->where("userid" , $userId)->update("aadhaar_profile_image", $aadhaarprofileimage);
+                    // } else {
+                    //     \Log::debug("Storing of aadhaar profile image is ended with error");
+                    // }
+                } elseif ($otpVerifyResponseJsonData && isset($otpVerifyResponseJsonData['error'][0]['status']) && ($otpVerifyResponseJsonData['error'][0]['status'] === 404 || $otpVerifyResponseJsonData['error'][0]['status'] === 409)) {
+                    $verificationDataArray['is_aadhaar_verified'] = 0;
+                    $verificationDataArray['provided_name'] =  $userData->name;
+                    $verificationDataArray['name_as_per_aadhaar'] = "";
+                    $verificationDataArray['aadhaar_name_match_status'] = 0;
+                    $verificationAadhaarOTPData = json_encode($verificationDataArray);
+                    $updateRequestIdResult =SellerVerify::where('seller_id', $user)->update([
+                        'verification_data' => $verificationAadhaarOTPData,
+                    ]);
+                    $response = [
+                        'status' => 'error', 
+                        'message' => 'Fetch Pan Card Number Data ended with error'
+                    ];
+                } else {
+                    $verificationDataArray['is_aadhaar_verified'] = 0;
+                    $verificationDataArray['provided_name'] =  $userData->name;
+                    $verificationDataArray['name_as_per_aadhaar'] = "";
+                    $verificationDataArray['aadhaar_name_match_status'] = 0;
+                    $verificationAadhaarOTPData = json_encode($verificationDataArray);
+                    $updateRequestIdResult =SellerVerify::where('seller_id', $user)->update([
+                        'verification_data' => $verificationAadhaarOTPData,
+                    ]);
+                    $response = [
+                        "status" => "error",
+                        "message" => "Error: " . $otpVerifyResponse,
+                    ];
+                }
+            } else {
+                $verificationDataArray['is_aadhaar_verified'] = 0;
+                $verificationDataArray['provided_name'] =  $userData->name;
+                $verificationDataArray['name_as_per_aadhaar'] = "";
+                $verificationDataArray['aadhaar_name_match_status'] = 0;
+                $verificationAadhaarOTPData = json_encode($verificationDataArray);
+                $updateRequestIdResult =SellerVerify::where('seller_id', $user)->update([
+                    'verification_data' => $verificationAadhaarOTPData,
+                ]);
+                $response = [
+                    "status" => "error",
+                    "message" => "Request ID Not found",
+                ];
+            }
+            if ($response['status'] == 'success') {
+                toastr_success(__('OTP verify successfully'));
+            } else {
+                toastr_error(__('Data Not Match or OTP Verification failed'));
+            }
+            return response()->json($response);
+        }
+    }
+
+    /*
+     * Verify Seller Account Number
+     */
+    public function sellerVerifyAccountNumber(Request $request) {
+        $user = Auth::guard('web')->user()->id;
+        if ($request->isMethod('post')) {
+            $verificationData = SellerVerify::select('verification_data')->where('seller_id', $user)->first();
+            $userData = User::find($user);
+            $verificationDataArray = [];
+            if ($verificationData) {
+                $verificationDataArray = json_decode($verificationData->verification_data, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    $verificationDataArray = [];
+                }
+            }
+
+            $accountNumber = $request->beneficiaryAccount ?? ($verificationDataArray['account_number'] ?? '');
+            $IFSCNumber = $request->beneficiaryIFSC ?? ($verificationDataArray['ifsc_number'] ?? '');
+            $mobileNumber = $request->beneficiaryMobile ?? ($verificationDataArray['mobile_number'] ?? '');
+            $nameAsPerBankAccount = $request->beneficiaryName ?? ($verificationDataArray['name_as_per_bank_account_number'] ?? '');
+
+            if (is_null($verificationData)) {
+                $verificationDataArray = [
+                    "aadhaar_number" => "",
+                    "is_aadhaar_verified" => "",
+                    "request_id" => "",
+                    "provided_address" => "",
+                    "address_as_per_aadhaar" => "",
+                    "aadhaar_address_match_status" => "",
+                    "provided_name" => "",
+                    "name_as_per_aadhaar" => "",
+                    "aadhaar_name_match_status" => "",
+                    "pan_number" => "",
+                    "is_pan_verified" => "",
+                    "name_as_per_pan" => "",
+                    "pan_name_match_status" => "",
+                    "account_number" => $accountNumber,
+                    "ifsc_number" => $IFSCNumber,
+                    "mobile_number" => $mobileNumber,
+                    "name_as_per_bank_account_number" => "",
+                    "is_account_verified" => ""
+                ];
+                $verificationAccountData = json_encode($verificationDataArray);
+                SellerVerify::create([
+                    'seller_id' => $user,
+                    'verification_data' => $verificationAccountData,
+                ]);
+                $responseMessage = 'Data added successfully';
+            } else {
+                $verificationDataArray['account_number'] = $accountNumber;
+                $verificationDataArray['ifsc_number'] = $IFSCNumber;
+                $verificationDataArray['mobile_number'] = $mobileNumber;
+                $verificationAccountData = json_encode($verificationDataArray);
+                SellerVerify::where('seller_id', $user)->update([
+                    'verification_data' => $verificationAccountData,
+                ]);
+                $responseMessage = 'Data updated successfully';
+            }
+
+            $accountData = json_encode([
+                "beneficiaryAccount" => $accountNumber,
+                "beneficiaryIFSC" => $IFSCNumber,
+                "beneficiaryMobile" => $mobileNumber,
+                "beneficiaryName" => $nameAsPerBankAccount,
+                "nameFuzzy" => $request->nameFuzzy,
+            ]);
+
+            $accountResponse = SignzyAPI::fetchData("bankaccountverification", $accountData);
+            $accountResponseData = json_decode($accountResponse, true);
+            \Log::debug("Response : " . print_r($accountResponseData,true));
+            if ($accountResponseData && isset($accountResponseData['result'])) {
+                $active = $accountResponseData['result']['active'] ?? null;
+                $nameMatchScore = $accountResponseData['result']['nameMatchScore'] ?? null;
+                $beneName = $accountResponseData['result']['bankTransfer']['beneName'] ?? null;
+                $verificationDataArray = json_decode($verificationAccountData, true);
+                if ($active === "yes" && $nameMatchScore >= 0.5){
+                    $verificationDataArray['is_account_verified'] = 1;
+                    $verificationDataArray['name_as_per_bank_account_number'] = $beneName;
+                } else {
+                    $verificationDataArray['is_account_verified'] = 0;
+                    $verificationDataArray['name_as_per_bank_account_number'] = $beneName;
+                }
+                $verificationAccountData = json_encode($verificationDataArray);
+                SellerVerify::where('seller_id', $user)->update([
+                        'verification_data' => $verificationAccountData,
+                ]);
+                $response = [
+                    "status" => "success",
+                    "message" => "Account Number Verified successfully",
+                ];
+            } else {
+                $response = [
+                    'status' => 'error', 
+                    'message' => 'Fetch account number data ended with error'
+                ];
+            }
+            if ($response['status'] == 'success') {
+                toastr_success(__('Bank Account Number Verified Successfully'));
+            } else {
+                toastr_error(__('Bank Account Number Verification Failed'));
+            }
+    
+            return response()->json($response);
+        }
+    }
 }

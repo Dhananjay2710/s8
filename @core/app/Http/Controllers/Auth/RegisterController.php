@@ -174,8 +174,29 @@ class RegisterController extends Controller
 
             if($request->get_user_type==0){
                 $last_order_id = DB::getPdo()->lastInsertId();
-                 SellerVerify::create([
-                    'seller_id' => $last_order_id,
+                $verificationData = json_encode([
+                    "aadhaar_number" => "",
+                    "is_aadhaar_verified" => "",
+                    "request_id" => "",
+                    "provided_address" => "",
+                    "address_as_per_aadhaar" => "",
+                    "aadhaar_address_match_status" => "",
+                    "provided_name" => "",
+                    "name_as_per_aadhaar" => "",
+                    "aadhaar_name_match_status" => "",
+                    "pan_number" => "",
+                    "is_pan_verified" => "",
+                    "name_as_per_pan" => "",
+                    "pan_name_match_status" => "",
+                    "account_number" => "",
+                    "ifsc_number" => "",
+                    "mobile_number" => "",
+                    "name_as_per_bank_account_number" => "",
+                    "is_account_verified" => ""
+                ]);
+                SellerVerify::create([
+                    'seller_id' => $user->id,
+                    'verification_data' => $verificationData,
                     'status' => 0,
                 ]);
             }

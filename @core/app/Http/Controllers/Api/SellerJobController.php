@@ -109,7 +109,7 @@ class SellerJobController extends Controller
 
         if(Auth::guard('sanctum')->check() && $user_type === 1){
             return response()->error([
-                'msg'=>'For create an offer you must register as a seller',
+                'msg'=>'For create an offer you must register as a serice provider',
             ]);
         }
 

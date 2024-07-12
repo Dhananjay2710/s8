@@ -158,7 +158,7 @@
                         </div>
                         <div class="contents">
                             <h2 class="order-titles">{{ $total_seller }} </h2>
-                            <span class="order-para"> {{ __('Total Seller') }} </span>
+                            <span class="order-para"> {{ __('Total Service Provider') }} </span>
                         </div>
                     </div>
                 </div>
@@ -174,7 +174,7 @@
                         </div>
                         <div class="contents">
                             <h2 class="order-titles"> {{ $total_buyer }} </h2>
-                            <span class="order-para"> {{ __('Total Buyer') }}</span>
+                            <span class="order-para"> {{ __('Total Customer') }}</span>
                         </div>
                     </div>
                 </div>
@@ -207,7 +207,7 @@
                         </div>
                         <div class="contents">
                             <h2 class="order-titles"> {{ $pending_order }} </h2>
-                            <span class="order-para">{{ __('Order Pending') }} </span>
+                            <span class="order-para">{{ __('Pending Service Request') }} </span>
                         </div>
                     </div>
                 </div>
@@ -256,6 +256,71 @@
                         <div class="contents">
                             <h2 class="order-titles">{{ $new_user_today }}</h2>
                             <span class="order-para">{{ __('New User Today') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 margin-top-30 orders-child">
+                <div class="single-orders">
+                    <div class="orders-shapes">
+                        <img src="{{ asset('assets/frontend/img/static/orders-shapes.png') }}" alt="">
+                    </div>
+                    <div class="orders-flex-content">
+                        <div class="icon">
+                            <i class="las la-file-invoice-dollar"></i>
+                        </div>
+                        <div class="contents">
+                            <h2 class="order-titles">{{ float_amount_with_currency_symbol($total_payout) }} </h2>
+                            <span class="order-para">{{ __('Total Service Payout') }} </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 margin-top-30 orders-child">
+                <div class="single-orders">
+                    <div class="orders-shapes">
+                        <img src="{{ asset('assets/frontend/img/static/orders-shapes2.png') }}" alt="">
+                    </div>
+                    <div class="orders-flex-content">
+                        <div class="icon">
+                            <i class="las la-file-invoice-dollar"></i>
+                        </div>
+                        <div class="contents">
+                            <h2 class="order-titles">{{ float_amount_with_currency_symbol($payout_liability) }} </h2>
+                            <span class="order-para"> {{ __('Total Payout Liability') }} </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 margin-top-30 orders-child">
+                <div class="single-orders">
+                    <div class="orders-shapes">
+                        <img src="{{ asset('assets/frontend/img/static/orders-shapes3.png') }}" alt="">
+                    </div>
+                    <div class="orders-flex-content">
+                        <div class="icon">
+                            <i class="las la-file-invoice-dollar"></i>
+                        </div>
+                        <div class="contents">
+                            <h2 class="order-titles"> {{ float_amount_with_currency_symbol($total_amount_paid) }} </h2>
+                            <span class="order-para"> {{ __('Paid Payout Liability') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 margin-top-30 orders-child">
+                <div class="single-orders">
+                    <div class="orders-shapes">
+                        <img src="{{ asset('assets/frontend/img/static/orders-shapes4.png') }}" alt="">
+                    </div>
+                    <div class="orders-flex-content">
+                        <div class="icon">
+                            <i class="las la-file-invoice-dollar"></i>
+                        </div>
+                        <div class="contents">
+                            <h2 class="order-titles">{{ float_amount_with_currency_symbol($pending_payout_liability) }} </h2>
+                            <span class="order-para">{{ __('Pending Payout Liability') }}</span>
                         </div>
                     </div>
                 </div>
@@ -350,7 +415,7 @@
             <div class="col-md-6">
                 <div class="line-charts-wrapper">
                     <div class="line-top-contents">
-                        <h5 class="earning-title">{{ __('Monthly Order Overview') }}</h5>
+                        <h5 class="earning-title">{{ __('Monthly Service Request Overview') }}</h5>
                     </div>
                     <div class="line-charts">
                         <canvas id="line-chart3"></canvas>
@@ -360,7 +425,7 @@
             <div class="col-md-6">
                 <div class="line-charts-wrapper">
                     <div class="line-top-contents">
-                        <h5 class="earning-title">{{ __('Daily Order Overview Last 30 Days') }}</h5>
+                        <h5 class="earning-title">{{ __('Daily Service Request Overview Last 30 Days') }}</h5>
                     </div>
                     <div class="line-charts">
                         <canvas id="line-chart4"></canvas>

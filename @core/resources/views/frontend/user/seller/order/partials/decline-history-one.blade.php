@@ -32,7 +32,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="dashboard-settings margin-top-40">
-                                    <h2 class="dashboards-title">#{{$order_id}}-{{ __('Order Decline History') }}</h2>
+                                    <h2 class="dashboards-title">#{{$order_id}}-{{ __('Service Request Decline History') }}</h2>
                                     <br>
                                     <a class="btn btn-success" href="{{ route('seller.orders') }}">{{__('Back To Orders')}}</a>
                                 </div>
@@ -48,7 +48,7 @@
                                             <thead>
                                             <tr>
                                                 <th> {{ __('ID') }} </th>
-                                                <th> {{ __('Buyer Details') }} </th>
+                                                <th> {{ __('Customer Details') }} </th>
                                                 <th>{{ __('Status') }} ({{ __('Decline Reason') }})</th>
                                                 <th> {{ __('Image File') }} </th>
                                             </tr>
@@ -57,7 +57,7 @@
                                             @foreach ($decline_histories as $history)
                                                 <tr>
                                                     <td data-label="{{__('ID')}}"> {{ $history->id }} </td>
-                                                    <td data-label="{{ __('Buyer Details') }}">
+                                                    <td data-label="{{ __('Customer Details') }}">
                                                         <strong>{{ __('Name: ') }}</strong> {{ optional($history->buyer)->name }} <br>
                                                         <strong>{{ __('Email: ') }}</strong> {{ optional($history->buyer)->email }} <br>
                                                         <strong>{{ __('Phone: ') }}</strong> {{ optional($history->buyer)->phone }} <br>

@@ -27,7 +27,7 @@
                             <table class="table table-default">
                                 <thead>
                                 <th>{{__('Service ID')}}</th>
-                                <th>{{__('Seller Id')}}</th>
+                                <th>{{__('Service Provider Id')}}</th>
                                 <th>{{__('Service Title')}}</th>
                                 <th>{{__('Service Description')}}</th>
                                 </thead>

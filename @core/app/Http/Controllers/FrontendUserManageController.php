@@ -72,7 +72,7 @@ class FrontendUserManageController extends Controller
                     return $row->id;
                 })
                 ->addColumn('name',function ($row){
-                        $user_type = $row->user_type==0 ? __("Seller") : __("Buyer");
+                        $user_type = $row->user_type==0 ? __("Service Provider") : __("Customer");
                         return $row->name." "."<".$row->username.">"."(".$user_type.")";
                 })
                 ->addColumn('user_status',function ($row) {
@@ -84,7 +84,7 @@ class FrontendUserManageController extends Controller
                 ->addColumn('user_verify',function ($row) {
                     $url = route('admin.frontend.seller.profile.view',$row->id);
                     $user_status = optional($row->sellerVerify)->status==1 ? '<span class="text-warning">'. __('Verified') .'</span>' : '<span class="text-info">'. __('Not Verified') .'</span>';
-                    $markup = $user_status.'<a class="btn btn-info" href="'.$url.'"><i class="ti-eye"></i></a>';
+                    $markup = $user_type = $row->user_type==0 ? $user_status.'<a class="btn btn-info" href="'.$url.'"><i class="ti-eye"></i></a>' : "NA";
                     return $markup;
 
                 })
@@ -190,20 +190,66 @@ class FrontendUserManageController extends Controller
    //seller profile view
     public function sellerProfileView($id=null){
         $seller_details = User::with('sellerVerify')->where('id',$id)->first();
-        return view('backend.frontend-user.seller-details',compact('seller_details'));
+        $seller_verify_deatils = SellerVerify::where('seller_id', $id)->first();
+        if ($seller_verify_deatils->verification_data == "" || $seller_verify_deatils->verification_data == 0) {
+            $seller_verification_data = [
+                "aadhaar_number" => "",
+                "is_aadhaar_verified" => "",
+                "request_id" => "",
+                "provided_address" => "",
+                "address_as_per_aadhaar" => "",
+                "aadhaar_address_match_status" => "",
+                "provided_name" => "",
+                "name_as_per_aadhaar" => "",
+                "aadhaar_name_match_status" => "",
+                "pan_number" => "",
+                "is_pan_verified" => "",
+                "name_as_per_pan" => "",
+                "pan_name_match_status" => "",
+                "account_number" => "",
+                "ifsc_number" => "",
+                "mobile_number" => "",
+                "name_as_per_bank_account_number" => "",
+                "is_account_verified" => ""
+            ];
+        } else {
+            $seller_verification_data = json_decode($seller_verify_deatils->verification_data, true);
+        }
+        return view('backend.frontend-user.seller-details',compact('seller_details','seller_verification_data'));
     }
 
     //seller verify
     public function sellerVerify($id)
     {
+        $verificationData = json_encode([
+            "aadhaar_number" => "",
+            "is_aadhaar_verified" => "",
+            "request_id" => "",
+            "provided_address" => "",
+            "address_as_per_aadhaar" => "",
+            "aadhaar_address_match_status" => "",
+            "provided_name" => "",
+            "name_as_per_aadhaar" => "",
+            "aadhaar_name_match_status" => "",
+            "pan_number" => "",
+            "is_pan_verified" => "",
+            "name_as_per_pan" => "",
+            "pan_name_match_status" => "",
+            "account_number" => "",
+            "ifsc_number" => "",
+            "mobile_number" => "",
+            "name_as_per_bank_account_number" => "",
+            "is_account_verified" => ""
+        ]);
 
-        $seller_status = SellerVerify::select('id','seller_id','status')->where('seller_id',$id)->firstOrCreate([
+        $seller_status = SellerVerify::select('id','seller_id','verification_data','status')->where('seller_id',$id)->firstOrCreate([
             'seller_id' => $id,
+            'verification_data' => $verificationData,
             'status' => 0,
         ]);
 
-
-       $verify_seller = SellerVerify::where('seller_id', $id)->update([
+        
+        $verify_seller = SellerVerify::where('seller_id', $id)->update([
             'status' => $seller_status->status === 0 ? 1 : 0
         ]);
 
@@ -213,7 +259,7 @@ class FrontendUserManageController extends Controller
                $message = get_static_option('admin_seller_verification_message') ?? '';
                $message = str_replace(["@name"],[$seller->name],$message);
                Mail::to($seller ->email)->send(new BasicMail([
-                   'subject' => get_static_option('admin_seller_verification_subject') ?? __('Seller Verification Success'),
+                   'subject' => get_static_option('admin_seller_verification_subject') ?? __('Service Provider Verification Success'),
                    'message' => $message
                ]));
            } catch (\Exception $e) {

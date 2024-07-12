@@ -7,6 +7,7 @@ use App\Events\SupportMessage;
 use App\ExtraService;
 use App\Mail\BasicMail;
 use App\Order;
+use App\User;
 use App\OrderCompleteDecline;
 use App\OrderInclude;
 use App\OrderAdditional;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Mail;
 use Modules\JobPost\Entities\JobRequest;
 use Yajra\DataTables\Facades\DataTables;
 use App\Helpers\DataTableHelpers\General;
+use App\Events\UpdateTicket;
 
 class OrdersController extends Controller
 {
@@ -49,6 +51,14 @@ class OrdersController extends Controller
                     return $row->id;
                 })
 
+                ->addColumn('customer_provider_details', function ($row) {
+                    return [
+                        "name" => $row->name,
+                        "email" => $row->email,
+                        "phone" => $row->phone
+                    ];
+                })
+
                 ->addColumn('name',function ($row){
                     return $row->name;
                 })
@@ -69,6 +79,15 @@ class OrdersController extends Controller
                     return float_amount_with_currency_symbol($row->total);
                 })
 
+                ->addColumn('service_provider_details', function ($row) {
+                    $user = User::find($row->seller_id);
+                    return [
+                        "name" => $user->name,
+                        "email" => $user->email,
+                        "phone" => $user->phone
+                    ];
+                })
+                     
                 ->addColumn('payment_status',function ($row){
                     $payment_status = __('pending');
                     $payment_complete = __('complete');
@@ -170,8 +189,8 @@ class OrdersController extends Controller
         Order::where('id',$request->id)->update(['status'=> $request->status_id]);
 
         try {
-            $order_status_change_title = __('Order Status Changed.') . $order_status->id;
-            $message_status = __('Order Status Changed.'). ' ' . __('Order ID:') .$order_status->id;
+            $order_status_change_title = __('Service Request Status Changed.') . $order_status->id;
+            $message_status = __('Service Request Status Changed.'). ' ' . __('Service Request ID:') .$order_status->id;
             $message = str_replace(["@name","@old_status","@new_status","@order_id"],[$order_status->name,$old_status,$new_status,$order_status->id],$message_status);
             Mail::to($order_status->email)->send(new BasicMail([
                 'subject' => $order_status_change_title,
@@ -205,7 +224,7 @@ class OrdersController extends Controller
      //cancel order delete
     public function cancelOrderDelete($id){
         Order::find($id)->delete();
-        return redirect()->back()->with(FlashMsg::item_new('Cancel Order Delete Success'));
+        return redirect()->back()->with(FlashMsg::item_new('Cancel Service Request Delete Success'));
     }
 
     //order complete request
@@ -213,7 +232,13 @@ class OrdersController extends Controller
     {
         if($request->isMethod('post')){
             Order::where('id',$id)->update(['order_complete_request'=>2,'status'=>2]);
-            return redirect()->back()->with(FlashMsg::item_new('Order Status Change to Complete'));
+            // update ticket stage to approved and closed
+            event(new UpdateTicket([
+                'sr_id' => $id,
+                'stage_name' => 'Approved And Closed',
+            ]));
+
+            return redirect()->back()->with(FlashMsg::item_new('Service Request Status Change to Complete'));
         }
         $orders = Order::select('id','total','updated_at','seller_id','buyer_id')->with('seller','buyer')
             ->where('order_complete_request',1)

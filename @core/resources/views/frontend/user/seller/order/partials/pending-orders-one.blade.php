@@ -20,7 +20,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="dashboard-settings margin-top-40">
-                                <h2 class="dashboards-title"> {{ __('Order Request') }}({{ $pending_orders->total() }}) </h2>
+                                <h2 class="dashboards-title"> {{ __('Service Request Request') }}({{ $pending_orders->total() }}) </h2>
                             </div>
                         </div>
                     </div>

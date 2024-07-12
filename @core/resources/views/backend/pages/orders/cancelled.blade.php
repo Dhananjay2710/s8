@@ -21,22 +21,22 @@
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
                                 <h4 class="header-title">{{__('Cancelled Orders')}}  </h4>
-                                <small class="text-danger">{{ __('If a order payment is completed and the order is cancelled without completing then admin can change the return money status here.') }}</small>
+                                <small class="text-danger">{{ __('If a Request payment is completed and the Service Request is cancelled without completing then admin can change the return money status here.') }}</small>
                             </div>
                         </div>
                         <div class="table-wrap table-responsive">
                             <table class="table table-default">
                                 <thead>
                                 <th>{{__('ID')}}</th>
-                                <th>{{__('Buyer Name')}}</th>
-                                <th>{{__('Buyer Email')}}</th>
-                                <th>{{__('Buyer Phone')}}</th>
-                                <th>{{__('Buyer Address')}}</th>
+                                <th>{{__('Customer Name')}}</th>
+                                <th>{{__('Customer Email')}}</th>
+                                <th>{{__('Customer Phone')}}</th>
+                                <th>{{__('Customer Address')}}</th>
                                 <th>{{__('Total Amount')}}</th>
                                 <th>{{__('Payment Status')}}</th>
                                 <th>{{__('Create Date')}}</th>
                                 <th>{{__('Money Return')}}</th>
-                                <th>{{__('Order Details')}}</th>
+                                <th>{{__('Service Request Details')}}</th>
                                 </thead>
                                 <tbody>
                                     @foreach($orders as $data)

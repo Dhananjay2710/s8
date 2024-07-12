@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title> {{ __('Order Invoice') }} </title>
+    <title> {{ __('Service Request Invoice') }} </title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300&display=swap" rel="stylesheet">
 
     @if( get_user_lang_direction() === 'rtl')
@@ -491,7 +491,7 @@
                     <table class="custom--table">
                         <thead class="head-bg">
                             <tr>
-                                <th>{{ __('Buyer Details') }}</th>
+                                <th>{{ __('Customer Details') }}</th>
                                 <th>{{ __('ID & Status') }}</th>
                                 <th>{{ __('Date & Schedule') }}</th>
                                 <th>{{ __('Amount Details') }}</th>

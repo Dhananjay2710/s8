@@ -808,7 +808,7 @@ class ServiceController extends Controller
 
         //Send order notification to seller
         $seller = User::where('id',$request->seller_id)->first();
-        $order_message = __('You have a new order');
+        $order_message = __('You have a new service request');
         $seller->notify(new OrderNotification($last_order_id,$request->service_id, $request->seller_id, $request->buyer_id,$order_message));
 
         $order_details = Order::find($last_order_id);
@@ -832,7 +832,7 @@ class ServiceController extends Controller
         if ($request->has('paytm') && !empty($request->has('paytm'))){
             $user_info = Auth::guard('sanctum')->user();
             $title = Str::limit(strip_tags($service_details->title),20);
-            $description = sprintf(__('Order id #%1$d Email: %2$s, Name: %3$s'),$last_order_id,$user_info->email,$user_info->name);
+            $description = sprintf(__('Service Request id #%1$d Email: %2$s, Name: %3$s'),$last_order_id,$user_info->email,$user_info->name);
             $paytm_details = XgPaymentGateway::paytm()->charge_customer([
                 'amount' => $total,
                 'title' => $title,
@@ -847,6 +847,22 @@ class ServiceController extends Controller
                 'payment_type' => 'order',
             ]);
         }
+        \Log::debug("Response : " . print_r([
+            'order_id'=> $last_order_id,
+            'service_sold_count'=> $service_sold_count,
+            'package_fee'=> float_amount_with_currency_symbol($package_fee),
+            'extra_service'=>float_amount_with_currency_symbol($extra_service),
+            'sub_total'=>float_amount_with_currency_symbol($sub_total),
+            'tax_amount'=>float_amount_with_currency_symbol($tax_amount),
+            'total'=>float_amount_with_currency_symbol($total),
+            'coupon_code'=>$coupon_code,
+            'coupon_type'=>$coupon_type,
+            'coupon_amount'=>float_amount_with_currency_symbol($coupon_amount),
+            'commission_amount'=>float_amount_with_currency_symbol($commission_amount),
+            'success_url' => route('frontend.order.payment.success',$new_order_id),
+            'cancel_url' => route('frontend.order.payment.cancel.static',$last_order_id),
+            'paytm_details' => $paytm_details
+        ],true));
 
         return response()->success([
             'order_id'=> $last_order_id,

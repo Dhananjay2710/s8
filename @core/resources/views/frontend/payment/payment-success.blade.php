@@ -1,9 +1,9 @@
 @extends('frontend.frontend-page-master')
 @section('site-title')
-    {{ __('Order Success') }}
+    {{ __('Service Request Success') }}
 @endsection
 @section('page-meta-data')
-    <title>{{ __('Order Success') }}</title>
+    <title>{{ __('Service Request Success') }}</title>
 @endsection
 @section('page-title')
     <?php
@@ -25,7 +25,7 @@
 
 @endsection
 @section('inner-title')
-    {{ __('Order') }}
+    {{ __('Service Request') }}
 @endsection 
 
 @section('content')
@@ -42,15 +42,15 @@
                             <a href="{{ route('homepage') }}" class="succcess-icon">
                                 <i class="las la-check"></i>
                             </a>
-                            <h5 class="purple-text text-center">{{ get_static_option('success_subtitle') ?? __('Your Order Successfully Completed') }}</h5>
+                            <h5 class="purple-text text-center">{{ get_static_option('success_subtitle') ?? __('Your Service Successfully Requested') }}</h5>
                             <div class="btn-wrapper margin-top-35">
-                                <h4 class="mb-3">{{ get_static_option('success_details_title') ?? __('Your Order Details') }}</h4>
+                                <h4 class="mb-3">{{ get_static_option('success_details_title') ?? __('Your Service Request Details') }}</h4>
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>{{ __('Date & Schedule') }}</th>
                                             <th>{{ __('Amount Details') }}</th>
-                                            <th>{{ __('Order Status') }}</th>
+                                            <th>{{ __('Service Request Status') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -81,7 +81,7 @@
                                                 <label><strong>{{ __('Payment Status:') }} </strong>{{ __(ucfirst($order_details->payment_status)) }}</label> <br>
                                             </td>
                                             <td>
-                                                <label><strong>{{ __('Order Status:') }}</strong>
+                                                <label><strong>{{ __('Service Request Status:') }}</strong>
                                                     @if ($order_details->status == 0) <span>{{ __('Pending') }}</span>@endif
                                                     @if ($order_details->status == 1) <span>{{ __('Active') }}</span>@endif
                                                     @if ($order_details->status == 2) <span>{{ __('Completed') }}</span>@endif

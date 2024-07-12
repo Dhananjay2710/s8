@@ -55,7 +55,7 @@
                                         @endcan
                                         @can('seller-subscription-list')
                                             <li class="{{ active_menu('admin-home/subscription/seller-subscription') }} @if (request()->is('admin-home/subscription/seller-subscription/*')) active @endif"><a
-                                                 href="{{ route('admin.seller.subscription') }}">{{ __('Seller Subscription') }}</a></li>
+                                                 href="{{ route('admin.seller.subscription') }}">{{ __('Service Provider Subscription') }}</a></li>
                                         @endcan
                                         @can('subscription-coupon-list')
                                             <li class="{{ active_menu('admin-home/subscription/coupon') }} @if (request()->is('admin-home/subscription/coupon/*')) active @endif"><a
@@ -473,7 +473,7 @@
                                                 href="{{ route('admin.service.book.settings') }}">{{ __('Service Book Settings') }}</a></li>
                                 @can('order-create-setting')
                                     <li class="{{ active_menu('admin-home/services/order-create-settings') }}"><a
-                                      href="{{ route('admin.order.create.settings') }}">{{ __('Order Create Settings') }}</a></li>
+                                      href="{{ route('admin.order.create.settings') }}">{{ __('Service Request Create Settings') }}</a></li>
                                 @endcan
                             </ul>
                         </li>
@@ -510,12 +510,12 @@
                             @endcan
                             @can('order-success-setting')
                             <li class="{{ active_menu('admin-home/orders/order-success-settings') }}">
-                                <a href="{{ route('admin.order.success.settings') }}">{{ __('Order Success Settings') }}</a>
+                                <a href="{{ route('admin.order.success.settings') }}">{{ __('Service Request Success Settings') }}</a>
                             </li>
                             @endcan
                             @can('order-request-complete')
                                 <li class="{{ active_menu('admin-home/orders/order-request-complete') }}">
-                                    <a href="{{ route('admin.order.complete.request') }}">{{ __('Order Request Complete') }}</a>
+                                    <a href="{{ route('admin.order.complete.request') }}">{{ __('Service Request Request Complete') }}</a>
                                 </li>
                             @endcan
                                 @can('order-request-complete')
@@ -534,7 +534,7 @@
                     
                     @can('seller-buyer-report')
                         <li class="{{ active_menu('admin-home/orders/seller-buyer-report') }}">
-                            <a href="{{ route('admin.order.seller.buyer.report') }}"><i class="ti-list-ol"></i> {{ __('Seller Buyer Report') }}</a>
+                            <a href="{{ route('admin.order.seller.buyer.report') }}"><i class="ti-list-ol"></i> {{ __('Service Provider Customer Report') }}</a>
                         </li>
                     @endcan
 
@@ -571,7 +571,7 @@
                         <li class="{{ active_menu('admin-home/area') }}
                             @if (request()->is('admin-home/seller-settings/*') || request()->is('admin-home/frontend/seller-verify/all')) active @endif">
                             <a href="javascript:void(0)" aria-expanded="true"><i class="ti-back-right"></i>
-                                <span>{{ __('Seller Settings') }}</span></a>
+                                <span>{{ __('Service Provider Settings') }}</span></a>
                             <ul class="collapse">
                                 @canany(['payout-list'])
                                     <li class="{{ active_menu('admin-home/seller-settings/payout-request/all') }}">
@@ -599,7 +599,7 @@
 
                                 @canany(['all-seller'])
                                     <li class="{{ active_menu('admin-home/frontend/seller-verify/all') }}">
-                                        <a href="{{ route('admin.frontend.seller.all') }}" aria-expanded="true">{{ __('All Seller') }}</a>
+                                        <a href="{{ route('admin.frontend.seller.all') }}" aria-expanded="true">{{ __('All Service Provider') }}</a>
                                     </li>
                                 @endcanany
                             </ul>

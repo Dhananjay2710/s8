@@ -682,7 +682,7 @@
             <div class="col-lg-6 margin-top-30">
                 <div class="seller-wrapper">
                     <div class="section-title text-left">
-                        <h2 class="title"> Start As <span class="title-color"> Seller </span> </h2>
+                        <h2 class="title"> Start As <span class="title-color"> Service Provider </span> </h2>
                         <span class="section-para"> It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. It is a long established fact that a reader will be distracted by the readable content of a page when
                                 looking at its layout. </span>
                     </div>
@@ -709,7 +709,7 @@
         </div>
     </div>
 </section>
-<!-- Seller area end -->
+<!-- Service Provider area end -->
 <!-- Blog area starts -->
 <section class="blog-area padding-top-100 padding-bottom-100 section-bg-1">
     <div class="container">

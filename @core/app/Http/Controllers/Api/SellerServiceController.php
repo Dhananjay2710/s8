@@ -123,6 +123,7 @@ class SellerServiceController extends Controller
             $service->video = $request->video;
             $service->seller_id = Auth::guard('sanctum')->user()->id;
             $service->service_city_id = Auth::guard('sanctum')->user()->service_city;
+            $service->service_arae_id = Auth::guard('sanctum')->user()->service_area;
             $service->status = 0;
             $service->tax = $country_tax->tax ?? 0;
             $service->is_service_all_cities = $request->is_service_all_cities ?? 0;

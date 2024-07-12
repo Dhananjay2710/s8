@@ -127,12 +127,14 @@ Route::post('submit-custom-form', 'FrontendFormController@custom_form_builder_me
 // admin login
 Route::middleware(['setlang'])->group(function () {
     Route::get('/login/admin', 'Auth\LoginController@showAdminLoginForm')->name('admin.login');
+    Route::get('/login/adminexternal', 'Auth\LoginController@showAdminLoginExternalForm')->name('admin.externallogin');
     Route::get('/login/admin/forget-password', 'FrontendController@showAdminForgetPasswordForm')->name('admin.forget.password');
     Route::get('/login/admin/reset-password/{user}/{token}', 'FrontendController@showAdminResetPasswordForm')->name('admin.reset.password');
     Route::post('/login/admin/reset-password', 'FrontendController@AdminResetPassword')->name('admin.reset.password.change');
     Route::post('/login/admin/forget-password', 'FrontendController@sendAdminForgetPasswordMail');
     Route::get('/logout/admin', 'AdminDashboardController@adminLogout')->name('admin.logout');
     Route::post('/login/admin', 'Auth\LoginController@adminLogin');
+    Route::post('/login/adminexternal', 'Auth\LoginController@adminLoginExternal');
 });
 
 Route::group(['middleware' => ['setlang', 'globalVariable', 'maintains_mode']], function () {
@@ -154,6 +156,10 @@ Route::group(['middleware'=>['auth','inactiveuser']],function(){
 
 });
 
+Route::group(['prefix' => '/api/v1/'], function () {
+    Route::get('book-now/create-service-order', 'Frontend\ServiceListController@createServiceOrder')->name('service.create.ordered');
+    Route::get('/service-list/searchusingcategory', 'Frontend\ServiceListController@searchUsingCategory')->name('search.using.category');
+});
 
 require_once __DIR__ . '/seller.php';
 require_once __DIR__ . '/buyer.php';

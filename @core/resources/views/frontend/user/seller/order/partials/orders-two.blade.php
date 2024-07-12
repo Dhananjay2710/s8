@@ -15,27 +15,75 @@
            text-align: center;
            border-radius: 5px;
            font-size: 14px;
-           @if(request()->path() == 'seller/job-orders')padding: 8px;  @else padding: 6px; margin-bottom: -1px; @endif
+           @if(request()->path() == 'seller/job-orders' || request()->path() == 'serviceprovider/job-orders')padding: 8px;  @else padding: 6px; margin-bottom: -1px; @endif
 }    </style>
+<style>
+    .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+    }
+    .pagination li {
+        margin-right: 5px;
+    }
+    .pagination li a,
+    .pagination li span {
+        display: block;
+        padding: 5px 10px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #333;
+    }
+    .pagination li.active a,
+    .pagination li.active span {
+        background-color: #337ab7;
+        color: #fff;
+        border-color: #337ab7;
+    }
+    .pagination li.disabled span {
+        pointer-events: none;
+        color: #777;
+    }
+</style>
     <link rel="stylesheet" href="{{asset('assets/common/css/themify-icons.css')}}">
     <link rel="stylesheet" href="{{asset('assets/frontend/css/font-awesome.min.css')}}">
 @endsection
 @section('content')
     <x-frontend.seller-buyer-preloader/>
     @php $default_lang = get_default_language(); @endphp
-    @include('frontend.user.seller.partials.sidebar-two')
-    <div class="dashboard__right">
-        @include('frontend.user.buyer.header.buyer-header')
+    @if ($isHideSideBarAndHeader)
+        @include('frontend.user.seller.partials.sidebar-two')
+        <div class="dashboard__right">
+            @include('frontend.user.buyer.header.buyer-header')
+    @else
+        <div class="dashboard">
+    @endif
         <div class="dashboard__body">
             <div class="dashboard__inner">
                 <!-- search section start-->
                 <div class="dashboard__inner__item dashboard_border padding-20 radius-10 bg-white">
                     <div class="dashboard__wallet">
-                         <form action="@if(request()->path() == 'seller/job-orders')  {{ route('seller.job.orders') }} @else {{ route('seller.orders') }}  @endif" method="GET">
+                         <form action="
+                            @if(request()->path() == 'seller/job-orders' || request()->path() == 'serviceprovider/job-orders')  
+                                @if ($isHideSideBarAndHeader) 
+                                    {{ route('seller.job.orders') }}
+                                @else 
+                                    {{ route('seller.job.servicerequests') }} 
+                                @endif 
+                            @else 
+                                @if ($isHideSideBarAndHeader) 
+                                    {{ route('seller.orders') }}
+                                @else
+                                    {{ route('seller.servicerequests') }} 
+                                @endif 
+                                  
+                            @endif" method="GET">
                             <div class="dashboard__headerGlobal__flex">
                                 <div class="dashboard__headerGlobal__content">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        <h4 class="dashboard_table__title">{{ __('Search Order Module') }}</h4> <i class="las la-angle-down search_by_all"></i>
+                                        <h4 class="dashboard_table__title">{{ __('Search Service Request Module') }}</h4> <i class="las la-angle-down search_by_all"></i>
                                     </button>
                                 </div>
                                 <div class="dashboard__headerGlobal__btn">
@@ -66,15 +114,19 @@
                                                         <div class="row g-4 mt-3">
                                                             <div class="col-lg-4 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    <label for="order_id" class="info-title"> {{__('Order ID')}} </label>
-                                                                    <input class="form--control" name="order_id" value="{{ request()->get('order_id') }}" type="text" placeholder="{{ __('Order ID') }}">
+                                                                    <label for="order_id" class="info-title"> {{__('Service Request ID')}} </label>
+                                                                    @if (!$isHideSideBarAndHeader)
+                                                                        <input type="hidden" name="serviceproviderId" value="{{ $serviceProviderId }}">
+                                                                        <input type="hidden" name="token" value="{{ $token }}">
+                                                                    @endif
+                                                                    <input class="form--control" name="order_id" value="{{ request()->get('order_id') }}" type="text" placeholder="{{ __('Service Request ID') }}">
                                                                 </div>
                                                             </div>
                                                             <div class="col-lg-4 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    <label for="order_status" class="info-title"> {{__('Order Status')}} </label>
+                                                                    <label for="order_status" class="info-title"> {{__('Service Request Status')}} </label>
                                                                     <select name="order_status">
-                                                                        <option value="">{{__('Select Order Status')}}</option>
+                                                                        <option value="">{{__('Select Service Request Status')}}</option>
                                                                          <option value="pending" @if(request()->get('order_status') == 'pending') selected @endif>{{ __('Pending') }}</option>
                                                                          <option value="1" @if(request()->get('order_status') == 1) selected @endif>{{ __('Active') }}</option>
                                                                          <option value="2" @if(request()->get('order_status') == 2) selected @endif>{{  __('completed') }}</option>
@@ -95,7 +147,7 @@
                                                         <div class="row g-4 mt-2">
                                                             <div class="col-lg-4 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    @if(request()->path() == 'seller/job-orders')
+                                                                    @if(request()->path() == 'seller/job-orders' || request()->path() == 'serviceprovider/job-orders')
                                                                         <input type="hidden" value="job_order" name="job_order_request">
                                                                         <label for="job_title" class="info-title"> {{__('Job Title')}} </label>
                                                                         <input class="form--control" name="job_title" value="{{ request()->get('job_title') }}" type="text" placeholder="{{ __('Job Title') }}">
@@ -107,8 +159,8 @@
                                                             </div>
                                                             <div class="col-lg-4 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    <label for="buyer_name" class="info-title"> {{__('Buyer Name')}} </label>
-                                                                    <input class="form--control" name="buyer_name" value="{{ request()->get('buyer_name') }}" type="text" placeholder="{{ __('Buyer Name') }}">
+                                                                    <label for="buyer_name" class="info-title"> {{__('Customer Name')}} </label>
+                                                                    <input class="form--control" name="buyer_name" value="{{ request()->get('buyer_name') }}" type="text" placeholder="{{ __('Customer Name') }}">
                                                                 </div>
                                                             </div>
                                                             <div class="col-lg-3 col-sm-6">
@@ -138,7 +190,7 @@
 
                 <!-- order table section start-->
                 <div class="dashboard_table__wrapper dashboard_border  padding-20 radius-10 bg-white">
-                    @if(request()->path() == 'seller/job-orders')
+                    @if(request()->path() == 'seller/job-orders' || request()->path() == 'serviceprovider/job-orders')
                         <h4 class="dashboards-title mb-3">{{ __('All Job Orders') }}</h4>
                     @else
                         <h4 class="dashboards-title mb-3">{{ __('All Service Orders') }}</h4>
@@ -162,6 +214,9 @@
                             <label for="Cancelled" class="paymentGateway_add__item__img">{{ __('Cancelled') }} <strong class="numbers">{{ $cancel_orders->count() }}</strong></label>
                         </div>
                         <div class="paymentGateway_add__item_seller_order custom_radio__single_seller_order radius-10">
+                            <label for="Incompetent" class="paymentGateway_add__item__img">{{ __('Incompetent') }} <strong class="numbers">{{ $incompetent_orders->count() }}</strong></label>
+                        </div>
+                        <div class="paymentGateway_add__item_seller_order custom_radio__single_seller_order radius-10">
                             <label for="All" class="paymentGateway_add__item__img">{{ __('All') }} <strong class="numbers">{{ $orders->count() }}</strong> </label>
                         </div>
                     </div>
@@ -175,17 +230,17 @@
                         <table>
                             <thead>
                             <tr>
-                                <th>{{ __('Order item') }}</th>
+                                <th>{{ __('Service Request item') }}</th>
 
-                                @if(request()->path() == 'seller/orders')
+                                @if(request()->path() == 'seller/orders' || request()->path() == 'serviceprovider/orders')
                                     <th>{{ __('Booking Date and Time') }}</th>
                                 @endif
 
-                                <th>{{ __('Order amount') }}</th>
-                                <th>{{ __('Order type') }}</th>
+                                <th>{{ __('Service Request amount') }}</th>
+                                <th>{{ __('Service Request type') }}</th>
                                 <th>{{ __('Payment Details') }}</th>
-                                <th>{{ __('Order Complete Request') }}</th>
-                                <th>{{ __('Order status') }}</th>
+                                <th>{{ __('Service Request Complete Request') }}</th>
+                                <th>{{ __('Service Request status') }}</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -197,7 +252,7 @@
                                     <div class="dashboard_table__main__order">
                                         <div class="dashboard_table__main__order__flex">
                                             <div class="dashboard_table__main__order__thumb">
-                                            @if(request()->path() == 'seller/job-orders')
+                                            @if(request()->path() == 'seller/job-orders' || request()->path() == 'serviceprovider/job-orders')
                                                 @if(!empty(render_image_markup_by_attachment_id(optional($order->job)->image, '', 'thumb')))
                                                     {!! render_image_markup_by_attachment_id(optional($order->job)->image, '', 'thumb') !!}
                                                 @else
@@ -213,22 +268,22 @@
 
                                             </div>
                                             <div class="dashboard_table__main__order__contents">
-                                                @if(request()->path() == 'seller/job-orders')
+                                                @if(request()->path() == 'seller/job-orders' || request()->path() == 'serviceprovider/job-orders')
                                                     <h5 class="dashboard_table__main__order__contents__title"> @if($order->order_from_job == 'yes') {{ Str::limit(optional($order->job)->title,60) }} @endif </h5>
                                                 @else
                                                     <h5 class="dashboard_table__main__order__contents__title">{{ optional($order->service)->title }}</h5>
                                                 @endif
                                                 <span class="dashboard_table__main__order__contents__subtitle mt-2">
-                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__id"> <strong class="text-dark">{{ __('Order ID:') }}</strong> {{ $order->id }}</a> ,
-                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark">{{ __('Buyer Name:') }}</strong>{{ optional($order->buyer)->name }} </a>
+                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__id"> <strong class="text-dark">{{ __('Service Request ID:') }}</strong> {{ $order->id }}</a> ,
+                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark">{{ __('Customer Name:') }}</strong>{{ optional($order->buyer)->name }} </a>
                                                 </span>
-                                                <span><strong>{{ __('Order Date:') }}</strong>  {{ Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y') }}</span>
+                                                <span><strong>{{ __('Service Request Date:') }}</strong>  {{ Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y') }}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
 
-                                @if(request()->path() == 'seller/orders')
+                                @if(request()->path() == 'seller/orders' || request()->path() == 'serviceprovider/orders')
                                 <td>
                                     <div class="dashboard_table__main__date">
                                         <span class="date">
@@ -267,7 +322,7 @@
                                         @endif
                                     @endif
                                     @if ($order->payment_status == 'complete')
-                                     <div class="dashboard_table__main__priority"><strong>{{__('Payment Status: ')}}</strong> <span class="priorityBtn completed">{{ __('Complete') }}</span> </div>
+                                     <div class="dashboard_table__main__priority"><strong>{{__('Payment Status: ')}}</strong> <span class="priorityBtn completed">{{ __('Payment_AMC') }}</span> </div>
                                     @endif
                                     @if(empty($order->payment_status))
                                          <div class="dashboard_table__main__priority"><strong>{{__('Payment Status: ')}}</strong>  <span class="priorityBtn pending">{{ __('Pending') }}</span> </div>
@@ -287,9 +342,13 @@
                                 <!-- payment status end -->
 
                                 <!-- order complete request start-->
-                                <td data-label="Order Status" >
+                                <td data-label="Service Request Status" >
                                 <span class="{{ in_array($order->order_complete_request,[0,1]) ? 'pending' : ' completed' }} d-block">
-                                    @php  $review_count = \App\Review::where('order_id',$order->id)->where('type', 1)->where('seller_id',Auth::guard('web')->user()->id)->get(); @endphp
+                                    @if ($isHideSideBarAndHeader)
+                                        @php  $review_count = \App\Review::where('order_id',$order->id)->where('type', 1)->where('seller_id',Auth::guard('web')->user()->id)->get(); @endphp
+                                    @else
+                                        @php  $review_count = \App\Review::where('order_id',$order->id)->where('type', 1)->where('seller_id',$serviceProviderId)->get(); @endphp
+                                    @endif
                                     @if(in_array($order->order_complete_request,[0,1]))
                                         @if($order->payment_status != 'pending')
                                             @if($order->order_complete_request == 0)
@@ -308,7 +367,7 @@
                                         @endif
 
                                     @elseif($order->order_complete_request == 2)
-                                        <div class="dashboard_table__main__priority   @if(request()->path() == 'seller/orders') mt-5 @else mt-4 @endif ">
+                                        <div class="dashboard_table__main__priority   @if(request()->path() == 'seller/orders' || request()->path() == 'serviceprovider/orders') mt-5 @else mt-4 @endif ">
                                             <a href="javascript:void(0)" class="priorityBtn completed">{{ __('Completed') }}</a>
                                         </div>
                                     @endif
@@ -327,7 +386,7 @@
 
                                     @endif
                                 </span>
-                                    @if(request()->path() == 'seller/orders')
+                                    @if(request()->path() == 'seller/orders' || request()->path() == 'serviceprovider/orders')
                                         <!-- order complete request start-->
                                         @if($order->status == 0 && $order->payment_status == 'pending')
                                             <span class="mx-1 pending"> {{ __('No Request Created') }}</span>
@@ -373,11 +432,27 @@
 
                                 <!-- Order status start -->
                                 <td>
-                                   @if ($order->status == 0)<div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn pending">{{ __('Pending') }}</a> </div> @endif
-                                   @if ($order->status == 1)<div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn active">{{ __('Active') }}</a> </div> @endif
+                                   @if ($order->status == 0)
+                                    {{-- <div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn pending">{{ __('Pending') }}</a> </div>  --}}
+                                    <div style="margin-bottom: 5px;">
+                                        <x-accept-order :url="route('seller.order.accept.cod.payment.pending',$order->id)"/>
+                                    <div> 
+                                    <div style="margin-top: 5px;">      
+                                        <x-decline-order :url="route('seller.order.decline.cod.payment.pending',$order->id)"/>
+                                    </div>
+                                   @endif
+                                   @if ($order->status == 1)
+                                    <div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn active">{{ __('Active') }}</a></div> 
+                                    @if ($order->order_complete_request == 0)
+                                        <div style="margin-top: 5px;">      
+                                            <x-incompetent-order :url="route('seller.order.incompetent.cod.payment.pending',$order->id)"/>
+                                        </div>
+                                    @endif
+                                   @endif
                                    @if ($order->status == 2)<div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn completed">{{ __('Completed') }}</a> </div> @endif
                                    @if ($order->status == 3)<div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn delivered">{{ __('Delivered') }}</a> </div> @endif
                                    @if ($order->status == 4)<div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn cancel">{{ __('Cancel') }}</a> </div> @endif
+                                   @if ($order->status == 5)<div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn cancel">{{ __('Incompetent') }}</a> </div> @endif
                                 </td>
                                 <!-- Order status end -->
                                 <td>
@@ -445,7 +520,46 @@
 
                         <div class="blog-pagination margin-top-55">
                             <div class="custom-pagination mt-4 mt-lg-5">
-                                {!! $all_orders->links() !!}
+                                @if ($isHideSideBarAndHeader)
+                                    {!! $all_orders->links() !!}
+                                @else
+                                    <div class="blog-pagination margin-top-55">
+                                        <div class="custom-pagination mt-4 mt-lg-5">
+                                            @if ($all_orders->lastPage() > 1)
+                                                <ul class="pagination">
+                                                    {{-- Previous Page Link --}}
+                                                    @if ($all_orders->onFirstPage())
+                                                        <li class="disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">
+                                                            <span aria-hidden="true">&laquo;</span>
+                                                        </li>
+                                                    @else
+                                                        <li>
+                                                            <a href="{{ $all_orders->previousPageUrl() . '&serviceproviderId=' . $serviceProviderId . '&token=' . $token }}" rel="prev" aria-label="@lang('pagination.previous')">&laquo;</a>
+                                                        </li>
+                                                    @endif
+
+                                                    {{-- Pagination Elements --}}
+                                                    @foreach ($all_orders->getUrlRange(1, $all_orders->lastPage()) as $page => $url)
+                                                        <li class="{{ ($all_orders->currentPage() == $page) ? 'active' : '' }}">
+                                                            <a href="{{ $url . '&serviceproviderId=' . $serviceProviderId . '&token=' . $token }}">{{ $page }}</a>
+                                                        </li>
+                                                    @endforeach
+
+                                                    {{-- Next Page Link --}}
+                                                    @if ($all_orders->hasMorePages())
+                                                        <li>
+                                                            <a href="{{ $all_orders->nextPageUrl() . '&serviceproviderId=' . $serviceProviderId . '&token=' . $token . '&page2=' }}" rel="next" aria-label="@lang('pagination.next')">&raquo;</a>
+                                                        </li>
+                                                    @else
+                                                        <li class="disabled" aria-disabled="true" aria-label="@lang('pagination.next')">
+                                                            <span aria-hidden="true">&raquo;</span>
+                                                        </li>
+                                                    @endif
+                                                </ul>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -470,7 +584,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModal">{{ __('Create Order Complete Request') }}</h5>
+                        <h5 class="modal-title" id="editModal">{{ __('Create Service Request Complete Request') }}</h5>
                     </div>
                     <div class="modal-body">
 
@@ -479,8 +593,10 @@
                             <select name="status" id="status" class="form-control">
                                 <option value="">{{ __('Select Status') }}</option>
                                 <option value="2">{{ __('Completed') }}</option>
+                                {{-- <option value="3">{{ __('Incompetent') }}</option> --}}
                             </select>
-                            <p class="text-info mt-2">{{ __('Completed: Order is completed and closed.') }}</p>
+                            <p id="completed-text" class="text-info mt-2" style="display: none;">{{ __('Completed: Service Request is completed and closed.') }}</p>
+                            {{-- <p id="incompetent-text" class="text-danger mt-2" style="display: none;">{{ __('Incompetent: Service Request is Incompetent and closed.') }}</p> --}}
                         </div>
 
                         <div class="form-group m-3">
@@ -710,6 +826,57 @@
                     });
                 });
 
+                //order decline status
+                $(document).on('click','.swal_status_change_decline',function(e){
+                    e.preventDefault();
+                    Swal.fire({
+                        title: '{{__("Are you sure to decline the order")}}',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: "{{__('Yes, decline it!')}}"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $(this).next().find('.swal_form_submit_btn_decline_order').trigger('click');
+                        }
+                    });
+                });
+
+                //order incompetent status
+                $(document).on('click','.swal_status_change_incompetent',function(e){
+                    e.preventDefault();
+                    Swal.fire({
+                        title: '{{__("Are you incompetent to complete this order")}}',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: "{{__('Yes, I am incompetent!')}}"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $(this).next().find('.swal_form_submit_btn_incompetent_order').trigger('click');
+                        }
+                    });
+                });
+
+                //order accept status
+                $(document).on('click','.swal_status_change_order_accept',function(e){
+                    e.preventDefault();
+                    Swal.fire({
+                        title: '{{__("Are you sure to accept the order")}}',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: "{{__('Yes, Accept it!')}}"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $(this).next().find('.swal_form_submit_btn_accept_order').trigger('click');
+                        }
+                    });
+                });
+
                 $(document).on('click', '.edit_payment_status_modal', function(e) {
                     e.preventDefault();
                     let modalContainer = $('#editPaymentStatusModal');
@@ -780,5 +947,20 @@
 
         })(jQuery);
 
+        $(document).ready(function() {
+            $('#status').change(function() {
+                var selectedValue = $(this).val();
+                if (selectedValue == "2") {
+                    $('#completed-text').show();
+                    $('#incompetent-text').hide();
+                } else if (selectedValue == "3") {
+                    $('#completed-text').hide();
+                    $('#incompetent-text').show();
+                } else {
+                    $('#completed-text').hide();
+                    $('#incompetent-text').hide();
+                }
+            });
+        });
     </script>
 @endsection

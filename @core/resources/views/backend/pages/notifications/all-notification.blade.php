@@ -26,10 +26,10 @@
                         <div class="table-wrap table-responsive">
                             <table class="table table-default">
                                 <thead>
-                                <th>{{__('Order ID')}}</th>
+                                <th>{{__('Service Request ID')}}</th>
                                 <th>{{__('Ticket ID')}}</th>
                                 <th>{{__('Job Post ID')}}</th>
-                                <th>{{__('Order Message')}}</th>
+                                <th>{{__('Service Request Message')}}</th>
                                 <th>{{__('Ticket Message')}}</th>
                                 <th>{{__('Job Post Message')}}</th>
                                 <th>{{__('Status')}}</th>
@@ -42,7 +42,7 @@
                                         <td>{{$data->ticket_id}}</td>
                                         <td>{{$data->job_post_id}}</td>
                                         <td>  @if(!empty($data->order_id)) {{ __('New Order') }} #{{$data->order_id}}  @endif </td>
-                                        <td>  @if(!empty($data->ticket_id)) {{ __('New Order Ticket') }} #{{$data->ticket_id}} @endif  </td>
+                                        <td>  @if(!empty($data->ticket_id)) {{ __('New Service Request Ticket') }} #{{$data->ticket_id}} @endif  </td>
                                         <td>  @if(!empty($data->job_post_id)) {{ __('New Job Created') }} #{{$data->job_post_id}} @endif  </td>
                                         <td>
                                             @if($data->status == 0) <span class="btn btn-danger btn-sm">{{ __('Unread') }}</span>   @endif

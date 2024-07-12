@@ -261,7 +261,7 @@
                                             <p><strong>{{__('Description:') }}</strong> {{ $ticket_details->description }}</p>
                                             <p><strong>{{__('Status:') }}</strong> <span class="status-{{ $ticket_details->status }}">{{ __(ucfirst($ticket_details->status )) }}</span></p>
                                             <p><strong>{{__('Priority:') }}</strong> <span class="{{ $ticket_details->priority }}">{{ __(ucfirst($ticket_details->priority)) }}</span></p>
-                                            <p><strong>{{__('Order ID:') }}</strong> #{{ $ticket_details->order_id }}</p>
+                                            <p><strong>{{__('Service Request ID:') }}</strong> #{{ $ticket_details->order_id }}</p>
                                         </div>
             
                                         <div class="gig-message-start-wrap">

@@ -32,7 +32,7 @@ class PaymentGatewayRenderHelper
         if (!empty($wallet_lists)){
             $output = '<div class="wallet-payment-gateway-wrapper">';
             $output .= '<input type="checkbox" name="selected_payment_gateway" id="wallet_selected_payment_gateway" class="mr-2 wallet_selected_payment_gateway">';
-            $output .= '<label for="wallet_selected_payment_gateway">'.__('Order From Wallet').'</label>';
+            $output .= '<label for="wallet_selected_payment_gateway">'.__('Service Request From Wallet').'</label>';
             $output .= '</div>';
         }else{
             $output = '';

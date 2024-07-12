@@ -1,6 +1,6 @@
 @extends('frontend.user.buyer.buyer-master')
 @section('site-title')
-    {{__('Buyer Dashboard')}}
+    {{__('Customer Dashboard')}}
 @endsection
 @section('content')
     <x-frontend.seller-buyer-preloader/>
@@ -67,7 +67,7 @@
                                     </div>
                                     <div class="contents">
                                         <h2 class="order-titles"> {{ $pending_order }} </h2>
-                                        <span class="order-para">{{ __('Order Pending') }}</span>
+                                        <span class="order-para">{{ __('Pending Service Request') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -83,7 +83,7 @@
                                     </div>
                                     <div class="contents">
                                         <h2 class="order-titles"> {{ $active_order }} </h2>
-                                        <span class="order-para">{{ __('Order Active') }}</span>
+                                        <span class="order-para">{{ __('Service Request Active') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -99,7 +99,7 @@
                                     </div>
                                     <div class="contents">
                                         <h2 class="order-titles"> {{ $complete_order }} </h2>
-                                        <span class="order-para">{{ __('Order Completed') }}</span>
+                                        <span class="order-para">{{ __('Service Request Completed') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -115,7 +115,7 @@
                                     </div>
                                     <div class="contents">
                                         <h2 class="order-titles">{{ $total_order }} </h2>
-                                        <span class="order-para"> {{ __('Order Total') }} </span>
+                                        <span class="order-para"> {{ __('Service Request Total') }} </span>
                                     </div>
                                 </div>
                             </div>
@@ -130,7 +130,7 @@
                                         <table class="custom--table">
                                             <thead>
                                             <tr>
-                                                <th> {{ __('Seller Name') }} </th>
+                                                <th> {{ __('Service Provider Name') }} </th>
                                                 <th>{{ __('Status') }}</th>
                                                 <th> {{ __('Location') }} </th>
                                                 <th>{{ __('Price') }} </th>
@@ -140,7 +140,7 @@
                                             <tbody>
                                             @foreach($last_10_order as $order)
                                                 <tr>
-                                                    <td data-label="{{__('Seller Name')}}">{{ optional($order->seller)->name }} </td>
+                                                    <td data-label="{{__('Service Provider Name')}}">{{ optional($order->seller)->name }} </td>
                                                     @if ($order->status == 0) <td data-label="{{__('Status')}}" class="pending"><span>{{ __('Pending') }}</span></td>@endif
                                                     @if ($order->status == 1) <td data-label="{{__('Status')}}" class="order-active"><span>{{ __('Active') }}</span></td>@endif
                                                     @if ($order->status == 2) <td data-label="{{__('Status')}}" class="completed"><span>{{ __('Completed') }}</span></td>@endif
@@ -178,7 +178,7 @@
                                             <tbody>
                                             @foreach($last_10_tickets as $ticket)
                                                 <tr>
-                                                    <td data-label="{{__('Ticket')}}" class="text-left">{{__('Order Id')}} #{{ $ticket->order_id }}, {{ $ticket->title }} </td>
+                                                    <td data-label="{{__('Ticket')}}" class="text-left">{{__('Service Request Id')}} #{{ $ticket->order_id }}, {{ $ticket->title }} </td>
                                                     <td data-label="{{__('Ticket Details')}}">
                                                         <a href="{{ route('buyer.support.ticket.view', $ticket->id) }}">
                                                             <span class="icon eye-icon"><i class="las la-eye"></i></span>

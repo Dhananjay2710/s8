@@ -35,8 +35,8 @@
                             <li><a href="03_service_details.html">Service Details Three</a></li>
                             <li><a href="04_service_details.html">Service Details Four</a></li>
                             <li><a href="profile.html">Profile</a></li>
-                            <li><a href="seller_profile.html">Seller Profile</a></li>
-                            <li><a href="seller_order_view.html">Seller View</a></li>
+                            <li><a href="seller_profile.html">Service Provider Profile</a></li>
+                            <li><a href="seller_order_view.html">Service Provider View</a></li>
                             <li><a href="invoice.html">Invoice</a></li>
                             <li><a href="signup.html">Signup</a></li>
                             <li><a href="faq.html">FAQ</a></li>

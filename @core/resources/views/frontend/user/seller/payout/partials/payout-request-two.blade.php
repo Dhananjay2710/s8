@@ -99,7 +99,7 @@
                             <div class="dashboard_promo bg-white">
                                 <div class="dashboard_promo__flex">
                                     <div class="dashboard_promo__contents">
-                                        <span class="dashboard_promo__subtitle">{{ __('Order Pending') }}</span>
+                                        <span class="dashboard_promo__subtitle">{{ __('Pending Service Request') }}</span>
                                         <h4 class="dashboard_promo__title mt-2">{{ $pending_order }}</h4>
                                     </div>
                                     <div class="dashboard_promo__icon">
@@ -112,7 +112,7 @@
                             <div class="dashboard_promo bg-white">
                                 <div class="dashboard_promo__flex">
                                     <div class="dashboard_promo__contents">
-                                        <span class="dashboard_promo__subtitle">{{ __('Order Completed') }}</span>
+                                        <span class="dashboard_promo__subtitle">{{ __('Service Request Completed') }}</span>
                                         <h4 class="dashboard_promo__title mt-2">{{ $complete_order }}</h4>
                                     </div>
                                     <div class="dashboard_promo__icon">
@@ -129,7 +129,7 @@
                                         <h4 class="dashboard_promo__title mt-2">{{ float_amount_with_currency_symbol($total_earnings) }} </h4>
                                     </div>
                                     <div class="dashboard_promo__icon">
-                                        <i class="las la-dollar-sign"></i>
+                                        <i class="fa-solid fa-indian-rupee-sign"></i>
                                     </div>
                                 </div>
                             </div>
@@ -145,7 +145,7 @@
                                         </div>
                                     </a>
                                     <div class="dashboard_promo__icon">
-                                        <i class="las la-file-invoice-dollar"></i>
+                                        <i class="fa-solid fa-indian-rupee-sign"></i>
                                     </div>
                                 </div>
                             </div>

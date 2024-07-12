@@ -21,7 +21,7 @@
                     <div class="card-body">
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
-                                <h4 class="header-title">{{__('Buyer & Seller Dashboard Variant')}} </h4>
+                                <h4 class="header-title">{{__('Customer & Service Provider Dashboard Variant')}} </h4>
                             </div>
                         </div>
                         <form action="{{ route('admin.dashboard.variant') }}" method="post">
@@ -57,7 +57,7 @@
                     <div class="card-body">
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
-                                <h4 class="header-title">{{__('Seller Dashboard Weekly Work Summary Start Day Add')}} </h4>
+                                <h4 class="header-title">{{__('Service Provider Dashboard Weekly Work Summary Start Day Add')}} </h4>
                             </div>
                         </div>
 

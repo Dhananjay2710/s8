@@ -22,7 +22,7 @@
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
                                 <h4 class="header-title">{{__('Amount Settings')}} </h4>
-                                <p class="mb-3">{{__('you can set minimum and maximum withdraw amount for seller')}}</p>
+                                <p class="mb-3">{{__('you can set minimum and maximum withdraw amount for service provider')}}</p>
                             </div>
                         </div>
                         <div class="table-wrap table-responsive">

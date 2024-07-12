@@ -18,7 +18,7 @@
                         <form action="{{route('admin.general.email.settings')}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
-                                <label for="order_mail_success_message">{{__('Order Mail Success Message')}}</label>
+                                <label for="order_mail_success_message">{{__('Service Request Mail Success Message')}}</label>
                                 <input type="text" name="order_mail_success_message"  class="form-control" value="{{get_static_option('order_mail_success_message')}}" >
                                 <small class="form-text text-muted">{{__('this message will show when any one place order.')}}</small>
                             </div>

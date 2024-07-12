@@ -33,7 +33,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="dashboard-settings margin-top-40">
-                                    <h2 class="dashboards-title">{{ __('Order Status') }}</h2>
+                                    <h2 class="dashboards-title">{{ __('Service Request Status') }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -53,36 +53,36 @@
                                         <table id="all_order_table" class="custom--table table-td-padding">
                                             <thead>
                                             <tr>
-                                                <th> {{ __('Order ID') }} </th>
-                                                <th> {{ __('Buyer Name') }} </th>
-                                                @if(request()->path() == 'seller/job-orders')
+                                                <th> {{ __('Service Request ID') }} </th>
+                                                <th> {{ __('Customer Name') }} </th>
+                                                @if(request()->path() == 'seller/job-orders' || request()->path() == 'serviceprovider/job-orders')
                                                     <!--job order title -->
                                                     <th> {{ __('Job Title') }} </th>
-                                                    <th> {{ __('Order Date') }} </th>
+                                                    <th> {{ __('Service Request Date') }} </th>
                                                 @else
                                                     <!--Service order title -->
                                                     <th> {{ __('Service Name') }} </th>
                                                     <th> {{ __('Service Date') }} </th>
                                                     <th> {{ __('Service Time') }} </th>
                                                 @endif
-                                                <th> {{ __('Order Pricing') }} </th>
+                                                <th> {{ __('Service Request Pricing') }} </th>
                                                 <th> {{ __('Payment Details') }} </th>
-                                                <th> {{ __('Order Status') }} </th>
-                                                <th> {{ __('Order Type') }} </th>
-                                                <th> {{ __('Order Complete Request') }} </th>
+                                                <th> {{ __('Service Request Status') }} </th>
+                                                <th> {{ __('Service Request Type') }} </th>
+                                                <th> {{ __('Service Request Complete Request') }} </th>
                                                 <th> {{ __('Action') }} </th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             @foreach ($all_orders as $order)
                                                 <tr>
-                                                    <td data-label="Order ID"> {{ $order->id }} </td>
-                                                    <td data-label="Buyer Name"> {{ $order->name }} </td>
+                                                    <td data-label="Service Request ID"> {{ $order->id }} </td>
+                                                    <td data-label="Customer Name"> {{ $order->name }} </td>
 
                                                     <!--service and job order info -->
-                                                    @if(request()->path() == 'seller/job-orders')
+                                                    @if(request()->path() == 'seller/job-orders' || request()->path() == 'serviceprovider/job-orders')
                                                         <td data-label="Job Title"> {{ Str::limit(optional($order->job)->title,20) }} </td>
-                                                        <td data-label="Order Date"> {{ Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y') }} </td>
+                                                        <td data-label="Service Request Date"> {{ Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y') }} </td>
                                                     @else
                                                         <td data-label="Service Name"> {{ optional($order->service)->title }} </td>
                                                         <td data-label="Service Date">
@@ -95,7 +95,7 @@
                                                         <td data-label="Service Time"> {{ __($order->schedule) }}</td>
                                                     @endif
 
-                                                    <td data-label="Order Pricing"> {{ float_amount_with_currency_symbol($order->total) }}</td>
+                                                    <td data-label="Service Request Pricing"> {{ float_amount_with_currency_symbol($order->total) }}</td>
                                                     <td data-label="Payment Status">
                                                         @if ($order->payment_status == 'pending')
                                                             <span class="text-danger"><strong>{{__('Payment Status: ')}}</strong>{{ __('Pending') }}</span>
@@ -106,27 +106,27 @@
                                                             @endif
                                                         @endif
                                                         @if ($order->payment_status == 'complete')
-                                                            <span class="text-success"><strong>{{__('Payment Status: ')}}</strong>{{ __('Complete') }}</span>
+                                                            <span class="text-success"><strong>{{__('Payment Status: ')}}</strong>{{ __('Payment_AMC') }}</span>
                                                         @endif
                                                         @if(empty($order->payment_status))
                                                             <span class="text-danger"><strong>{{__('Payment Status: ')}}</strong>{{ __('Pending') }}</span>
                                                         @endif
                                                     </td>
 
-                                                    @if ($order->status == 0) <td data-label="Order Status" class="pending"><span>{{ __('Pending') }}</span></td>@endif
-                                                    @if ($order->status == 1) <td data-label="Order Status" class="order-active"><span>{{ __('Active') }}</span></td>@endif
-                                                    @if ($order->status == 2) <td data-label="Order Status" class="completed"><span>{{ __('Completed') }}</span></td>@endif
-                                                    @if ($order->status == 3) <td data-label="Order Status" class="order-deliver"><span>{{ __('Delivered') }}</span></td>@endif
-                                                    @if ($order->status == 4) <td data-label="Order Status" class="canceled"><span>{{ __('Cancelled') }}</span></td>@endif
+                                                    @if ($order->status == 0) <td data-label="Service Request Status" class="pending"><span>{{ __('Pending') }}</span></td>@endif
+                                                    @if ($order->status == 1) <td data-label="Service Request Status" class="order-active"><span>{{ __('Active') }}</span></td>@endif
+                                                    @if ($order->status == 2) <td data-label="Service Request Status" class="completed"><span>{{ __('Completed') }}</span></td>@endif
+                                                    @if ($order->status == 3) <td data-label="Service Request Status" class="order-deliver"><span>{{ __('Delivered') }}</span></td>@endif
+                                                    @if ($order->status == 4) <td data-label="Service Request Status" class="canceled"><span>{{ __('Cancelled') }}</span></td>@endif
 
-                                                    <td data-label="Order Pricing">
+                                                    <td data-label="Service Request Pricing">
                                                         @if($order->is_order_online==1)
                                                             <span class="btn btn-success">{{ __('Online') }}</span>
                                                         @else
                                                             <span class="btn btn-info">{{ __('Offline') }}</span>
                                                         @endif
                                                     </td>
-                                                    <td data-label="Order Status" >
+                                                    <td data-label="Service Request Status" >
                                                         <span class="{{ in_array($order->order_complete_request,[0,1]) ? 'pending' : 'completed' }} d-block">
                                                             @if ( in_array($order->order_complete_request,[0,1]))
                                                                 @if($order->payment_status != 'pending')
@@ -269,7 +269,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModal">{{ __('Create Order Complete Request') }}</h5>
+                        <h5 class="modal-title" id="editModal">{{ __('Create Service Request Complete Request') }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -282,7 +282,7 @@
                                 <option value="">{{ __('Select Status') }}</option>
                                 <option value="2">{{ __('Completed') }}</option>
                             </select>
-                            <p class="text-info">{{ __('Completed: Order is completed and closed.') }}</p>
+                            <p class="text-info">{{ __('Completed: Service Request is completed and closed.') }}</p>
                         </div>
 
                         <div class="form-group ">

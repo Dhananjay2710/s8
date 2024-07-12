@@ -66,7 +66,7 @@ class JobDetailsController extends Controller
                         }elseif(\Carbon\Carbon::parse($item->deadline)->gt(\Carbon\Carbon::now())){
                            $already_applied_status = __('Job Expired');
                         }elseif(auth("sanctum")->user()->user_type === 1){
-                            $already_applied_status = __('Only Seller Can Apply');
+                            $already_applied_status = __('Only Service Provider Can Apply');
                         }else{
                             $is_hired = false;
                             $already_applied_status = __('Apply Now');

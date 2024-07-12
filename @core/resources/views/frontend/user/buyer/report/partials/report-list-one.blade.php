@@ -45,19 +45,19 @@
                                         <table id="all_order_table" class="custom--table table-td-padding">
                                             <thead>
                                             <tr>
-                                                <th> {{ __('Order ID') }} </th>
+                                                <th> {{ __('Service Request ID') }} </th>
                                                 <th> {{ __('Report ID') }} </th>
                                                 <th> {{ __('Report Details') }} </th>
-                                                <th> {{ __('Seller Details') }} </th>
+                                                <th> {{ __('Service Provider Details') }} </th>
                                                 <th> {{ __('Conversation') }} </th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             @foreach ($reports as $report)
                                                 <tr>
-                                                    <td data-label="{{__('Order ID')}}"> {{ $report->order_id }} </td>
+                                                    <td data-label="{{__('Service Request ID')}}"> {{ $report->order_id }} </td>
                                                     <td data-label="{{__('Report ID')}}"> {{ $report->id }} </td>
-                                                    <td data-label="{{__('Seller Name')}}">
+                                                    <td data-label="{{__('Service Provider Name')}}">
                                                         <p><strong>{{ __('Report From:') }}</strong> {{ ucfirst($report->report_from) }}</p>
                                                         <p><strong>{{ __('Report To:') }}</strong> {{ ucfirst($report->report_to) }}</p>
                                                         <p><strong>{{ __('Report Date:') }}</strong> {{date('d-m-Y', strtotime($report->created_at))}}</p>

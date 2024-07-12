@@ -28,7 +28,7 @@
                     </div>
                     <div class="btn-wrapper margin-top-50 text-right">
                         <a href="#" class="cmn-btn btn-bg-1" data-toggle="modal"
-                           data-target="#ticketModal" > {{__('Create Ticket For A Order' )}}
+                           data-target="#ticketModal" > {{__('Create Ticket For A Service Request' )}}
                         </a>
                     </div>
                     <div class="dashboard-service-single-item border-1 margin-top-40">
@@ -172,7 +172,7 @@
                                 <select name="order_id">
                                     <option value="">{{__('Select Order')}}</option>
                                     @foreach($orders as $order)
-                                        <option value="{{ $order->id }}">{{ __('Order ID#') }} {{ $order->id }}</option>
+                                        <option value="{{ $order->id }}">{{ __('Service Request ID#') }} {{ $order->id }}</option>
                                     @endforeach
                                 </select>
                             </div>

@@ -1,6 +1,6 @@
 @extends('backend.admin-master')
 @section('site-title')
-    {{__('Seller Buyer Reports')}}
+    {{__('Service Provider Customer Reports')}}
 @endsection
 
 @section('style')
@@ -20,16 +20,16 @@
                     <div class="card-body">
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
-                                <h4 class="header-title">{{__('Seller Buyer Reports')}}  </h4>
+                                <h4 class="header-title">{{__('Service Provider Customer Reports')}}  </h4>
                             </div>
                         </div>
                         <div class="table-wrap table-responsive">
                             <table class="table table-default">
                                 <thead>
-                                <th>{{__('Order ID')}}</th>
+                                <th>{{__('Service Request ID')}}</th>
                                 <th>{{__('Report Details')}}</th>
-                                <th>{{__('Seller Details')}}</th>
-                                <th>{{__('Buyer Details')}}</th>
+                                <th>{{__('Service Provider Details')}}</th>
+                                <th>{{__('Customer Details')}}</th>
                                 <th>{{__('Action')}}</th>
                                 </thead>
                                 <tbody>
@@ -46,13 +46,13 @@
                                             <p><strong>{{ __('Name:') }}</strong> {{ optional($data->seller)->name }}</p>
                                             <p><strong>{{ __('Email:') }}</strong> {{ optional($data->seller)->email }}</p>
                                             <p><strong>{{ __('Phone:') }}</strong> {{ optional($data->seller)->phone }}</p>
-                                            <a class="btn btn-info btn-sm" href="{{ route('admin.order.report.chat.seller',$data->id.'/'.$data->seller_id) }}">{{__('Chat To Seller')}}</a>
+                                            <a class="btn btn-info btn-sm" href="{{ route('admin.order.report.chat.seller',$data->id.'/'.$data->seller_id) }}">{{__('Chat To Service Provider')}}</a>
                                         </td>
                                         <td>
                                             <p><strong>{{ __('Name:') }}</strong> {{ optional($data->buyer)->name }}</p>
                                             <p><strong>{{ __('Email:') }}</strong> {{ optional($data->buyer)->email }}</p>
                                             <p><strong>{{ __('Phone:') }}</strong> {{ optional($data->buyer)->phone }}</p>
-                                            <a class="btn btn-info btn-sm" href="{{ route('admin.order.report.chat.buyer',$data->id.'/'.$data->buyer_id) }}">{{__('Chat To Buyer')}}</a>
+                                            <a class="btn btn-info btn-sm" href="{{ route('admin.order.report.chat.buyer',$data->id.'/'.$data->buyer_id) }}">{{__('Chat To Customer')}}</a>
                                         </td>
                                         <td>
                                             @can('report-delete')

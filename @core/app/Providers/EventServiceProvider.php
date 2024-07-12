@@ -18,6 +18,8 @@ use App\Listeners\SupportSendMailToAdmin;
 use App\Listeners\SupportSendMailToUser;
 use App\Listeners\SupportSendMailToSeller;
 use App\Listeners\SupportSendMailToBuyer;
+use App\Events\UpdateTicket;
+use App\Listeners\UpdateTicketStage;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -31,6 +33,9 @@ class EventServiceProvider extends ServiceProvider
             SupportSendMailToUser::class,
             SupportSendMailToSeller::class,
             SupportSendMailToBuyer::class,
+        ],
+        UpdateTicket::class => [
+            UpdateTicketStage::class,
         ],
         DonationSuccess::class => [
             DonationDatabaseUpdate::class,

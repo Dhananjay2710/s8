@@ -15,7 +15,7 @@ class UserEmailVerify
      */
     public function handle($request, Closure $next)
     {
-         if (auth('web')->check() && auth('web')->user()->email_verified == 0 && empty(get_static_option('disable_user_email_verify')) && request()->path() !== 'seller/logout'){
+         if (auth('web')->check() && auth('web')->user()->email_verified == 0 && empty(get_static_option('disable_user_email_verify')) && (request()->path() !== 'seller/logout' || request()->path() !== 'serviceprovider/logout')){
             return redirect()->route('email.verify');
         }
         return $next($request);

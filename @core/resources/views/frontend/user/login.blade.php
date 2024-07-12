@@ -48,12 +48,12 @@
                             <tr>
                                 <td id="seller_username">test_seller</td>
                                 <td id="seller_password">12345678</td>
-                                <td><button type="button" class="autoLogin" id="sellerLogin">{{__('Seller Login')}}</button></td>
+                                <td><button type="button" class="autoLogin" id="sellerLogin">{{__('Service Provider Login')}}</button></td>
                             </tr>
                             <tr>
                                 <td id="buyer_username">test_buyer</td>
                                 <td id="buyer_password">12345678</td>
-                                <td><button type="button" class="autoLogin" id="buyerLogin">{{__('Buyer Login')}}</button></td>
+                                <td><button type="button" class="autoLogin" id="buyerLogin">{{__('Customer Login')}}</button></td>
                             </tr>
                         </tbody>
                     </table>

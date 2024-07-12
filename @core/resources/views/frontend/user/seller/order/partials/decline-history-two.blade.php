@@ -13,7 +13,7 @@
                 <!-- Report section start-->
                 <div class="dashboard_table__wrapper dashboard_border  padding-20 radius-10 bg-white">
                     <div class="dashboard_table__title__flex">
-                        <h4 class="dashboards-title"> {{ __('Decline History') }} <br> <b style="font-size: 20px">{{ __('Order ID:') }} <span class="text-info"> {{ $order_id }} </span></b></h4>
+                        <h4 class="dashboards-title"> {{ __('Decline History') }} <br> <b style="font-size: 20px">{{ __('Service Request ID:') }} <span class="text-info"> {{ $order_id }} </span></b></h4>
                         <a class="btn btn-success" href="{{ route('seller.orders') }}">{{__('Back To Orders')}}</a>
 
                     </div>
@@ -23,7 +23,7 @@
                                 <thead>
                                 <tr>
                                     <th> {{ __('ID') }} </th>
-                                    <th> {{ __('Buyer Details') }} </th>
+                                    <th> {{ __('Customer Details') }} </th>
                                     <th>{{ __('Status') }} ({{ __('Decline Reason') }})</th>
                                 </tr>
                                 </thead>

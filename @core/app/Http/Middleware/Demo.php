@@ -21,6 +21,8 @@ class Demo
           'admin-home',
           'seller',
           'buyer',
+          'serviceprovider',
+          'customer',
         ];
         $allow_path = [
             'admin-home/visited/os',
@@ -30,11 +32,16 @@ class Demo
             'admin-home/media-upload/all',
             'admin-home/media-upload/loadmore',
             'seller/logout',
+            'serviceprovider/logout',
             'buyer/send',
+            'customer/send',
             'seller/send',
+            'serviceprovider/send',
             'broadcasting/auth',
             'seller/get-dependent-subcategory',
-            'seller/get-child-category-by-subcategory',
+            'seller/get-dependent-subcategory',
+            'serviceprovider/get-child-category-by-subcategory',
+            'serviceprovider/get-child-category-by-subcategory',
             // 'admin-home/widgets/update',
             // 'admin-home/update'
             //'buyer/jobpost/subcategory/get',

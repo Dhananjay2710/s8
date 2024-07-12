@@ -1,6 +1,6 @@
 @extends('frontend.frontend-page-master')
 @section('page-title')
-    {{__('Order Cancelled Of:'.' '.$order_details->package_name)}}
+    {{__('Service Request Cancelled Of:'.' '.$order_details->package_name)}}
 @endsection
 @section('content')
     <div class="error-page-content padding-120">

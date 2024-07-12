@@ -1,6 +1,6 @@
 @extends('frontend.user.buyer.buyer-master')
 @section('site-title')
-    {{__('Seller Dashboard')}}
+    {{__('Service Provider Dashboard')}}
 @endsection
 @section('style')
     <style>
@@ -26,7 +26,7 @@
                     @if(empty(auth('web')->user()->subscribedSeller))
                         <div class="col-lg-12 mt-1">
                                 <div class="alert alert-warning d-flex justify-content-between">
-                                    <strong style="font-size: 16px">{{__('you must have to subscribe any of our package in order to start selling your services.')}}</strong>
+                                    <strong style="font-size: 16px">{{__('you must have to subscribe any of our package in service request to start selling your services.')}}</strong>
                                     <a href="{{getSlugFromReadingSetting('price_plan_page') ? url('/'.getSlugFromReadingSetting('price_plan_page')) : url('/price-plan')}}" target="_self" class="btn btn-secondary">{{__('view packages')}}</a>
                                 </div>
                         </div>
@@ -58,7 +58,7 @@
                                 <div class="dashboard_promo__flex">
                                     <a href="{{ route('seller.orders') }}">
                                     <div class="dashboard_promo__contents">
-                                        <span class="dashboard_promo__subtitle">{{ __('Order In Progress') }}</span>
+                                        <span class="dashboard_promo__subtitle">{{ __('Service Request In Progress') }}</span>
                                         <h4 class="dashboard_promo__title mt-2">{{ $active_order }}</h4>
                                     </div>
                                     </a>
@@ -73,7 +73,7 @@
                                 <div class="dashboard_promo__flex">
                                     <a href="{{ route('seller.orders') }}">
                                     <div class="dashboard_promo__contents">
-                                        <span class="dashboard_promo__subtitle">{{ __('Order Pending') }}</span>
+                                        <span class="dashboard_promo__subtitle">{{ __('Pending Service Request') }}</span>
                                         <h4 class="dashboard_promo__title mt-2">{{ $pending_order }}</h4>
                                     </div>
                                     </a>
@@ -88,7 +88,7 @@
                                 <div class="dashboard_promo__flex">
                                     <a href="{{ route('seller.orders') }}">
                                     <div class="dashboard_promo__contents">
-                                        <span class="dashboard_promo__subtitle">{{ __('Order Completed') }}</span>
+                                        <span class="dashboard_promo__subtitle">{{ __('Service Request Completed') }}</span>
                                         <h4 class="dashboard_promo__title mt-2">{{ $complete_order }}</h4>
                                     </div>
                                     </a>
@@ -104,7 +104,7 @@
                                 <div class="dashboard_promo__flex">
                                     <a href="{{ route('seller.orders') }}">
                                     <div class="dashboard_promo__contents">
-                                        <span class="dashboard_promo__subtitle">{{ __('Total Order') }}</span>
+                                        <span class="dashboard_promo__subtitle">{{ __('Total Service Request') }}</span>
                                         <h4 class="dashboard_promo__title mt-2">{{ $total_order }}</h4>
                                     </div>
                                     </a>
@@ -125,7 +125,7 @@
                                     </div>
                                     </a>
                                     <div class="dashboard_promo__icon">
-                                        <i class="fa-solid fa-dollar"></i>
+                                        <i class="fa-solid fa-indian-rupee-sign"></i>
                                     </div>
                                 </div>
                             </div>
@@ -142,7 +142,7 @@
                                     </div>
                                     </a>
                                     <div class="dashboard_promo__icon">
-                                        <i class="las la-file-invoice-dollar"></i>
+                                        <i class="fa-solid fa-indian-rupee-sign"></i>
                                     </div>
                                 </div>
                             </div>
@@ -201,7 +201,7 @@
                 <div class="row g-4 mt-1">
                     <div class="col-xxl-12">
                         <div class="dashboard_recentOrder dashboard_border  bg-white padding-20 radius-10">
-                            <h4 class="dashboard_recentOrder__title">{{ __('Recent Order') }}</h4>
+                            <h4 class="dashboard_recentOrder__title">{{ __('Recent Service Request') }}</h4>
                             <div class="dashboard_recentOrder__inner">
                                 @if($last_five_order->count() >= 1)
                                     <div class="row g-4 mt-1">
@@ -220,7 +220,7 @@
                                                         </a>
                                                     </div>
                                                     <div class="dashboard_recentOrder__item__service__contents">
-                                                        <a href="{{ route('seller.order.details', $order->id) }}" class="dashboard_recentOrder__item__service__id"><span>{{ __('Order ID:') }}</span> {{ $order->id }}</a>
+                                                        <a href="{{ route('seller.order.details', $order->id) }}" class="dashboard_recentOrder__item__service__id"><span>{{ __('Service Request ID:') }}</span> {{ $order->id }}</a>
                                                         <h4 class="dashboard_recentOrder__item__service__title mt-1">
                                                             @if(!empty($order->job_post_id))
                                                                 <a href="{{ route('job.post.details', optional($order->job)->slug) }}"> {{ optional($order->job)->title }}</a></h4>
@@ -228,8 +228,8 @@
                                                             <a href="{{ route('service.list.details', optional($order->service)->slug) }}"> {{ optional($order->service)->title }}</a></h4>
                                                             @endif
                                                         <p class="dashboard_recentOrder__item__service__buyer mt-2">
-                                                            {{ __('Order Date:') }} <strong>{{ Carbon\Carbon::parse($order->created_at)->format('d/m/y') }}{{ __(',') }}</strong>
-                                                            {{ __('Buyer:') }}   <a href="{{ route('about.buyer.profile',optional($order->buyer)->username) }}"> {{ optional($order->buyer)->name }} </a>
+                                                            {{ __('Service Request Date:') }} <strong>{{ Carbon\Carbon::parse($order->created_at)->format('d/m/y') }}{{ __(',') }}</strong>
+                                                            {{ __('Customer:') }}   <a href="{{ route('about.buyer.profile',optional($order->buyer)->username) }}"> {{ optional($order->buyer)->name }} </a>
                                                         </p>
                                                     </div>
                                                 </div>
@@ -252,18 +252,18 @@
                                                 </div>
 
                                                 <div class="dashboard_recentOrder__item__details__item">
-                                                    <p class="dashboard_recentOrder__item__details__item__left">{{ __('Order type:')}}</p>
+                                                    <p class="dashboard_recentOrder__item__details__item__left">{{ __('Service Request type:')}}</p>
                                                     <p class="dashboard_recentOrder__item__details__item__right">
                                                         @php $online = __('Online'); $offline = __('Offline')  @endphp
                                                         @if($order->is_order_online == 1) {{ $online }} @else {{ $offline }} @endif
                                                     </p>
                                                 </div>
                                                 <div class="dashboard_recentOrder__item__details__item">
-                                                    <p class="dashboard_recentOrder__item__details__item__left">{{ __('Order amount:')}}</p>
+                                                    <p class="dashboard_recentOrder__item__details__item__left">{{ __('Service Request amount:')}}</p>
                                                     <p class="dashboard_recentOrder__item__details__item__right">{{ amount_with_currency_symbol($order->total) }}</p>
                                                 </div>
                                                 <div class="dashboard_recentOrder__item__details__item">
-                                                    <p class="dashboard_recentOrder__item__details__item__left">{{ __('Order status:')}}</p>
+                                                    <p class="dashboard_recentOrder__item__details__item__left">{{ __('Service Request status:')}}</p>
                                                     @if ($order->status == 0)<div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn pending">{{ __('Pending') }}</a> </div> @endif
                                                     @if ($order->status == 1)<div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn active">{{ __('Active') }}</a> </div> @endif
                                                     @if ($order->status == 2)<div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn completed">{{ __('Completed') }}</a> </div> @endif
@@ -289,7 +289,7 @@
                                     <div class="dashboard_promo bg-white">
                                         <div class="dashboard_promo__flex">
                                             <div class="dashboard_promo__contents">
-                                                <span class="dashboard_promo__subtitle">{{ __('Order') }}</span>
+                                                <span class="dashboard_promo__subtitle">{{ __('Service Request') }}</span>
                                                 <h4 class="dashboard_promo__title mt-2">{{ $this_month_order_count }}</h4>
                                             </div>
                                             <div class="dashboard_promo__icon">
@@ -306,7 +306,7 @@
                                                 <h4 class="dashboard_promo__title mt-2">{{ float_amount_with_currency_symbol($this_month_earnings) }}</h4>
                                             </div>
                                             <div class="dashboard_promo__icon">
-                                                <i class="fa-solid fa-dollar"></i>
+                                                <i class="fa-solid fa-indian-rupee-sign"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -319,7 +319,7 @@
                                                 <h4 class="dashboard_promo__title mt-2">{{ float_amount_with_currency_symbol($this_month_balance_without_tax_and_admin_commission) }}</h4>
                                             </div>
                                             <div class="dashboard_promo__icon">
-                                                <i class="las la-file-invoice-dollar"></i>
+                                                <i class="fa-solid fa-indian-rupee-sign"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -329,7 +329,7 @@
                                     <div class="dashboard_promo bg-white">
                                         <div class="dashboard_promo__flex">
                                             <div class="dashboard_promo__contents">
-                                                <span class="dashboard_promo__subtitle">{{ __('Total Buyer') }}</span>
+                                                <span class="dashboard_promo__subtitle">{{ __('Total Customer') }}</span>
                                                 <h4 class="dashboard_promo__title mt-2">{{ $buyer_count }}</h4>
                                             </div>
                                             <div class="dashboard_promo__icon">
@@ -392,7 +392,7 @@
                             <div class="single-flex-middle margin-top-40">
                                 <div class="line-charts-wrapper">
                                     <div class="line-top-contents">
-                                        <h4 class="dashboard_table__title">{{ __('Total Order Overview') }}</h4>
+                                        <h4 class="dashboard_table__title">{{ __('Total Service Request Overview') }}</h4>
                                     </div>
                                     <div class="line-charts">
                                         <canvas id="line-chart"></canvas>

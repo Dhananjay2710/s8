@@ -16,6 +16,7 @@ class Service extends Model
         'child_category_id',
         'seller_id',
         'service_city_id',
+        'service_area_id',
         'title',
         'slug',
         'description',

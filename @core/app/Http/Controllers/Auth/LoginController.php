@@ -71,6 +71,15 @@ class LoginController extends Controller
         return view('auth.admin.login');
     }
 
+     /**
+     * show admin external login page
+     * @since 1.0.0
+     * */
+    public function showAdminLoginExternalForm()
+    {
+        return view('auth.admin.externallogin');
+    }
+    
     /**
      * admin login system
      * */
@@ -88,6 +97,34 @@ class LoginController extends Controller
 
         if (Auth::guard('admin')->attempt([$email_or_username => $request->username, 'password' => $request->password], $request->get('remember'))) {
 
+            return response()->json([
+                'msg' => __('Login Success Redirecting'),
+                'type' => 'success',
+                'status' => 'ok'
+            ]);
+        }
+        return response()->json([
+            'msg' => sprintf(__('Your %s or Password Is Wrong !!'),$email_or_username),
+            'type' => 'danger',
+            'status' => 'not_ok'
+        ]);
+    }
+
+     /**
+     * admin login system from external
+     * */
+    public function adminLoginExternal(Request $request)
+    {
+        $email_or_username = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $this->validate($request, [
+            'username' => 'required|string',
+            'password' => 'required|min:6'
+        ], [
+            'username.required' => sprintf(__('%s required'),$email_or_username),
+            'password.required' => __('password required')
+        ]);
+
+        if (Auth::guard('admin')->attempt([$email_or_username => $request->username, 'password' => $request->password], $request->get('remember'))) {
             return response()->json([
                 'msg' => __('Login Success Redirecting'),
                 'type' => 'success',

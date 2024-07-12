@@ -1,6 +1,6 @@
 @extends('frontend.user.seller.seller-master')
 @section('site-title')
-    {{ __('Order Details') }}
+    {{ __('Service Request Details') }}
 @endsection
 @section('content')
     <x-frontend.seller-buyer-preloader/>
@@ -25,7 +25,7 @@
                                         <div class="line-charts-wrapper margin-top-40">
 
                                             <div class="line-top-contents">
-                                                <h5 class="earning-title">{{ __('Buyer Details') }}</h5>
+                                                <h5 class="earning-title">{{ __('Customer Details') }}</h5>
                                             </div>
                                             <div class="single-checbox">
                                                 <div class="checkbox-inlines">
@@ -110,19 +110,19 @@
                                                     <label><strong>{{ __('Payment Status:') }} </strong>{{ __(ucfirst($order_details->payment_status)) }}</label>
                                                 </div>
                                                 <div class="checkbox-inlines">
-                                                    <label><strong>{{ __('Order Note:') }} </strong>{{ $order_details->order_note }}</label>
+                                                    <label><strong>{{ __('Service Request Note:') }} </strong>{{ $order_details->order_note }}</label>
                                                 </div>
                                             </div>
 
                                             <div class="line-top-contents">
-                                                <h5 class="earning-title">{{ __('Order Details') }}</h5>
+                                                <h5 class="earning-title">{{ __('Service Request Details') }}</h5>
                                             </div>
                                             <div class="single-checbox">
                                                 <div class="checkbox-inlines">
-                                                    <label><strong>{{ __('Order ID:') }} </strong>{{ $order_details->id }}</label>
+                                                    <label><strong>{{ __('Service Request ID:') }} </strong>{{ $order_details->id }}</label>
                                                 </div>
                                                 <div class="checkbox-inlines">
-                                                    <label><strong>{{ __('Order Status:') }} </strong>
+                                                    <label><strong>{{ __('Service Request Status:') }} </strong>
                                                         @if ($order_details->status == 0) <span>{{ __('Pending') }}</span>@endif
                                                         @if ($order_details->status == 1) <span>{{ __('Active') }}</span>@endif
                                                         @if ($order_details->status == 2) <span>{{ __('Completed') }}</span>@endif
@@ -229,7 +229,7 @@
                                                 <div class="line-top-contents">
                                                     <h5 class="earning-title">{{ __('Extra Service Details') }}</h5>
                                                 </div>
-                                                <span class="info-text d-block mb-4">{{__('This is not included in the main service order calculation')}}</span>
+                                                <span class="info-text d-block mb-4">{{__('This is not included in the main service Request calculation')}}</span>
 
                                                 <table class="table table-bordered">
                                                     <thead>
@@ -301,13 +301,13 @@
                                         <div class="single-flex-middle-inner">
                                             <div class="line-charts-wrapper oreder_details_rtl margin-top-40">
                                                 <div class="line-top-contents">
-                                                    <h5 class="earning-title">{{ __('Order Decline History') }}</h5>
+                                                    <h5 class="earning-title">{{ __('Service Request Decline History') }}</h5>
                                                 </div>
                                                 <table class="table table-bordered">
                                                     <thead>
                                                     <tr>
                                                         <th>{{ __('History ID') }}</th>
-                                                        <th>{{ __('Buyer Details') }}</th>
+                                                        <th>{{ __('Customer Details') }}</th>
                                                         <th>{{ __('Status') }} ({{ __('Decline Reason') }})</th>
                                                         <th>{{ __('Image File') }}</th>
                                                     </tr>

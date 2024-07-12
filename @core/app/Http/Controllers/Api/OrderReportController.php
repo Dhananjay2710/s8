@@ -44,13 +44,13 @@ class OrderReportController extends Controller
         
         if($is_report_exist){
             return response([
-                'msg' => __('Report Already Created For This Order')
+                'msg' => __('Report Already Created For This Service Request')
             ],422);
         }
 
         if(is_null($order_details)){
             return response([
-                'msg' => __('Order not exists')
+                'msg' => __('Service Request not exists')
             ],422);
         }
 

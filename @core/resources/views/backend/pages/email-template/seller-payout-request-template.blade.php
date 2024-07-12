@@ -1,6 +1,6 @@
 @extends('backend.admin-master')
 @section('site-title')
-    {{__('Seller Payout Template')}}
+    {{__('Service Provider Payout Template')}}
 @endsection
 @section('style')
     <x-media.css/>
@@ -18,7 +18,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="header-wrapp d-flex justify-content-between">
-                            <h4 class="header-title">{{__('Seller Payout Template')}}</h4>
+                            <h4 class="header-title">{{__('Service Provider Payout Template')}}</h4>
                             <a class="btn btn-info" href="{{route('admin.email.template.all')}}">{{__('All Email Templates')}}</a>
                         </div>
                         <form action="{{route('admin.seller.payout.request')}}" method="post" enctype="multipart/form-data">
@@ -26,7 +26,7 @@
                             <div class="tab-content margin-top-30">
                                 <div class="form-group">
                                     <label for="service_approve_subject">{{__('Email Subject')}}</label>
-                                    <input type="text" name="seller_payout_subject"  class="form-control" value="{{ get_static_option('seller_payout_subject') ?? __('Seller Payout Request') }}">
+                                    <input type="text" name="seller_payout_subject"  class="form-control" value="{{ get_static_option('seller_payout_subject') ?? __('Service Provider Payout Request') }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="user_register_message">{{ __('Email Message') }}</label>

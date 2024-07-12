@@ -1,7 +1,7 @@
 @extends('frontend.frontend-page-master')
 @section('page-title')
 
-    {{__('Order Cancelled')}}
+    {{__('Service Request Cancelled')}}
 @endsection
 @section('content')
     <div class="error-page-content padding-120">
@@ -10,7 +10,7 @@
                 <div class="col-lg-8">
                     <div class="order-cancel-area">
                         <div class="alert alert-warning">
-                            <h6 class="title">{{ __('Your Order has been canceled') }}</h6>
+                            <h6 class="title">{{ __('Your Service Request has been canceled') }}</h6>
                         </div>
                         <div class="btn-wrapper mt-5">
                             <a href="{{url('/')}}" class="boxed-btn">{{__('Back To Home')}}</a>

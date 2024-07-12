@@ -163,6 +163,6 @@ HTML;
 
     public function addon_title()
     {
-        return __('Start As Seller: 02');
+        return __('Start As Service Provider: 02');
     }
 }

@@ -1,6 +1,6 @@
 @extends('backend.admin-master')
 @section('site-title')
-    {{__('Buyer Extra Service Accept Template')}}
+    {{__('Customer Extra Service Accept Template')}}
 @endsection
 @section('style')
     <x-media.css/>
@@ -18,7 +18,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="header-wrapp d-flex justify-content-between">
-                            <h4 class="header-title">{{__('Buyer Extra Service Accept Template')}}</h4>
+                            <h4 class="header-title">{{__('Customer Extra Service Accept Template')}}</h4>
                             <a class="btn btn-info" href="{{route('admin.email.template.all')}}">{{__('All Email Templates')}}</a>
                         </div>
                         <form action="{{route('admin.buyer.extra.service.accept')}}" method="post" enctype="multipart/form-data">
@@ -29,16 +29,16 @@
                                     <input type="text" name="buyer_extra_service_subject"  class="form-control" value="{{ get_static_option('buyer_extra_service_subject') ?? __('Extra Service Accepted') }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="buyer_extra_service_message">{{ __('Email Message For Buyer') }}</label>
+                                    <label for="buyer_extra_service_message">{{ __('Email Message For Customer') }}</label>
                                     <textarea class="form-control summernote" name="buyer_extra_service_message">{!! get_static_option('buyer_extra_service_message') ?? '' !!} </textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label for="buyer_to_seller_extra_service_message">{{ __('Email Message For Seller') }}</label>
+                                    <label for="buyer_to_seller_extra_service_message">{{ __('Email Message For Service Provider') }}</label>
                                     <textarea class="form-control summernote" name="buyer_to_seller_extra_service_message">{!! get_static_option('buyer_to_seller_extra_service_message') ?? '' !!} </textarea>
                                 </div>
-                                <small class="form-text text-muted text-danger"><code>@order_id</code> {{__('will be replaced by dynamically with order id.')}}</small>
-                                <small class="form-text text-muted text-danger"><code>@seller_name</code> {{__('will be replaced by dynamically with seller name.')}}</small>
-                                <small class="form-text text-muted text-danger"><code>@buyer_name</code> {{__('will be replaced by dynamically with buyer name.')}}</small>
+                                <small class="form-text text-muted text-danger"><code>@order_id</code> {{__('will be replaced by dynamically with service request id.')}}</small>
+                                <small class="form-text text-muted text-danger"><code>@seller_name</code> {{__('will be replaced by dynamically with service provider name.')}}</small>
+                                <small class="form-text text-muted text-danger"><code>@buyer_name</code> {{__('will be replaced by dynamically with customer name.')}}</small>
                             </div>
                             <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">{{__('Update')}}</button>
                         </form>

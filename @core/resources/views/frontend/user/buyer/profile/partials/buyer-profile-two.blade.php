@@ -1,6 +1,6 @@
 @extends('frontend.user.buyer.buyer-master')
 @section('site-title')
-    {{__('Edit Buyer Profile')}}
+    {{__('Edit Customer Profile')}}
 @endsection
 @section('style')
     <x-media.css/>
@@ -98,7 +98,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="custom-form">
-                        <form action="{{route('seller.profile.edit')}}" method="POST">
+                        <form action="{{route('buyer.profile.edit')}}" method="POST">
                             <input type="hidden" name="id" value="{{ Auth::guard('web')->user()->id }}">
                             @csrf
                             <div class="row g-4">

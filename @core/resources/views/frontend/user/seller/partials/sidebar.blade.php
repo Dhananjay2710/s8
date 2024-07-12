@@ -63,7 +63,7 @@
                 </li>
 
                 <li class="list @if(request()->is('seller/pending-orders')) active @endif">
-                    <a href="{{ route('seller.pending.orders') }}"> <i class="las la-tasks"></i> {{ __('Order Pending') }} </a>
+                    <a href="{{ route('seller.pending.orders') }}"> <i class="las la-tasks"></i> {{ __('Pending Service Request') }} </a>
                 </li>
 
                 <li class="list
@@ -90,31 +90,31 @@
                 </li>
                 @endif
 
-                <li class="list @if(request()->is('seller/notification/all-notifications*')) active @endif">
+                <li class="list @if(request()->is('seller/notification/all-notifications*')) active @elseif(request()->is('serviceprovider/notification/all-notifications*')) active @endif">
                     <a href="{{ route('seller.notification.all') }}"> <i class="las la-bell"></i> {{ __('All Notifications') }} </a>
                 </li>
-                <li class="list @if(request()->is('seller/payout-request*')) active @endif">
+                <li class="list @if(request()->is('seller/payout-request*')) active @elseif(request()->is('serviceprovider/payout-request*')) active @endif">
                     <a href="{{ route('seller.payout') }}"> <i class="las la-dollar-sign"></i>{{ __('Payout History') }} </a>
                 </li>
-                <li class="list @if(request()->is('seller/service-reviews*')) active @endif">
+                <li class="list @if(request()->is('seller/service-reviews*')) active @elseif(request()->is('serviceprovider/service-reviews*')) active @endif">
                     <a href="{{ route('seller.service.review') }}"> <i class="lar la-star"></i>{{ __('Review') }}</a>
                 </li>
-                <li class="list @if(request()->is('seller/all-tickets*')) active @endif">
+                <li class="list @if(request()->is('seller/all-tickets*')) active @elseif(request()->is('serviceprovider/all-tickets*')) active @endif">
                     <a href="{{ route('seller.support.ticket') }}"> <i class="las la-headset"></i>{{ __('Support Ticket') }}</a>
                 </li>
-                <li class="list @if(request()->is('seller/report/list*')) active @endif">
+                <li class="list @if(request()->is('seller/report/list*')) active @elseif(request()->is('serviceprovider/report/list*')) active @endif">
                     <a href="{{ route('seller.order.report.list')}}"> <i class="las la-user"></i> {{__('Reports List')}} </a>
                 </li>
-                <li class="list @if(request()->is('seller/to-do-list*')) active @endif">
+                <li class="list @if(request()->is('seller/to-do-list*')) active @elseif(request()->is('serviceprovider/to-do-list*')) active @endif">
                     <a href="{{ route('seller.todolist') }}"> <i class="las la-list"></i>{{ __('Todo List') }}</a>
                 </li>
-                <li class="list @if(request()->is('seller/profile*')) active @endif">
+                <li class="list @if(request()->is('seller/profile*')) active @elseif(request()->is('serviceprovider/profile*')) active@endif">
                     <a href="{{ route('seller.profile')}}"> <i class="las la-user"></i> {{__('Profile')}} </a>
                 </li>
-                <li class="list @if(request()->is('seller/seller-profile-verify*')) active @endif">
+                <li class="list @if(request()->is('seller/seller-profile-verify*')) active @elseif(request()->is('serviceprovider/seller-profile-verify*')) active @endif">
                     <a href="{{ route('seller.profile.verify')}}"> <i class="las la-user"></i> {{__('Profile Verify')}} </a>
                 </li>
-                <li class="list @if(request()->is('seller/account-settings*')) active @endif">
+                <li class="list @if(request()->is('seller/account-settings*')) active @elseif(request()->is('serviceprovider/account-settings*')) active @endif">
                     <a href="{{ route('seller.account.settings') }}"> <i class="las la-cog"></i> {{__('Settings')}} </a>
                 </li>
                 <li class="list">

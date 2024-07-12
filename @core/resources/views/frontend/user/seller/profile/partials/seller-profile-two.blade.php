@@ -1,6 +1,6 @@
 @extends('frontend.user.buyer.buyer-master')
 @section('site-title')
-    {{__('Edit Seller Profile')}}
+    {{__('Edit Service Provider Profile')}}
 @endsection
 @section('style')
     <x-media.css/>

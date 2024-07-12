@@ -1,7 +1,7 @@
 @extends('backend.admin-master')
 
 @section('site-title')
-    {{__('Order Success Settings')}}
+    {{__('Service Request Success Settings')}}
 @endsection
 
 @section('content')
@@ -12,28 +12,28 @@
                 <x-msg.error/>
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="header-title mb-4">{{__("Order Success Settings")}}</h4>
-                        <small class="text-danger mb-5">{{ __('You can change order success page text from here.') }}</small>
+                        <h4 class="header-title mb-4">{{__("Service Request Success Settings")}}</h4>
+                        <small class="text-danger mb-5">{{ __('You can change service request success page text from here.') }}</small>
                         <form action="{{route('admin.order.success.settings.update')}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
-                                <label for="success_title">{{__('Order Success Title')}}</label>
+                                <label for="success_title">{{__('Service Request Success Title')}}</label>
                                 <input type="text" name="success_title"  class="form-control" value="{{get_static_option('success_title')}}" id="success_title">
                             </div>
                             <div class="form-group">
-                                <label for="success_subtitle">{{__('Order Success Subtitle')}}</label>
+                                <label for="success_subtitle">{{__('Service Request Success Subtitle')}}</label>
                                 <input type="text" name="success_subtitle"  class="form-control" value="{{get_static_option('success_subtitle')}}" id="success_subtitle">
                             </div>
                             <div class="form-group">
-                                <label for="success_details_title">{{__('Order Success Details Title')}}</label>
+                                <label for="success_details_title">{{__('Service Request Success Details Title')}}</label>
                                 <input type="text" name="success_details_title"  class="form-control" value="{{get_static_option('success_details_title')}}" id="success_details_title">
                             </div>
                             <div class="form-group">
-                                <label for="button_title">{{__('Order Success Button Title')}}</label>
+                                <label for="button_title">{{__('Service Request Success Button Title')}}</label>
                                 <input type="text" name="button_title"  class="form-control" value="{{get_static_option('button_title')}}" id="button_title">
                             </div>
                             <div class="form-group">
-                                <label for="button_url">{{__('Order Success Button Url')}}</label>
+                                <label for="button_url">{{__('Service Request Success Button Url')}}</label>
                                 <input type="text" name="button_url"  class="form-control" value="{{get_static_option('button_url')}}" id="button_url">
                             </div>
                             <button type="submit" id="update" class="btn btn-primary mt-4 pr-4 pl-4">{{__('Update Changes')}}</button>

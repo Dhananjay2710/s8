@@ -30,11 +30,11 @@
                 <!-- search section start-->
                 <div class="dashboard__inner__item dashboard_border padding-20 radius-10 bg-white">
                     <div class="dashboard__wallet">
-                            <form action="@if(request()->path() == 'buyer/job-orders') {{ route('buyer.job.orders') }} @else {{ route('buyer.orders') }} @endif" method="GET">
+                            <form action="@if(request()->path() == 'buyer/job-orders' || request()->path() == 'customer/job-orders') {{ route('buyer.job.orders') }} @else {{ route('buyer.orders') }} @endif" method="GET">
                             <div class="dashboard__headerGlobal__flex">
                                 <div class="dashboard__headerGlobal__content">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        <h4 class="dashboard_table__title">{{ __('Search Order Module') }}</h4> <i class="las la-angle-down search_by_all"></i>
+                                        <h4 class="dashboard_table__title">{{ __('Search Service Request Module') }}</h4> <i class="las la-angle-down search_by_all"></i>
                                     </button>
                                 </div>
                                 <div class="dashboard__headerGlobal__btn">
@@ -66,15 +66,15 @@
                                                         <div class="row g-4 mt-3">
                                                             <div class="col-lg-4 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    <label for="order_id" class="info-title"> {{__('Order ID')}} </label>
-                                                                    <input class="form--control" name="order_id" value="{{ request()->get('order_id') }}" type="text" placeholder="{{ __('Order ID') }}">
+                                                                    <label for="order_id" class="info-title"> {{__('Service Request ID')}} </label>
+                                                                    <input class="form--control" name="order_id" value="{{ request()->get('order_id') }}" type="text" placeholder="{{ __('Service Request ID') }}">
                                                                 </div>
                                                             </div>
                                                             <div class="col-lg-4 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    <label for="order_status" class="info-title"> {{__('Order Status')}} </label>
+                                                                    <label for="order_status" class="info-title"> {{__('Service Request Status')}} </label>
                                                                     <select name="order_status">
-                                                                        <option value="">{{__('Select Order Status')}}</option>
+                                                                        <option value="">{{__('Select Service Request Status')}}</option>
                                                                          <option value="pending" @if(request()->get('order_status') == 'pending') selected @endif>{{ __('Pending') }}</option>
                                                                          <option value="1" @if(request()->get('order_status') == 1) selected @endif>{{ __('Active') }}</option>
                                                                          <option value="2" @if(request()->get('order_status') == 2) selected @endif>{{  __('completed') }}</option>
@@ -95,7 +95,7 @@
                                                         <div class="row g-4 mt-2">
                                                             <div class="col-lg-4 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    @if(request()->path() == 'buyer/job-orders')
+                                                                    @if(request()->path() == 'buyer/job-orders' || request()->path() == 'customer/job-orders')
                                                                         <input type="hidden" value="job_order" name="job_order_request">
                                                                         <label for="job_title" class="info-title"> {{__('Job Title')}} </label>
                                                                         <input class="form--control" name="job_title" value="{{ request()->get('job_title') }}" type="text" placeholder="{{ __('Job Title') }}">
@@ -107,8 +107,8 @@
                                                             </div>
                                                             <div class="col-lg-4 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    <label for="seller_name" class="info-title"> {{__('Seller Name')}} </label>
-                                                                    <input class="form--control" name="seller_name" value="{{ request()->get('seller_name') }}" type="text" placeholder="{{ __('Seller Name') }}">
+                                                                    <label for="seller_name" class="info-title"> {{__('Service Provider Name')}} </label>
+                                                                    <input class="form--control" name="seller_name" value="{{ request()->get('seller_name') }}" type="text" placeholder="{{ __('Service Provider Name') }}">
                                                                 </div>
                                                             </div>
                                                             <div class="col-lg-3 col-sm-6">
@@ -137,7 +137,7 @@
 
                 <!-- order table section start-->
                 <div class="dashboard_table__wrapper dashboard_border  padding-20 radius-10 bg-white">
-                    @if(request()->path() == 'buyer/job-orders')
+                    @if(request()->path() == 'buyer/job-orders' || request()->path() == 'customer/job-orders')
                         <h4 class="dashboards-title mb-3">{{ __('All Job Orders') }}</h4>
                     @else
                         <h4 class="dashboards-title mb-3">{{ __('All Service Orders') }}</h4>
@@ -150,17 +150,17 @@
                         <table>
                             <thead>
                             <tr>
-                                <th>{{ __('Order item') }}</th>
+                                <th>{{ __('Service Request item') }}</th>
 
-                                @if(request()->path() == 'buyer/orders')
+                                @if(request()->path() == 'buyer/orders' || request()->path() == 'customer/orders')
                                     <th>{{ __('Booking Date and Time') }}</th>
                                 @endif
 
-                                <th>{{ __('Order amount') }}</th>
-                                <th>{{ __('Order type') }}</th>
+                                <th>{{ __('Service Request amount') }}</th>
+                                <th>{{ __('Service Request type') }}</th>
                                 <th>{{ __('Payment Details') }}</th>
-                                <th>{{ __('Order Complete Request') }}</th>
-                                <th>{{ __('Order status') }}</th>
+                                <th>{{ __('Service Request Complete Request') }}</th>
+                                <th>{{ __('Service Request status') }}</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -172,7 +172,7 @@
                                     <div class="dashboard_table__main__order">
                                         <div class="dashboard_table__main__order__flex">
                                             <div class="dashboard_table__main__order__thumb">
-                                                @if(request()->path() == 'buyer/job-orders')
+                                                @if(request()->path() == 'buyer/job-orders' || request()->path() == 'customer/job-orders')
                                                     @if(!empty(render_image_markup_by_attachment_id(optional($order->job)->image, '', 'thumb')))
                                                         {!! render_image_markup_by_attachment_id(optional($order->job)->image, '', 'thumb') !!}
                                                     @else
@@ -188,22 +188,22 @@
 
                                             </div>
                                             <div class="dashboard_table__main__order__contents">
-                                                @if(request()->path() == 'buyer/job-orders')
+                                                @if(request()->path() == 'buyer/job-orders' || request()->path() == 'customer/job-orders')
                                                     <h5 class="dashboard_table__main__order__contents__title"> @if($order->order_from_job == 'yes') {{ Str::limit(optional($order->job)->title,60) }} @endif </h5>
                                                 @else
                                                     <h5 class="dashboard_table__main__order__contents__title">{{ optional($order->service)->title }}</h5>
                                                 @endif
                                                 <span class="dashboard_table__main__order__contents__subtitle mt-2">
-                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__id"> <strong class="text-dark">{{ __('Order ID:') }}</strong> {{ $order->id }}</a> ,
-                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark">{{ __('Seller Name:') }}</strong>{{ optional($order->seller)->name }} </a>
+                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__id"> <strong class="text-dark">{{ __('Service Request ID:') }}</strong> {{ $order->id }}</a> ,
+                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark">{{ __('Service Provider Name:') }}</strong>{{ optional($order->seller)->name }} </a>
                                                 </span>
-                                                <span><strong>{{ __('Order Date:') }}</strong>  {{ Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y') }}</span>
+                                                <span><strong>{{ __('Service Request Date:') }}</strong>  {{ Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y') }}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
 
-                                @if(request()->path() == 'buyer/orders')
+                                @if(request()->path() == 'buyer/orders' || request()->path() == 'customer/orders')
                                 <td>
                                     <div class="dashboard_table__main__date">
                                         <span class="date">
@@ -242,7 +242,7 @@
                                         @endif
                                     @endif
                                     @if ($order->payment_status == 'complete')
-                                     <div class="dashboard_table__main__priority"><strong>{{__('Payment Status: ')}}</strong> <span class="priorityBtn completed">{{ __('Complete') }}</span> </div>
+                                     <div class="dashboard_table__main__priority"><strong>{{__('Payment Status: ')}}</strong> <span class="priorityBtn completed">{{ __('Payment_AMC') }}</span> </div>
                                     @endif
                                     @if(empty($order->payment_status))
                                          <div class="dashboard_table__main__priority"><strong>{{__('Payment Status: ')}}</strong>  <span class="priorityBtn pending">{{ __('Pending') }}</span> </div>
@@ -370,12 +370,12 @@
                                             @endif
                                             <!-- report section end -->
                                             @php
-                                                if (request()->path() == 'buyer/job-orders'){
+                                                if (request()->path() == 'buyer/job-orders' || request()->path() == 'customer/job-orders'){
                                                     $service_title =  optional($order->job)->title;
                                                 }else{
                                                      $service_title =  optional($order->service)->title;
                                                 }
-                                                $details = __('Order Successfully Created');
+                                                $details = __('Service Request Successfully Created');
                                                 $address =  optional($order->buyer)->address;
                                             @endphp
                                              <li>

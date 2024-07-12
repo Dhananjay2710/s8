@@ -1,6 +1,6 @@
 @extends('backend.admin-master')
 @section('site-title')
-    {{__('Order Details')}}
+    {{__('Service Request Details')}}
 @endsection
 
 @section('content')
@@ -12,7 +12,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="checkbox-inlines">
-                                <label><strong>{{ __('Order ID:') }} </strong>#{{ $order_details->id }}</label>
+                                <label><strong>{{ __('Service Request ID:') }} </strong>#{{ $order_details->id }}</label>
                             </div>
                         </div>
                     </div>
@@ -24,7 +24,7 @@
                         <div class="card-body">
 
                             <div class="border-bottom mb-3">
-                                <h5>{{ __('Seller Details') }}</h5>
+                                <h5>{{ __('Service Provider Details') }}</h5>
                             </div>
                             <div class="single-checbox">
                                 <div class="checkbox-inlines">
@@ -112,7 +112,7 @@
                         <div class="card-body">
 
                             <div class="border-bottom mb-3">
-                                <h5>{{ __('Buyer Details') }}</h5>
+                                <h5>{{ __('Customer Details') }}</h5>
                             </div>
                             <div class="single-checbox">
                                 <div class="checkbox-inlines">
@@ -204,11 +204,11 @@
                             </div>
 
                             <div class="border-bottom mb-3 mt-4">
-                                <h5>{{ __('Order Status') }}</h5>
+                                <h5>{{ __('Service Request Status') }}</h5>
                             </div>
                             <div class="single-checbox">
                                 <div class="checkbox-inlines">
-                                    <label><strong>{{ __('Order Status: ') }}</strong>
+                                    <label><strong>{{ __('Service Request Status: ') }}</strong>
                                         @if ($order_details->status == 0) <span>{{ __('Pending') }}</span>@endif
                                         @if ($order_details->status == 1) <span>{{ __('Active') }}</span>@endif
                                         @if ($order_details->status == 2) <span>{{ __('Completed') }}</span>@endif
@@ -301,7 +301,7 @@
                                                 <div class="line-top-contents">
                                                     <h5 class="earning-title">{{ __('Extra Service Details') }}</h5>
                                                 </div>
-                                                <span class="info-text d-block mb-4">{{__('This is not included in the main service order calculation')}}</span>
+                                                <span class="info-text d-block mb-4">{{__('This is not included in the main service service request calculation')}}</span>
 
                                                 <table class="table table-bordered">
                                                     <thead>

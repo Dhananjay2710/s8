@@ -45,17 +45,17 @@
                                         <table id="all_order_table" class="custom--table table-td-padding">
                                             <thead>
                                             <tr>
-                                                <th> {{ __('Order ID') }} </th>
+                                                <th> {{ __('Service Request ID') }} </th>
                                                 <th> {{ __('Report ID') }} </th>
                                                 <th> {{ __('Report Details') }} </th>
-                                                <th> {{ __('Buyer Details') }} </th>
+                                                <th> {{ __('Customer Details') }} </th>
                                                 <th> {{ __('Conversation') }} </th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             @foreach ($reports as $report)
                                                 <tr>
-                                                    <td data-label="{{__('Order ID')}}"> {{ $report->order_id }} </td>
+                                                    <td data-label="{{__('Service Request ID')}}"> {{ $report->order_id }} </td>
                                                     <td data-label="{{__('Report ID')}}"> {{ $report->id }} </td>
                                                     <td data-label="{{ __('Report Details') }}">
                                                         <p><strong>{{ __('Report From:') }}</strong> {{ ucfirst($report->report_from) }}</p>
@@ -63,7 +63,7 @@
                                                         <p><strong>{{ __('Report Date:') }}</strong> {{date('d-m-Y', strtotime($report->created_at))}}</p>
                                                         <p><strong>{{ __('Description:') }}</strong> <span class="btn btn-info report_description" data-toggle="modal" data-target="#reportModal" data-report="{{ $report->report }}"><i class="ti-eye"></i></span></p>
                                                     </td>
-                                                    <td data-label="{{ __('Buyer Details') }} ">
+                                                    <td data-label="{{ __('Customer Details') }} ">
                                                         <p><strong>{{ __('Name:') }}</strong> {{ optional($report->buyer)->name }}</p>
                                                         <p><strong>{{ __('Email:') }}</strong> {{ optional($report->buyer)->email }}</p>
                                                         <p><strong>{{ __('Phone:') }}</strong> {{ optional($report->buyer)->phone }}</p>

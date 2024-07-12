@@ -2,7 +2,7 @@
     @include('frontend.user.seller.partials.header-two')
     <!--Dashboard Markup -->
     <div class="body-overlay"></div>
-    <div class="dashboard__area @if(Auth::guard('web')->user()->user_type == 0) seller_look @endif">
+    <div class="dashboard__area @if((Auth::guard('web')->user()->user_type ?? 0) == 0) seller_look @endif">
         <div class="container-fluid p-0">
             <div class="dashboard__contents__wrapper">
                 <div class="dashboard__icon">

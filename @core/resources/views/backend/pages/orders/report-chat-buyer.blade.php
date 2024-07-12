@@ -250,7 +250,7 @@
 
                                         <div class="gig-order-info">
                                             <p><strong>{{__('Report ID:') }}</strong> #{{ $report_details->id }}</p>
-                                            <p><strong>{{__('Order ID:') }}</strong> #{{ $report_details->order_id }}</p>
+                                            <p><strong>{{__('Service Request ID:') }}</strong> #{{ $report_details->order_id }}</p>
                                             <p><strong>{{__('Report From:') }}</strong> {{ ucfirst($report_details->report_from) }}</p>
                                         </div>
 

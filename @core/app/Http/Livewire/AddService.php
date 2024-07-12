@@ -147,7 +147,7 @@ class AddService extends Component
 
         $commissionGlobal = AdminCommission::first();
         if(moduleExists('Subscription') && $commissionGlobal->system_type == 'subscription' && empty(auth('web')->user()->subscribedSeller)){
-            session()->flash('message', __('you must have to subscribe any of our package in order to start selling your services.'));
+            session()->flash('message', __('you must have to subscribe any of our package in service request to start selling your services.'));
             return back();
         }
 
@@ -232,6 +232,7 @@ class AddService extends Component
             $service->video = $this->services['video'] ?? '';
             $service->seller_id = Auth::guard('web')->user()->id;
             $service->service_city_id = Auth::guard('web')->user()->service_city;
+            $service->service_area_id = Auth::guard('web')->user()->service_area;
             $service->status = $service_status;
             $service->tax = $country_tax->tax ?? 0;
             $service->is_service_all_cities = $this->services['is_service_all_cities'] ?? 0;

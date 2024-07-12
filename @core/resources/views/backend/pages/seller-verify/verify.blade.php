@@ -7,7 +7,7 @@
 @endsection
 
 @section('site-title')
-    {{__('All Seller')}}
+    {{__('All Service Provider')}}
 @endsection
 
 @section('content')
@@ -21,7 +21,7 @@
                                 <div class="card-body">
                                     <x-msg.success/>
                                     <x-msg.error/>
-                                    <h4 class="header-title">{{__('All Seller')}}</h4>
+                                    <h4 class="header-title">{{__('All Service Provider')}}</h4>
                                     @can('user-delete')
                                         <x-bulk-action/>
                                     @endcan
@@ -53,9 +53,9 @@
                                                     <td>{{$data->name}}</td>
                                                     <td>
                                                         @if($data->user_type==0)
-                                                            <span class="text-danger">{{ __('Seller') }}</span>
+                                                            <span class="text-danger">{{ __('Service Provider') }}</span>
                                                         @else
-                                                            <span class="text-success">{{ __('Buyer') }}</span>
+                                                            <span class="text-success">{{ __('Customer') }}</span>
                                                         @endif
                                                     </td>
                                                     <td>

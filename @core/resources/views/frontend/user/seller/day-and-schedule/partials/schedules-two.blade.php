@@ -29,7 +29,7 @@
                             <div class="dashboard-settings margin-top-40">
                                 <h4 class="dashboards-title"> {{__('All Schedules')}} </h4>
                                 <div class="notice-board">
-                                    <p class="text-danger">{{ __('schedules will show while a customer booking your order') }}</p>
+                                    <p class="text-danger">{{ __('schedules will show while a customer booking your service request') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -45,12 +45,12 @@
                                     @php
                                         $allow_or_not = App\Schedule::select('allow_multiple_schedule')->first();
                                     @endphp
-                                    <label class="total_day_label label_title"> {{ __('Allow Multiple Order to Same Schedule ') }} </label>
+                                    <label class="total_day_label label_title"> {{ __('Allow Multiple Service Request to Same Schedule ') }} </label>
                                     <select name="allow_multiple_schedule">
                                         <option value="{{ __('yes') }}" @if($allow_or_not?->allow_multiple_schedule=='yes') selected @endif> {{ __('Yes') }}</option>
                                         <option value="{{ __('no') }}" @if($allow_or_not?->allow_multiple_schedule=='no') selected @endif> {{ __('No') }}</option>
                                     </select>
-                                    <p class="text-warning mt-3">{{ __('If you select yes than buyer will place multiple order at the same schedule') }}</p>
+                                    <p class="text-warning mt-3">{{ __('If you select yes than customer will place multiple service request at the same schedule') }}</p>
                                 </div>
                                 <div class="btn-wrapper mt-3">
                                     <button type="submit" class="dashboard_table__title__btn btn-bg-1 radius-5" style="border: none">{{__('Submit')}}</button>

@@ -34,6 +34,7 @@ use App\Events\SupportMessage;
 use App\Helpers\FlashMsg;
 use Illuminate\Support\Facades\Mail;
 use Modules\JobPost\Entities\BuyerJob;
+use App\Events\UpdateTicket;
 
 class BuyerController extends Controller
 {
@@ -204,7 +205,12 @@ class BuyerController extends Controller
     {
         $orderDetails  = Order::where('id',$id)->first();
         $orderDetails->update(['order_complete_request'=>2,'status'=>2]);
-        toastr_success(__('Order complete request successfully approved.'));
+        toastr_success(__('Service complete requested successfully approved.'));
+        // update ticket stage to approved and closed
+        event(new UpdateTicket([
+            'sr_id' => $id,
+            'stage_name' => 'Approved And Closed',
+        ]));
         \Session::flash('open_review_modal', 'yes');
         \Session::flash('CompleteOrderId', $id);
         \Session::flash('seller_id', $orderDetails->seller_id);
@@ -215,7 +221,7 @@ class BuyerController extends Controller
     public function orderCancel($id=null)
     {
         Order::where('id',$id)->update(['payment_status'=>'','status'=>4]);
-        toastr_success(__('Order successfully cancelled.'));
+        toastr_success(__('Service request successfully cancelled.'));
         return redirect()->back();
     }
 
@@ -239,26 +245,26 @@ class BuyerController extends Controller
 
         //Send decline mail to seller and admin
         try {
-            $message_body_admin = __('A buyer has been decline a request to complete an order. Order ID #'). $request->order_id.'</br>';
-            $message_body_seller = __('Your request to complete an order has been decline by the buyer. Order ID #'). $request->order_id.'</br>';
+            $message_body_admin = __('A customer has been decline a request to complete an service request. Service Request ID #'). $request->order_id.'</br>';
+            $message_body_seller = __('Your requested to complete an service request has been decline by the customer. Service Request ID #'). $request->order_id.'</br>';
             $message = get_static_option('buyer_to_admin_extra_service_message');
             $message = str_replace(["@order_id"],[$request->order_id],$message);
             Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
-                'subject' =>get_static_option('buyer_order_decline_subject') ?? __('Order Complete Decline'),
+                'subject' =>get_static_option('buyer_order_decline_subject') ?? __('Service Request Complete Decline'),
                 'message' => $message
             ]));
 
             $message = get_static_option('buyer_order_decline_message');
             $message = str_replace(["@order_id"],[$request->order_id],$message);
             Mail::to($seller_email->email)->send(new BasicMail([
-                'subject' =>get_static_option('buyer_order_decline_subject') ?? __('Order Complete Decline'),
+                'subject' =>get_static_option('buyer_order_decline_subject') ?? __('Service Request Complete Decline'),
                 'message' => $message
             ]));
         } catch (\Exception $e) {
             return redirect()->back()->with(FlashMsg::item_new($e->getMessage()));
         }
 
-        toastr_success(__('Order complete request decline successfully'));
+        toastr_success(__('Service Request complete request decline successfully'));
         return back();
     }
 
@@ -630,7 +636,7 @@ class BuyerController extends Controller
             // send order ticket notification to seller
             $seller = User::where('id',$last_ticket->seller_id)->first();
             if($seller){
-                $order_ticcket_message = __('You have a new order ticket');
+                $order_ticcket_message = __('You have a new service request ticket');
                 $seller ->notify(new TicketNotificationSeller($last_ticket_id , $seller_id, $last_ticket->seller_id,$order_ticcket_message ));
             }
 
@@ -642,11 +648,11 @@ class BuyerController extends Controller
                 $message = get_static_option('buyer_report_message');
                 $message = str_replace(["@order_ticket_id","@report_id"],[$last_ticket_id],$message);
                 Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
-                    'subject' => get_static_option('buyer_report_subject') ?? __('New Order Ticket'),
+                    'subject' => get_static_option('buyer_report_subject') ?? __('New Service Request Ticket'),
                     'message' => $message
                 ]));
                 Mail::to($seller->email)->send(new BasicMail([
-                    'subject' => get_static_option('buyer_report_subject') ?? __('New Order Ticket'),
+                    'subject' => get_static_option('buyer_report_subject') ?? __('New Service Request Ticket'),
                     'message' => $message
                 ]));
             } catch (\Exception $e) {
@@ -861,7 +867,7 @@ class BuyerController extends Controller
             }catch (\Exception $e){
                 //handle error
             }
-            toastr_success(__('Order Created Success'));
+            toastr_success(__('Service Request Created Success'));
             return back();
         }
 

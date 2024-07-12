@@ -38,8 +38,8 @@
                                                     <div class="row g-4 mt-3">
                                                         <div class="col-lg-4 col-sm-6">
                                                             <div class="single-info-input">
-                                                                <label for="title" class="info-title"> {{__('Order ID')}} </label>
-                                                                <input class="form--control" name="order_id" value="{{ request()->get('order_id') }}" type="text" placeholder="{{ __('Order ID') }}">
+                                                                <label for="title" class="info-title"> {{__('Service Request ID')}} </label>
+                                                                <input class="form--control" name="order_id" value="{{ request()->get('order_id') }}" type="text" placeholder="{{ __('Service Request ID') }}">
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-4 col-sm-6">
@@ -81,10 +81,10 @@
                             <table>
                                 <thead>
                                 <tr>
-                                    <th> {{ __('Order ID') }} </th>
+                                    <th> {{ __('Service Request ID') }} </th>
                                     <th> {{ __('Report ID') }} </th>
                                     <th> {{ __('Report Details') }} </th>
-                                    <th> {{ __('Seller Details') }} </th>
+                                    <th> {{ __('Service Provider Details') }} </th>
                                     <th> {{ __('Conversation') }} </th>
                                 </tr>
                                 </thead>

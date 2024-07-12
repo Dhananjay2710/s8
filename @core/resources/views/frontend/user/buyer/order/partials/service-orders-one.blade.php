@@ -31,7 +31,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="dashboard-settings margin-top-40">
-                                    @if(request()->path() == 'buyer/job-orders')
+                                    @if(request()->path() == 'buyer/job-orders' || request()->path() == 'customer/job-orders')
                                         <h2 class="dashboards-title">{{ __('All Job Orders') }}</h2>
                                     @else
                                         <h2 class="dashboards-title">{{ __('All Service Orders') }}</h2>
@@ -48,38 +48,38 @@
                                         <table id="all_order_table" class="custom--table table-td-padding">
                                             <thead>
                                             <tr>
-                                                <th> {{ __('Order ID') }} </th>
-                                                <th> {{ __('Seller Name') }} </th>
-                                                @if(request()->path() == 'buyer/job-orders')
+                                                <th> {{ __('Service Request ID') }} </th>
+                                                <th> {{ __('Service Provider Name') }} </th>
+                                                @if(request()->path() == 'buyer/job-orders' || request()->path() == 'customer/job-orders')
                                                     <!--Job heading -->
                                                     <th> {{ __('Job Title') }} </th>
-                                                    <th> {{ __('Order Date') }} </th>
+                                                    <th> {{ __('Service Request Date') }} </th>
                                                 @else
                                                     <!--service heading -->
                                                     <th> {{ __('Service Name') }} </th>
                                                     <th> {{ __('Service Date') }} </th>
                                                     <th> {{ __('Service Time') }} </th>
                                                 @endif
-                                                <th> {{ __('Order Pricing') }} </th>
+                                                <th> {{ __('Service Request Pricing') }} </th>
                                                 <th> {{ __('Payment Details') }} </th>
-                                                <th> {{ __('Order Status') }} </th>
-                                                <th> {{ __('Order Type') }} </th>
-                                                <th> {{ __('Order Complete Request') }} </th>
+                                                <th> {{ __('Service Request Status') }} </th>
+                                                <th> {{ __('Service Request Type') }} </th>
+                                                <th> {{ __('Service Request Complete Request') }} </th>
                                                 <th> {{ __('Action') }} </th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             @foreach ($orders as $order)
                                                 <tr>
-                                                    <td data-label="{{__('Order ID')}}"> {{ $order->id }} </td>
-                                                    <td data-label="{{__('Seller Name')}}"> {{ optional($order->seller)->name }} </td>
+                                                    <td data-label="{{__('Service Request ID')}}"> {{ $order->id }} </td>
+                                                    <td data-label="{{__('Service Provider Name')}}"> {{ optional($order->seller)->name }} </td>
 
                                                     <!--job and service info -->
-                                                    @if(request()->path() == 'buyer/job-orders')
+                                                    @if(request()->path() == 'buyer/job-orders' || request()->path() == 'customer/job-orders')
                                                         <td data-label="{{__('Job Title')}}">
                                                             @if($order->order_from_job == 'yes') {{ Str::limit(optional($order->job)->title,20) }} @endif
                                                         </td>
-                                                        <td data-label="{{__('Order Date')}}"><span>{{ Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y') }} </span></td>
+                                                        <td data-label="{{__('Service Request Date')}}"><span>{{ Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y') }} </span></td>
                                                     @else
                                                         <td data-label="{{__('Service Name')}}">{{ Str::limit(optional($order->service)->title,20) }} </td>
                                                         <td data-label="{{__('Service Date')}}">
@@ -92,7 +92,7 @@
                                                         <td data-label="{{__('Service Time')}}"> {{ __($order->schedule) }}</td>
                                                     @endif
 
-                                                    <td data-label="{{__('Order Pricing')}}"> {{ float_amount_with_currency_symbol($order->total) }}</td>
+                                                    <td data-label="{{__('Service Request Pricing')}}"> {{ float_amount_with_currency_symbol($order->total) }}</td>
                                                     <td data-label="Payment Status">
                                                         @if ($order->payment_status == 'pending')
                                                             <span class="text-danger"><strong>{{__('Payment Status: ')}}</strong>{{ __('Pending') }}</span>
@@ -103,7 +103,7 @@
                                                             @endif
                                                         @endif
                                                         @if ($order->payment_status == 'complete')
-                                                            <span class="text-success"><strong>{{__('Payment Status: ')}}</strong>{{ __('Complete') }}</span>
+                                                            <span class="text-success"><strong>{{__('Payment Status: ')}}</strong>{{ __('Payment_AMC') }}</span>
                                                         @endif
 
                                                         @if(empty($order->payment_status))
@@ -111,13 +111,13 @@
                                                         @endif
                                                     </td>
 
-                                                    @if ($order->status == 0) <td data-label="{{__('Order Status')}}" class="pending"><span>{{ __('Pending') }}</span></td>@endif
-                                                    @if ($order->status == 1) <td data-label="{{__('Order Status')}}" class="order-active"><span>{{ __('Active') }}</span></td>@endif
-                                                    @if ($order->status == 2) <td data-label="{{__('Order Status')}}" class="completed"><span>{{ __('Completed') }}</span></td>@endif
-                                                    @if ($order->status == 3) <td data-label="{{__('Order Status')}}" class="order-deliver"><span>{{ __('Delivered') }}</span></td>@endif
-                                                    @if ($order->status == 4) <td data-label="{{__('Order Status')}}" class="canceled"><span>{{ __('Cancelled') }}</span></td>@endif
+                                                    @if ($order->status == 0) <td data-label="{{__('Service Request Status')}}" class="pending"><span>{{ __('Pending') }}</span></td>@endif
+                                                    @if ($order->status == 1) <td data-label="{{__('Service Request Status')}}" class="order-active"><span>{{ __('Active') }}</span></td>@endif
+                                                    @if ($order->status == 2) <td data-label="{{__('Service Request Status')}}" class="completed"><span>{{ __('Completed') }}</span></td>@endif
+                                                    @if ($order->status == 3) <td data-label="{{__('Service Request Status')}}" class="order-deliver"><span>{{ __('Delivered') }}</span></td>@endif
+                                                    @if ($order->status == 4) <td data-label="{{__('Service Request Status')}}" class="canceled"><span>{{ __('Cancelled') }}</span></td>@endif
 
-                                                    <td data-label="Order Pricing">
+                                                    <td data-label="Service Request Pricing">
                                                         @if($order->is_order_online==1)
                                                             <span class="btn btn-success">{{ __('Online') }}</span>
                                                         @else
@@ -126,11 +126,11 @@
                                                     </td>
 
                                                     @if ($order->order_complete_request == 0)
-                                                        <td data-label="{{__('Order Status')}}" class="pending"><span>{{ __('No Request Create') }}</span></td>
+                                                        <td data-label="{{__('Service Request Status')}}" class="pending"><span>{{ __('No Request Create') }}</span></td>
                                                     @endif
 
                                                     @if ($order->order_complete_request == 1)
-                                                        <td data-label="Order Status" class="pending">
+                                                        <td data-label="Service Request Status" class="pending">
                                                             <span>{{ __('Complete Request') }}</span> <br>
                                                             <span><x-order-complete-request-approve :url="route('buyer.order.complete.request.approve',$order->id)"/></span>
                                                             <span class="btn btn-warning btn-sm mt-1">
@@ -147,10 +147,10 @@
                                                     @endif
 
                                                     @if ($order->order_complete_request == 2)
-                                                        <td data-label="{{__('Order Status')}}" class="completed"> <span>{{ __('Completed') }}</span></td>
+                                                        <td data-label="{{__('Service Request Status')}}" class="completed"> <span>{{ __('Completed') }}</span></td>
                                                     @endif
                                                     @if ($order->order_complete_request == 3)
-                                                        <td data-label="{{__('Order Status')}}">
+                                                        <td data-label="{{__('Service Request Status')}}">
                                                             @if(optional($order->completedeclinehistory)->count() >=1)
                                                             <span class="text-danger">{{ __('Request Decline') }}</span> <br>
                                                             <span class="btn btn-warning"><a href="{{ route('buyer.order.request.decline.history',$order->id) }}"> {{ __('View History') }} </a></span>

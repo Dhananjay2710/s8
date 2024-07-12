@@ -47,7 +47,7 @@
                             <div class="dashboard__headerGlobal__flex">
                                 <div class="dashboard__headerGlobal__content">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        <h4 class="dashboard_table__title">{{ __('Search Order Pending Module') }}</h4> <i class="las la-angle-down search_by_all"></i>
+                                        <h4 class="dashboard_table__title">{{ __('Search Pending Service Request Module') }}</h4> <i class="las la-angle-down search_by_all"></i>
                                     </button>
                                 </div>
                                 <div class="dashboard__headerGlobal__btn">
@@ -71,8 +71,8 @@
                                                         <div class="row g-4 mt-3">
                                                             <div class="col-lg-4 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    <label for="order_id" class="info-title"> {{__('Order ID')}} </label>
-                                                                    <input class="form--control" name="order_id" value="{{ request()->get('order_id') }}" type="text" placeholder="{{ __('Order ID') }}">
+                                                                    <label for="order_id" class="info-title"> {{__('Service Request ID')}} </label>
+                                                                    <input class="form--control" name="order_id" value="{{ request()->get('order_id') }}" type="text" placeholder="{{ __('Service Request ID') }}">
                                                                 </div>
                                                             </div>
 
@@ -100,7 +100,7 @@
                 <div class="dashboard__headerContents">
                     <div class="dashboard__headerContents__flex">
                         <div class="dashboard__headerContents__left">
-                            <h4 class="dashboard__headerContents__title"> {{ __('Order Request') }}({{ $pending_orders->total() }}) </h4>
+                            <h4 class="dashboard__headerContents__title"> {{ __('Service Request Request') }}({{ $pending_orders->total() }}) </h4>
                         </div>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                                                     <h4 class="dashboard_jobPost__author__title">
                                                      {{ optional($order->service)->title }}
                                                     </h4>
-                                                    <strong class="label_title mt-2"> {{ __('Order').' #'.$order->id }} </strong>
+                                                    <strong class="label_title mt-2"> {{ __('Service Provider').' #'.$order->id }} </strong>
                                                     </a>
 
                                                     <div class="dashboard_jobPost__views mt-3">
@@ -211,7 +211,7 @@
                     </div>
                 @else
                     <div class="chat_wrapper__details__inner__chat__contents">
-                        <h2 class="chat_wrapper__details__inner__chat__contents__para">{{ __('No Pending Order Found') }}</h2>
+                        <h2 class="chat_wrapper__details__inner__chat__contents__para">{{ __('No Pending Service Request Found') }}</h2>
                     </div>
                 @endif
             </div>

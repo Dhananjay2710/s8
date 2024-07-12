@@ -29,7 +29,7 @@
 
                     <div class="btn-wrapper margin-top-50 text-right">
                         <a href="#" class="cmn-btn btn-bg-1" data-toggle="modal"
-                           data-target="#ticketModal" > {{__('Create Ticket For A Order' )}}</a>
+                           data-target="#ticketModal" > {{__('Create Ticket For A Service Request' )}}</a>
                     </div>
 
                     @if($tickets->count() >= 1)
@@ -49,7 +49,7 @@
                                     @foreach($tickets as $key=>$data)
                                         <tr>
                                             <td>{{ $data->id }}</td>
-                                            <td>{{__('Order Id')}} #{{ $data->order_id }}, {{ $data->title }}</td>
+                                            <td>{{__('Service Request Id')}} #{{ $data->order_id }}, {{ $data->title }}</td>
                                             <td>
                                                 @if($data->priority=='low')<span class="btn btn-primary btn-bg-1">{{ __(ucfirst($data->priority)) }}</span>@endif
                                                 @if($data->priority=='high')<span class="btn btn-warning btn-bg-1">{{ __(ucfirst($data->priority)) }}</span>@endif
@@ -176,7 +176,7 @@
                                 <select name="order_id">
                                     <option value="">{{__('Select Order')}}</option>
                                     @foreach($orders as $order)
-                                        <option value="{{ $order->id }}">{{ __('Order ID#') }} {{ $order->id }}</option>
+                                        <option value="{{ $order->id }}">{{ __('Service Request ID#') }} {{ $order->id }}</option>
                                     @endforeach
                                 </select>
                             </div>

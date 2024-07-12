@@ -1,6 +1,6 @@
 @extends('backend.admin-master')
 @section('site-title')
-    {{__('Seller Verification Template')}}
+    {{__('Service Provider Verification Template')}}
 @endsection
 @section('style')
     <x-media.css/>
@@ -18,7 +18,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="header-wrapp d-flex justify-content-between">
-                            <h4 class="header-title">{{__('Seller Order Ticket Template')}}</h4>
+                            <h4 class="header-title">{{__('Service Provider Request Ticket Template')}}</h4>
                             <a class="btn btn-info" href="{{route('admin.email.template.all')}}">{{__('All Email Templates')}}</a>
                         </div>
                         <form action="{{route('admin.seller.verification')}}" method="post" enctype="multipart/form-data">
@@ -26,7 +26,7 @@
                             <div class="tab-content margin-top-30">
                                 <div class="form-group">
                                     <label for="seller_verification_subject">{{__('Email Subject')}}</label>
-                                    <input type="text" name="seller_verification_subject"  class="form-control" value="{{ get_static_option('seller_verification_subject') ?? __('Seller Verification Request') }}">
+                                    <input type="text" name="seller_verification_subject"  class="form-control" value="{{ get_static_option('seller_verification_subject') ?? __('Service Provider Verification Request') }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="seller_verification_message">{{ __('Email Message') }}</label>

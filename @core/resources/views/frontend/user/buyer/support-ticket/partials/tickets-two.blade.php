@@ -49,8 +49,8 @@
                                                             </div>
                                                             <div class="col-lg-2 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    <label for="order_id" class="info-title"> {{__('Order ID')}} </label>
-                                                                    <input class="form--control" name="order_id" value="{{ request()->get('order_id') }}" type="text" placeholder="{{ __('Order ID') }}">
+                                                                    <label for="order_id" class="info-title"> {{__('Service Request ID')}} </label>
+                                                                    <input class="form--control" name="order_id" value="{{ request()->get('order_id') }}" type="text" placeholder="{{ __('Service Request ID') }}">
                                                                 </div>
                                                             </div>
                                                             <div class="col-lg-5 col-sm-6">
@@ -88,7 +88,7 @@
                             <a href="javascript:void(0)"
                                class="dashboard_table__title__btn btn-bg-1 radius-5"
                                data-bs-toggle="modal"
-                               data-bs-target="#ticketModal"><i class="fa-solid fa-plus"></i> {{__('Create Ticket For A Order' )}}</a>
+                               data-bs-target="#ticketModal"><i class="fa-solid fa-plus"></i> {{__('Create Ticket For A Service Request' )}}</a>
                         </div>
                     </div>
 
@@ -98,7 +98,7 @@
                             <thead>
                             <tr>
                                 <th>{{ __('Ticket Name/ID') }}</th>
-                                <th>{{ __('Order ID') }}</th>
+                                <th>{{ __('Service Request ID') }}</th>
                                 <th>{{ __('Priority') }}</th>
                                 <th>{{ __('Status') }}</th>
                                 <th>{{ __('Action') }}</th>
@@ -247,7 +247,7 @@
                                             <select class="select2_activation" name="order_id">
                                                 <option value="">{{__('Select Order')}}</option>
                                                 @foreach($orders as $order)
-                                                    <option value="{{ $order->id }}">{{ __('Order ID#') }} {{ $order->id }}</option>
+                                                    <option value="{{ $order->id }}">{{ __('Service Request ID#') }} {{ $order->id }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

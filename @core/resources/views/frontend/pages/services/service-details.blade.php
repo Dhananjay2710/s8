@@ -121,7 +121,7 @@
                                     {{ get_static_option('service_details_overview_title') ?? __('Overview') }}
                                 </li>
                                 <li class="list" data-tab="tab2">
-                                    {{ get_static_option('service_details_about_seller_title') ?? __('About Seller') }}
+                                    {{ get_static_option('service_details_about_seller_title') ?? __('About Service Provider') }}
                                 </li>
                                 <li class="list" data-tab="tab3">
                                     {{ get_static_option('service_details_review_title') ?? __('Review') }}
@@ -197,7 +197,7 @@
                                                 <h5 class="title"> <a href="{{ route('about.seller.profile',optional($service_details->seller)->username) }}"> {{ optional($service_details->seller)->name }} </a> </h5>
                                                 @if($completed_order >=1)
                                                     <div class="about-seller-list">
-                                                        <span class="icon">{{ __('Order Completed') }}</span>
+                                                        <span class="icon">{{ __('Service Request Completed') }}</span>
                                                         <span class="reviews">({{ $completed_order }}) </span>
                                                     </div>
                                                 @endif
@@ -211,20 +211,20 @@
                                                     </strong>
                                                 </li>
                                                 @if(!empty($seller_since))
-                                                    <li class="box-list"> {{ __('Seller Since') }}
+                                                    <li class="box-list"> {{ __('Service Provider Since') }}
                                                         <strong>
                                                             {{ Carbon\Carbon::parse($seller_since->created_at)->year }}
                                                         </strong>
                                                     </li>
                                                 @endif
                                                 @if($order_completion_rate>=1)
-                                                    <li class="box-list"> {{ __('Order Completion Rate') }}
+                                                    <li class="box-list"> {{ __('Service Request Completion Rate') }}
                                                         <strong> {{ ceil($order_completion_rate) }}%
                                                         </strong>
                                                     </li>
                                                 @endif
                                                 @if($completed_order>=1)
-                                                    <li class="box-list">{{ __('Order Completed') }}
+                                                    <li class="box-list">{{ __('Service Request Completed') }}
                                                         <strong>
                                                             {{ $completed_order }}
                                                         </strong>
@@ -351,7 +351,7 @@
                     @if($another_service->count() > 0)
                         <div class="another-details-wrapper padding-top-100">
                             <div class="section-title-two">
-                                <h3 class="title">{{ get_static_option('service_details_another_service_title') ?? __('Another Service of this Seller') }}</h3>
+                                <h3 class="title">{{ get_static_option('service_details_another_service_title') ?? __('Another Service of this Service Provider') }}</h3>
                                 <a href="{{ route('seller.service.all',$service_details->seller_id) }}" class="section-btn">{{ get_static_option('service_details_explore_all_title') ?? __('Explore All') }}</a>
                             </div>
                             <div class="row padding-top-20">
@@ -450,12 +450,12 @@
                         <div class="order-pagkages">
                             @if($completed_order >=1)
                                 <span class="single-order"> <i class="las la-check"></i>
-                                {{ $completed_order }} {{ __('Order Completed') }}
+                                {{ $completed_order }} {{ __('Service Request Completed') }}
                             </span>
                             @endif
                             @if($seller_rating_percentage_value >=1)
                                 <span class="single-order"> <i class="las la-star"></i>
-                                {{ __('Seller Rating:') }}
+                                {{ __('Service Provider Rating:') }}
                                     {{ ceil($seller_rating_percentage_value) }}%
                             </span>
                             @endif

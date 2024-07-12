@@ -139,10 +139,10 @@
     </div>
         <div class="inner-wrap" style="background-color: #fff;text-align: left;box-shadow: 0 0 20px 0 rgba(0,0,0,0.01);">
         <div class="inner-wrap-contents">
-            <p class="wrap-para">{{ __('Hello, Order Created By:') }} {{ optional($order_details->buyer)->name }} <br>
-            {{ __('Order has been created successfully at:') .optional($order_details->created_at)->toFormattedDateString().','. ucwords(str_replace("_", " ", $order_details->payment_gateway)) }}
+            <p class="wrap-para">{{ __('Hello, Service Requested By:') }} {{ optional($order_details->buyer)->name }} <br>
+            {{ __('Service has been requested successfully at:') .optional($order_details->created_at)->toFormattedDateString().','. ucwords(str_replace("_", " ", $order_details->payment_gateway)) }}
             </p>
-            <h4 class="earning-order-title">{{ __('Your Order ID') }} #{{ $order_details->id }}<br>
+            <h4 class="earning-order-title">{{ __('Your Service Request ID') }} #{{ $order_details->id }}<br>
                 {{ __('Total Amount') }} {{ float_amount_with_currency_symbol($order_details->total) }}<br>
                 {{ __('Tax Amount') }} {{ float_amount_with_currency_symbol($order_details->tax) }} <br> <br>
                 @if($order_details->transaction_id !='')
@@ -156,7 +156,7 @@
         @endphp
 
         @if($order_includes->count()>=1)
-        <h3 class="earning-title">{{ __('Order Include Details') }}</h3>
+        <h3 class="earning-title">{{ __('Service Request Include Details') }}</h3>
         <table class="table table-bordered table-responsive" style="margin: 0 auto; border: 1px solid #ddd; border-collapse: collapse; width: 100%; margin-bottom: 30px;overflow-x: auto;">
             <thead>
                 <tr class="table-row">
@@ -201,7 +201,7 @@
         @endphp
 
         @if($order_additionals->count()>=1)
-        <h3 class="earning-title">{{ get_static_option('service_extra_title') ?? __('Order Additional Details') }}</h3>
+        <h3 class="earning-title">{{ get_static_option('service_extra_title') ?? __('Service Request Additional Details') }}</h3>
         <table class="table table-bordered" style="margin: 0 auto; border: 1px solid #ddd; border-collapse: collapse; width: 100%; margin-bottom: 30px;">
             <thead>
                 <tr>
@@ -261,7 +261,7 @@
             <p class="wrap-para"><strong>{{ __('Phone:') }}</strong> {{ $order_details->phone }}</p>
         </div>
         <div class="earning-wrapper">
-            <h3 class="earning-title">{{ __('Shipping Details') }}</h3><hr>
+            <h3 class="earning-title">{{ __('Service Location Details') }}</h3><hr>
             <p class="wrap-para"><strong>{{ __('Name:') }}</strong> {{ $order_details->name }}</p>
             <p class="wrap-para"><strong>{{ __('Email:') }}</strong> {{ $order_details->email }}</p>
             <p class="wrap-para"><strong>{{ __('Phone:') }}</strong> {{ $order_details->phone }}</p>
@@ -271,7 +271,7 @@
             <p class="wrap-para"><strong>{{ __('Address:') }}</strong> {{ $order_details->address }}</p>
             <p class="wrap-para"><strong>{{ __('Date:') }}</strong> {{ __($order_details->date) }}</p>
             <p class="wrap-para"><strong>{{ __('Schedule:') }}</strong> {{ __($order_details->schedule) }}</p>
-            <p class="wrap-para"><strong>{{ __('Order Create Date:') }}</strong> {{ optional($order_details->created_at)->toFormattedDateString() }}</p>
+            <p class="wrap-para"><strong>{{ __('Requested Service Raise Date:') }}</strong> {{ optional($order_details->created_at)->toFormattedDateString() }}</p>
         </div>
        @endif
 

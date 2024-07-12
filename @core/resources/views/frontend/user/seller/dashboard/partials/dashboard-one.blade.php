@@ -1,6 +1,6 @@
 @extends('frontend.user.seller.seller-master')
 @section('site-title')
-    {{__('Seller Dashboard')}}
+    {{__('Service Provider Dashboard')}}
 @endsection
 @section('content')
     <x-frontend.seller-buyer-preloader/>
@@ -74,7 +74,7 @@
                             @if(empty(auth('web')->user()->subscribedSeller))
                                 <div class="col-lg-12 mt-1">
                                     <div class="alert alert-warning d-flex justify-content-between">
-                                        <strong style="font-size: 16px">{{__('you must have to subscribe any of our package in order to start selling your services.')}}</strong>
+                                        <strong style="font-size: 16px">{{__('you must have to subscribe any of our package in service request to start selling your services.')}}</strong>
                                         <a href="{{getSlugFromReadingSetting('price_plan_page') ? url('/'.getSlugFromReadingSetting('price_plan_page')) : url('/price-plan')}}" target="_self" class="btn btn-secondary">{{__('view packages')}}</a>
                                     </div>
                                 </div>
@@ -114,7 +114,7 @@
                                     </div>
                                     <div class="contents">
                                         <h2 class="order-titles"> {{ $pending_order }} </h2>
-                                        <span class="order-para">{{ __('Order Pending') }} </span>
+                                        <span class="order-para">{{ __('Pending Service Request') }} </span>
                                     </div>
                                 </div>
                             </div>
@@ -130,7 +130,7 @@
                                     </div>
                                     <div class="contents">
                                         <h2 class="order-titles"> {{ $complete_order }} </h2>
-                                        <span class="order-para"> {{ __('Order Completed ') }}</span>
+                                        <span class="order-para"> {{ __('Service Request Completed ') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -172,7 +172,7 @@
                         <div class="single-flex-middle margin-top-40">
                             <div class="line-charts-wrapper">
                                 <div class="line-top-contents">
-                                    <h5 class="earning-title">{{ __('Total Order Overview') }}</h5>
+                                    <h5 class="earning-title">{{ __('Total Service Request Overview') }}</h5>
                                 </div>
                                 <div class="line-charts">
                                     <canvas id="line-chart"></canvas>
@@ -208,7 +208,7 @@
                                             </div>
                                             <div class="contents">
                                                 <h4 class="title">{{ $this_month_order_count }} </h4>
-                                                <span class="title-para">{{ __('Order') }} </span>
+                                                <span class="title-para">{{ __('Service Request') }} </span>
                                             </div>
                                         </div>
                                         <div class="single-chart-summery">
@@ -235,7 +235,7 @@
                                             </div>
                                             <div class="contents">
                                                 <h4 class="title"> {{ $buyer_count }} </h4>
-                                                <span class="title-para">{{ __('Total Buyer') }} </span>
+                                                <span class="title-para">{{ __('Total Customer') }} </span>
                                             </div>
                                         </div>
                                     </div>

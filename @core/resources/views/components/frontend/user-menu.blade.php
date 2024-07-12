@@ -10,14 +10,14 @@
                     @if(Auth::guard('web')->check())
                         <i class="las la-bell"></i>
                         <span class="notification-number">
-                    {{ Auth()->user()->unreadNotifications()->where('data->order_message' , 'You have a new order')->count() }}
+                    {{ Auth()->user()->unreadNotifications()->where('data->order_message' , 'You have a new service request')->count() }}
                 </span>
                     @endif
 
                     <div class="notification-list-item mt-2">
                         <h5 class="notification-title">{{ __('Notifications') }}</h5>
                         <div class="list">
-                            @if(Auth::guard('web')->check() && Auth::guard('web')->user()->unreadNotifications()->where('data->order_message' , 'You have a new order')->count() >=1)
+                            @if(Auth::guard('web')->check() && Auth::guard('web')->user()->unreadNotifications()->where('data->order_message' , 'You have a new service request')->count() >=1)
                                 <span>
                             @foreach(Auth::user()->unreadNotifications->take(5) as $notification)
                                         @if(isset($notification->data['order_id']))
@@ -58,7 +58,13 @@
                 <a href="{{ route('buyer.dashboard')}}"> {{ __('Dashboard') }} </a>
                 @endif
             </li>
-            <li class="list"> <a href="{{ route('seller.logout')}}"> {{ __('Logout') }} </a> </li>
+            <li class="list"> 
+                @if(Auth::guard('web')->user()->user_type==0)
+                <a href="{{ route('seller.logout')}}"> {{ __('Logout') }} </a>
+                @else
+                <a href="{{ route('buyer.logout')}}"> {{ __('Logout') }} </a>
+                @endif
+            </li>
         </ul>
     </div>
 </div>

@@ -1,6 +1,6 @@
 @extends('frontend.user.seller.seller-master')
 @section('site-title')
-    {{__('Buyer Account Settings')}}
+    {{__('Customer Account Settings')}}
 @endsection
 @section('style')
     <style>

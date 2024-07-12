@@ -85,7 +85,7 @@
                                     <h4 class="title">
                                         <a href="{{ route('about.buyer.profile',$buyer->username) }}"> {{ $buyer->name }} </a>
                                         @if($buyer->email_verified == 1)
-                                            <div data-toggle="tooltip" data-placement="top" title="{{__('This Buyer is verified')}}">
+                                            <div data-toggle="tooltip" data-placement="top" title="{{__('This Customer is verified')}}">
                                                 <span class="seller-verified"> <i class="las la-check"></i> </span>
                                             </div>
                                         @endif
@@ -106,7 +106,7 @@
                         <div class="profile-author-contents">
                             <ul class="profile-about">
                                 <li> {{ __('From:') }} <span> {{ optional($buyer->country)->country }} </span> </li>
-                                <li> {{ __('Buyer Since:') }} <span> {{ Carbon\Carbon::parse($buyer_since->created_at)->year }}  </span> </li>
+                                <li> {{ __('Customer Since:') }} <span> {{ Carbon\Carbon::parse($buyer_since->created_at)->year }}  </span> </li>
                             </ul>
                         </div>
                     </div>
@@ -129,7 +129,7 @@
                                         <div class="icon"><i class="las la-star"></i></div>
                                         <div class="contents margin-top-10">
                                             <h3 class="title">@if(!empty($buyer_rating_percentage_value)) {{ ceil($buyer_rating_percentage_value) }}% @endif</h3>
-                                            <span class="ratings-span">{{ __('Buyer Rating') }} </span>
+                                            <span class="ratings-span">{{ __('Customer Rating') }} </span>
                                         </div>
                                     </div>
                                 </div>
@@ -148,7 +148,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="section-title-two">
-                            <h3 class="title">{{ __('Job of this Buyer') }} </h3>
+                            <h3 class="title">{{ __('Job of this Customer') }} </h3>
                         </div>
                     </div>
                 </div>
@@ -256,7 +256,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="section-title-two">
-                            <h3 class="title">{{ __('Reviews as Buyer') }}</h3>
+                            <h3 class="title">{{ __('Reviews as Customer') }}</h3>
                         </div>
                     </div>
                 </div>

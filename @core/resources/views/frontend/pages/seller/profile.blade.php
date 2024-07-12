@@ -118,7 +118,7 @@
                         <div class="profile-author-contents">
                             <ul class="profile-about">
                                 <li> {{ __('From:') }} <span> {{ optional($seller->country)->country }} </span> </li>
-                                <li> {{ __('Seller Since:') }} <span> {{ Carbon\Carbon::parse($seller_since->created_at)->year }}  </span> </li>
+                                <li> {{ __('Service Provider Since:') }} <span> {{ Carbon\Carbon::parse($seller_since->created_at)->year }}  </span> </li>
                             </ul>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                                         </div>
                                         <div class="contents margin-top-10">
                                             <h3 class="title">@if(!empty($completed_order)){{ $completed_order }} @endif</h3>
-                                            <span class="ratings-span"> {{ __('Order Completed') }}</span>
+                                            <span class="ratings-span"> {{ __('Service Request Completed') }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -143,7 +143,7 @@
                                         </div>
                                         <div class="contents margin-top-10">
                                             <h3 class="title">@if(!empty($seller_rating_percentage_value)) {{ ceil($seller_rating_percentage_value) }}% @endif</h3>
-                                            <span class="ratings-span">{{ __('Seller Rating') }} </span>
+                                            <span class="ratings-span">{{ __('Service Provider Rating') }} </span>
                                         </div>
                                     </div>
                                 </div>
@@ -162,7 +162,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="section-title-two">
-                            <h3 class="title">{{ __('Services of this Seller') }} </h3>
+                            <h3 class="title">{{ __('Services of this service provider') }} </h3>
                         </div>
                     </div>
                 </div>
@@ -237,7 +237,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="section-title-two">
-                            <h3 class="title">{{ get_static_option('service_reviews_title') ?? __('Reviews as Seller') }}</h3>
+                            <h3 class="title">{{ get_static_option('service_reviews_title') ?? __('Reviews as Service Provider') }}</h3>
                         </div>
                     </div>
                 </div>

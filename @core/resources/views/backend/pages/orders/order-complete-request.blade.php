@@ -1,6 +1,6 @@
 @extends('backend.admin-master')
 @section('site-title')
-    {{__('Order Complete Request')}}
+    {{__('Service Request Complete Request')}}
 @endsection
 
 @section('style')
@@ -20,18 +20,18 @@
                     <div class="card-body">
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
-                                <h4 class="header-title">{{__('Order Complete Request')}}  </h4>
+                                <h4 class="header-title">{{__('Service Request Complete Request')}}  </h4>
                                 <small class="text-info py-2">{{ __('Request from Provider to admin and Customer. Provider will review the request and complete it. Or admin can complete it anytime if Provider not any response') }}</small>
                             </div>
                         </div>
                         <div class="table-wrap table-responsive">
                             <table class="table table-default">
                                 <thead>
-                                <th>{{__('Order ID')}}</th>
-                                <th>{{__('Order Price')}}</th>
+                                <th>{{__('Service Request ID')}}</th>
+                                <th>{{__('Service Request Price')}}</th>
                                 <th>{{__('Request Date')}}</th>
-                                <th>{{__('Seller Details')}}</th>
-                                <th>{{__('Buyer Details')}}</th>
+                                <th>{{__('Service Provider Details')}}</th>
+                                <th>{{__('Customer Details')}}</th>
                                 <th>{{__('Action')}}</th>
                                 </thead>
                                 <tbody>

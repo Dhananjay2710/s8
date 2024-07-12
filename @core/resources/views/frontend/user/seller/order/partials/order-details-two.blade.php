@@ -1,6 +1,6 @@
 @extends('frontend.user.buyer.buyer-master')
 @section('site-title')
-    {{ __('Order Details') }}
+    {{ __('Service Request Details') }}
 @endsection
 @section('style')
     <style>
@@ -27,7 +27,7 @@
                                         <div class="line-charts-wrapper margin-top-40">
 
                                             <div class="line-top-contents mb-2">
-                                                <h4 class="earning-title">{{ __('Seller Details') }}</h4>
+                                                <h4 class="earning-title">{{ __('Service Provider Details') }}</h4>
                                             </div>
                                             <div class="single-checbox">
                                                 <div class="checkbox-inlines">
@@ -133,15 +133,15 @@
                                             </div>
 
                                             <div class="line-top-contents mb-2">
-                                                <h4 class="earning-title">{{ __('Order Details') }}</h4>
+                                                <h4 class="earning-title">{{ __('Service Request Details') }}</h4>
                                             </div>
                                             <div class="single-checbox">
                                                 <div class="checkbox-inlines">
-                                                    <label><strong>{{ __('Order ID:') }} </strong>{{ $order_details->id }}
+                                                    <label><strong>{{ __('Service Request ID:') }} </strong>{{ $order_details->id }}
                                                     </label>
                                                 </div>
                                                 <div class="checkbox-inlines">
-                                                    <label><strong>{{ __('Order Status: ') }}</strong>
+                                                    <label><strong>{{ __('Service Request Status: ') }}</strong>
                                                         @if ($order_details->status == 0)
                                                             <span>{{ __('Pending') }}</span>
                                                         @endif
@@ -269,7 +269,7 @@
                                                     <div class="line-top-contents">
                                                         <h4 class="earning-title">{{ __('Extra Service Details') }}</h4>
                                                     </div>
-                                                    <span class="info-text d-block mb-4">{{__('This is not included in the main service order calculation')}}</span>
+                                                    <span class="info-text d-block mb-4">{{__('This is not included in the main service request calculation')}}</span>
                                                     <table class="table table-bordered">
                                                         <thead>
                                                         <tr>
@@ -341,13 +341,13 @@
                                         <div class="single-flex-middle-inner">
                                             <div class="line-charts-wrapper oreder_details_rtl margin-top-40">
                                                 <div class="line-top-contents">
-                                                    <h4 class="earning-title">{{ __('Order Decline History') }}</h4>
+                                                    <h4 class="earning-title">{{ __('Service Request Decline History') }}</h4>
                                                 </div>
                                                 <table class="table table-bordered mt-3">
                                                     <thead>
                                                     <tr>
                                                         <th>{{ __('History ID') }}</th>
-                                                        <th>{{ __('Seller Details') }}</th>
+                                                        <th>{{ __('Service Provider Details') }}</th>
                                                         <th>{{ __('Status') }} ({{ __('Decline Reason') }})</th>
                                                         <th>{{ __('Image File') }}</th>
                                                     </tr>

@@ -26,25 +26,25 @@ class CommunityWidget extends WidgetBase
         ]);
         $output .= Text::get([
             'name' => 'seller_title',
-            'label' => __('Become Seller Title'),
+            'label' => __('Become Service Provider Title'),
             'value' => $widget_saved_values['seller_title'] ?? null,
         ]);
 
         $output .= Text::get([
             'name' => 'seller_link',
-            'label' => __('Become Seller Link'),
+            'label' => __('Become Service Provider Link'),
             'value' => $widget_saved_values['seller_link'] ?? null,
         ]);
 
         $output .= Text::get([
             'name' => 'buyer_title',
-            'label' => __('Become Buyer Title'),
+            'label' => __('Become Customer Title'),
             'value' => $widget_saved_values['buyer_title'] ?? null,
         ]);
 
         $output .= Text::get([
             'name' => 'buyer_link',
-            'label' => __('Become Buyer Link'),
+            'label' => __('Become Customer Link'),
             'value' => $widget_saved_values['buyer_link'] ?? null,
         ]);
 

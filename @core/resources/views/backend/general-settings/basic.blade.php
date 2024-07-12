@@ -51,7 +51,7 @@
                                     <input type="checkbox" name="disable_user_email_verify"  @if(!empty(get_static_option('disable_user_email_verify'))) checked @endif id="disable_user_email_verify">
                                     <span class="slider-enable-disable"></span>
                                 </label>
-                                <small class="form-text text-muted">{{__('Disable, means user must have to verify their email account in order to access his/her dashboard.')}}</small>
+                                <small class="form-text text-muted">{{__('Disable, means user must have to verify their email account in service request to access his/her dashboard.')}}</small>
                             </div>
                             <div class="form-group">
                                 <label for="site_maintenance_mode"><strong>{{__('Maintenance Mode')}}</strong></label>

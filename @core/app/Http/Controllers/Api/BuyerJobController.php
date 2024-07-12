@@ -295,7 +295,7 @@ class BuyerJobController extends Controller
         }
         if($request_details->is_hired == 1){
             return response()->error([
-                'msg'=>__('Already hired a seller for this job.'),
+                'msg'=>__('Already hired a service provider for this service.'),
             ]);
         }
 
@@ -380,7 +380,7 @@ class BuyerJobController extends Controller
         //Send order notification to seller
         $seller = User::where('id',$request_details->seller_id)->first();
         $buyer_id = auth('sanctum')->check() ? auth('sanctum')->user()->id : NULL;
-        $order_message = __('You have a new order');
+        $order_message = __('You have a new service request');
         $seller->notify(new OrderNotification($last_order_id,$request_details->job_post_id, $request_details->seller_id, $buyer_id,$order_message));
 
         //todo: check payment gateway is wallet or not
@@ -394,8 +394,8 @@ class BuyerJobController extends Controller
                     if($wallet_balance->balance >= $order_details->total){
                         //Send order email to buyer for cash on delivery
                         try {
-                            $message_for_buyer = get_static_option('new_order_buyer_message') ?? __('You have successfully placed an order #');
-                            $message_for_seller_admin = get_static_option('new_order_admin_seller_message') ?? __('You have a new order #');
+                            $message_for_buyer = get_static_option('new_order_buyer_message') ?? __('You have successfully requested a service #');
+                            $message_for_seller_admin = get_static_option('new_order_admin_seller_message') ?? __('You have a new service request #');
                             Mail::to($order_details->email)->send(new OrderMail(strip_tags($message_for_buyer).$order_details->id,$order_details));
                             Mail::to($seller->email)->send(new OrderMail(strip_tags($message_for_seller_admin).$order_details->id,$order_details));
                             Mail::to(get_static_option('site_global_email'))->send(new OrderMail(strip_tags($message_for_seller_admin).$order_details->id,$order_details));
@@ -416,12 +416,12 @@ class BuyerJobController extends Controller
                     }else{
                         $shortage_balance =  $order_details->total-$wallet_balance->balance;
                         return response()->error([
-                            'msg' => __('Your wallet has '.float_amount_with_currency_symbol($shortage_balance).' shortage to order this service. Please Credit your wallet first and try again.')
+                            'msg' => __('Your wallet has '.float_amount_with_currency_symbol($shortage_balance).' shortage to request this service. Please Credit your wallet first and try again.')
                         ]);
                     }
                 }
                 return response()->success([
-                    'msg'=>__('Your Order Created Successfully'),
+                    'msg'=>__('Your Service Requested Successfully'),
                 ]);
             }
         }
@@ -447,8 +447,8 @@ class BuyerJobController extends Controller
             }
 
             try {
-                $message_for_buyer = get_static_option('new_order_buyer_message') ?? __('You have successfully placed an order #');
-                $message_for_seller_admin = get_static_option('new_order_admin_seller_message') ?? __('You have a new order #');
+                $message_for_buyer = get_static_option('new_order_buyer_message') ?? __('You have successfully requested a service #');
+                $message_for_seller_admin = get_static_option('new_order_admin_seller_message') ?? __('You have a new service request #');
                 Mail::to($order_details->email)->send(new OrderMail(strip_tags($message_for_buyer).$order_details->id,$order_details));
                 Mail::to($seller->email)->send(new OrderMail(strip_tags($message_for_seller_admin).$order_details->id,$order_details));
                 Mail::to(get_static_option('site_global_email'))->send(new OrderMail(strip_tags($message_for_seller_admin).$order_details->id,$order_details));
@@ -457,7 +457,7 @@ class BuyerJobController extends Controller
                 \Toastr::error($e->getMessage());
             }
             return response()->success([
-                'msg'=>__('Your Order Created Successfully'),
+                'msg'=>__('Your Service Requested Successfully'),
             ]);
 
         }
@@ -586,12 +586,12 @@ class BuyerJobController extends Controller
         $last_order_id = $order_details->id;
         $job_post_title = optional($request_details->job)->title;
         $title = \Str::limit($job_post_title,20);
-        $description = sprintf(__('Order id #%1$d Email: %2$s, Name: %3$s'),$last_order_id,$email,$name);
+        $description = sprintf(__('Service Request id #%1$d Email: %2$s, Name: %3$s'),$last_order_id,$email,$name);
 
         //Send order notification to seller
         $seller = User::where('id',$request_details->seller_id)->first();
         $buyer_id = Auth::guard('sanctum')->check() ? Auth::guard('sanctum')->user()->id : NULL;
-        $order_message = __('You have a new order');
+        $order_message = __('You have a new service request');
         $seller->notify(new OrderNotification($last_order_id,$request_details->job_post_id, $request_details->seller_id, $buyer_id,$order_message));
 
         return response([

@@ -1,6 +1,6 @@
 @extends('frontend.user.seller.seller-master')
 @section('site-title')
-    {{__('Edit Buyer Profile')}}
+    {{__('Edit Customer Profile')}}
 @endsection
 @section('style')
     <x-media.css/>
@@ -36,7 +36,7 @@
                                             </div>
                                             <div class="dashboard-address-details">
                                                 <x-error-message/>
-                                                <form action="{{route('seller.profile.edit')}}" method="post">
+                                                <form action="{{route('buyer.profile.edit')}}" method="post">
                                                 @csrf
                                                     <div class="single-dashboard-input">
                                                         <div class="single-info-input margin-top-30">

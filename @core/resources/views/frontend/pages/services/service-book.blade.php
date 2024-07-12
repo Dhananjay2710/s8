@@ -294,7 +294,7 @@
                                                 </div>
                                             </div>
                                             <div class="overview-single padding-top-60 extra-services">
-                                                <h4 class="title">{{ get_static_option('service_additional_attribute_title') ?? __('Upgrade your order with extras') }}
+                                                <h4 class="title">{{ get_static_option('service_additional_attribute_title') ?? __('Upgrade your service request with extras') }}
                                                 </h4>
                                                 <div class="row">
                                                     @foreach ($service_additionals as $additional)
@@ -537,8 +537,8 @@
                                     </div>
                                     <div class="single-info-overview margin-top-30">
                                         <div class="single-info-input">
-                                            <label class="info-title">{{ __('Order Note*') }} </label>
-                                            <textarea class="form--control textarea--form" name="order_note" id="order_note" placeholder="{{ __('Type Order Note') }}"></textarea>
+                                            <label class="info-title">{{ __('Service Request Note*') }} </label>
+                                            <textarea class="form--control textarea--form" name="order_note" id="order_note" placeholder="{{ __('Type Service Request Note') }}"></textarea>
                                             <span>{{__('Max: 190 Character')}}</span>
                                         </div>
                                     </div>
@@ -594,7 +594,7 @@
                                                         @endif
                                                     </div>
                                                     <div class="single-confirm margin-top-30">
-                                                        <h3 class="titles">{{ __('Order Location') }}</h3>
+                                                        <h3 class="titles">{{ __('Service Location') }}</h3>
                                                         <span class="details country_name_text"></span>
                                                         <span class="details city_name_text"></span>
                                                         <span class="details area_name_text"></span>
@@ -632,7 +632,7 @@
                                                             <span class="list-strong get_address"></span>
                                                         </li>
                                                         <li class="lists">
-                                                            <span class="list-span">{{ __('Order Note:') }}</span>
+                                                            <span class="list-span">{{ __('Service Request Note:') }}</span>
                                                             <span class="list-strong get_order_note"></span>
                                                         </li>
                                                     </ul>
@@ -759,7 +759,7 @@
                                                             <button type="submit" class="cmn-btn btn-appoinment btn-bg-1">{{ get_static_option('service_order_confirm_title') ?? __('Pay & Confirm Your Order') }} </button>
                                                         @else
                                                             <a class="cmn-btn btn-appoinment btn-bg-1" href="{{route('user.login')}}?return={{request()->path()}}">{{ __('Sign In') }}</a>
-                                                            <small class="text-danger">{{__('Must login to create order for online services')}}</small>
+                                                            <small class="text-danger">{{__('Must login to create service request for online services')}}</small>
                                                         @endif
                                                     @else
                                                         <button type="submit" class="cmn-btn btn-appoinment btn-bg-1">{{ get_static_option('service_order_confirm_title') ?? __('Pay & Confirm Your Order') }} </button>

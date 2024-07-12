@@ -26,9 +26,9 @@
                         <div class="table-wrap table-responsive">
                             <table class="table table-default">
                                 <thead>
-                                <th>{{__('Order ID')}}</th>
-                                <th>{{__('Buyer Name')}}</th>
-                                <th>{{__('Seller Name')}}</th>
+                                <th>{{__('Service Request ID')}}</th>
+                                <th>{{__('Customer Name')}}</th>
+                                <th>{{__('Service Provider Name')}}</th>
                                 <th>{{__('Review Rating')}}</th>
                                 <th>{{__('Review Message')}}</th>
                                 <th>{{__('Action')}}</th>

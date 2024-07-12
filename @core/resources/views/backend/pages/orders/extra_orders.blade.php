@@ -26,10 +26,10 @@
                         <div class="table-wrap table-responsive">
                             <table class="table table-default">
                                 <thead>
-                                <th>{{__('Main Order ID')}}</th>
-                                <th>{{__('Extra Order ID')}}</th>
-                                <th>{{__('Buyer Details')}}</th>
-                                <th>{{__('Seller Details')}}</th>
+                                <th>{{__('Main Service Request ID')}}</th>
+                                <th>{{__('Extra Service Request ID')}}</th>
+                                <th>{{__('Customer Details')}}</th>
+                                <th>{{__('Service Provider Details')}}</th>
                                 <th>{{__('Title')}}</th>
                                 <th>{{__('Payment Gateway')}}</th>
                                 <th>{{__('Payment Status')}}</th>

@@ -43,7 +43,7 @@
                                                     <label><strong>{{ __('Request Date:') }} </strong>{{ $request_details->created_at->toFormattedDateString() }}</label>
                                                 </div>
                                                 <div class="checkbox-inlines">
-                                                    <label><strong>{{ __('Seller Note:') }} </strong>{{ $request_details->seller_note }}</label>
+                                                    <label><strong>{{ __('Service Provider Note:') }} </strong>{{ $request_details->seller_note }}</label>
                                                 </div>
                                                 <div class="checkbox-inlines">
                                                     <label><strong>{{ __('Admin Note:') }} </strong>{{ $request_details->admin_note }}</label>

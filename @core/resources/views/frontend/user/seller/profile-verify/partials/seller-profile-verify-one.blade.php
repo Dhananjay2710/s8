@@ -1,7 +1,7 @@
 
 @extends('frontend.user.seller.seller-master')
 @section('site-title')
-    {{__('Seller Profile Verify')}}
+    {{__('Service Provider Profile Verify')}}
 @endsection
 @section('style')
     <style>
@@ -39,7 +39,7 @@
                                             <div class="alert alert-success"> <i class="las la-check-circle" style="font-size: 16px"></i> {{ __('Profile Verified')}}</div>
                                         @else
                                             <div class="notice-board">
-                                                <p class="text-danger">{{ __('Submit your original documents so that the admin can verify you. Once verified a badge will show in your profile that increase your order possibility') }}</p>
+                                                <p class="text-danger">{{ __('Submit your original documents so that the admin can verify you. Once verified a badge will show in your profile that increase your service request possibility') }}</p>
                                             </div>
 
                                             <div class="dashboard-profile-flex">

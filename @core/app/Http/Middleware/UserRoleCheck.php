@@ -20,7 +20,10 @@ class UserRoleCheck
         $allowed_url_list = [
             'seller/logout',
             'buyer/send',
-            'buyer/load-latest-messages'
+            'buyer/load-latest-messages',
+            'serviceprovider/logout',
+            'customer/send',
+            'customer/load-latest-messages'
         ];
         if (Auth::guard('web')->check() &&
             1 !== Auth::guard('web')->user()->user_type &&

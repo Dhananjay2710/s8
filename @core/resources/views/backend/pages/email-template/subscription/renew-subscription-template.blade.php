@@ -29,7 +29,7 @@
                                     <input type="text" name="renew_subscription_email_subject"  class="form-control" value="{{ get_static_option('renew_subscription_email_subject') ?? __('Renew Subscription') }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="renew_subscription_seller_message">{{ __('Email Message For Seller') }}</label>
+                                    <label for="renew_subscription_seller_message">{{ __('Email Message For Service Provider') }}</label>
                                     <textarea class="form-control summernote" name="renew_subscription_seller_message">{!! get_static_option('renew_subscription_seller_message') ?? '' !!} </textarea>
                                 </div>
                                 <div class="form-group">
@@ -39,8 +39,8 @@
                                 <small class="form-text text-muted text-danger margin-top-20"><code>@type</code> {{__('will be replaced by dynamically with subscription type.')}}</small>
                                 <small class="form-text text-muted text-danger"><code>@price</code> {{__('will be replaced by dynamically with subscription price.')}}</small>
                                 <small class="form-text text-muted text-danger"><code>@connect</code> {{__('will be replaced by dynamically with subscription connect.')}}</small>
-                                <small class="form-text text-muted text-danger"><code>@seller_name</code> {{__('will be replaced by dynamically with seller name.')}}</small>
-                                <small class="form-text text-muted text-danger"><code>@seller_email</code> {{__('will be replaced by dynamically with seller email.')}}</small>
+                                <small class="form-text text-muted text-danger"><code>@seller_name</code> {{__('will be replaced by dynamically with service provider name.')}}</small>
+                                <small class="form-text text-muted text-danger"><code>@seller_email</code> {{__('will be replaced by dynamically with service provider email.')}}</small>
 
                             </div>
                             <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">{{__('Update')}}</button>

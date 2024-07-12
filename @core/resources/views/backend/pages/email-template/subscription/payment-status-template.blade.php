@@ -29,7 +29,7 @@
                                     <input type="text" name="payment_subscription_email_subject"  class="form-control" value="{{ get_static_option('payment_subscription_email_subject') ?? __('Subscription Payment Status') }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="payment_subscription_seller_message">{{ __('Email Message For Seller') }}</label>
+                                    <label for="payment_subscription_seller_message">{{ __('Email Message For Service Provider') }}</label>
                                     <textarea class="form-control summernote" name="payment_subscription_seller_message">{!! get_static_option('payment_subscription_seller_message') ?? '' !!} </textarea>
                                 </div>
                             </div>

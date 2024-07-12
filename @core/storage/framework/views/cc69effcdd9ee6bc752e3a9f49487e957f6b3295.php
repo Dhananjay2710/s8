@@ -64,22 +64,22 @@
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
                                 <h4 class="header-title"><?php echo e(__('Cancelled Orders')); ?>  </h4>
-                                <small class="text-danger"><?php echo e(__('If a order payment is completed and the order is cancelled without completing then admin can change the return money status here.')); ?></small>
+                                <small class="text-danger"><?php echo e(__('If a Request payment is completed and the Service Request is cancelled without completing then admin can change the return money status here.')); ?></small>
                             </div>
                         </div>
                         <div class="table-wrap table-responsive">
                             <table class="table table-default">
                                 <thead>
                                 <th><?php echo e(__('ID')); ?></th>
-                                <th><?php echo e(__('Buyer Name')); ?></th>
-                                <th><?php echo e(__('Buyer Email')); ?></th>
-                                <th><?php echo e(__('Buyer Phone')); ?></th>
-                                <th><?php echo e(__('Buyer Address')); ?></th>
+                                <th><?php echo e(__('Customer Name')); ?></th>
+                                <th><?php echo e(__('Customer Email')); ?></th>
+                                <th><?php echo e(__('Customer Phone')); ?></th>
+                                <th><?php echo e(__('Customer Address')); ?></th>
                                 <th><?php echo e(__('Total Amount')); ?></th>
                                 <th><?php echo e(__('Payment Status')); ?></th>
                                 <th><?php echo e(__('Create Date')); ?></th>
                                 <th><?php echo e(__('Money Return')); ?></th>
-                                <th><?php echo e(__('Order Details')); ?></th>
+                                <th><?php echo e(__('Service Request Details')); ?></th>
                                 </thead>
                                 <tbody>
                                     <?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>

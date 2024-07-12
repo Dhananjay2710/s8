@@ -2,7 +2,7 @@
     <?php echo $__env->make('frontend.user.seller.partials.header-two', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <!--Dashboard Markup -->
     <div class="body-overlay"></div>
-    <div class="dashboard__area <?php if(Auth::guard('web')->user()->user_type == 0): ?> seller_look <?php endif; ?>">
+    <div class="dashboard__area <?php if((Auth::guard('web')->user()->user_type ?? 0) == 0): ?> seller_look <?php endif; ?>">
         <div class="container-fluid p-0">
             <div class="dashboard__contents__wrapper">
                 <div class="dashboard__icon">

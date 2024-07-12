@@ -56,12 +56,12 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="register_seller_title"><?php echo e(__('Register Page Seller Title')); ?></label>
+                                <label for="register_seller_title"><?php echo e(__('Register Page Service Provider Title')); ?></label>
                                 <input type="text" name="register_seller_title"  class="form-control" value="<?php echo e(get_static_option('register_seller_title')); ?>" id="register_seller_title">
                             </div>
 
                             <div class="form-group">
-                                <label for="register_buyer_title"><?php echo e(__('Register Page Buyer Title')); ?></label>
+                                <label for="register_buyer_title"><?php echo e(__('Register Page Customer Title')); ?></label>
                                 <input type="text" name="register_buyer_title"  class="form-control" value="<?php echo e(get_static_option('register_buyer_title')); ?>" id="register_buyer_title">
                             </div>
 

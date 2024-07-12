@@ -89,7 +89,7 @@
                             <div class="dashboard__headerGlobal__flex">
                                 <div class="dashboard__headerGlobal__content">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        <h4 class="dashboard_table__title"><?php echo e(__('Search Order Pending Module')); ?></h4> <i class="las la-angle-down search_by_all"></i>
+                                        <h4 class="dashboard_table__title"><?php echo e(__('Search Pending Service Request Module')); ?></h4> <i class="las la-angle-down search_by_all"></i>
                                     </button>
                                 </div>
                                 <div class="dashboard__headerGlobal__btn">
@@ -113,8 +113,8 @@
                                                         <div class="row g-4 mt-3">
                                                             <div class="col-lg-4 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    <label for="order_id" class="info-title"> <?php echo e(__('Order ID')); ?> </label>
-                                                                    <input class="form--control" name="order_id" value="<?php echo e(request()->get('order_id')); ?>" type="text" placeholder="<?php echo e(__('Order ID')); ?>">
+                                                                    <label for="order_id" class="info-title"> <?php echo e(__('Service Request ID')); ?> </label>
+                                                                    <input class="form--control" name="order_id" value="<?php echo e(request()->get('order_id')); ?>" type="text" placeholder="<?php echo e(__('Service Request ID')); ?>">
                                                                 </div>
                                                             </div>
 
@@ -142,7 +142,7 @@
                 <div class="dashboard__headerContents">
                     <div class="dashboard__headerContents__flex">
                         <div class="dashboard__headerContents__left">
-                            <h4 class="dashboard__headerContents__title"> <?php echo e(__('Order Request')); ?>(<?php echo e($pending_orders->total()); ?>) </h4>
+                            <h4 class="dashboard__headerContents__title"> <?php echo e(__('Service Request Request')); ?>(<?php echo e($pending_orders->total()); ?>) </h4>
                         </div>
                     </div>
                 </div>
@@ -170,7 +170,7 @@
                                                      <?php echo e(optional($order->service)->title); ?>
 
                                                     </h4>
-                                                    <strong class="label_title mt-2"> <?php echo e(__('Order').' #'.$order->id); ?> </strong>
+                                                    <strong class="label_title mt-2"> <?php echo e(__('Service Provider').' #'.$order->id); ?> </strong>
                                                     </a>
 
                                                     <div class="dashboard_jobPost__views mt-3">
@@ -259,7 +259,7 @@
                     </div>
                 <?php else: ?>
                     <div class="chat_wrapper__details__inner__chat__contents">
-                        <h2 class="chat_wrapper__details__inner__chat__contents__para"><?php echo e(__('No Pending Order Found')); ?></h2>
+                        <h2 class="chat_wrapper__details__inner__chat__contents__para"><?php echo e(__('No Pending Service Request Found')); ?></h2>
                     </div>
                 <?php endif; ?>
             </div>

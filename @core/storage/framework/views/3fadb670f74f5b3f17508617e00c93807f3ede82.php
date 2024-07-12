@@ -55,8 +55,8 @@
                                     <label for="service_city"><?php echo e(__('Who Will Create Service?')); ?></label>
                                     <select type="text" class="form-control" name="service_create_settings" id="service_create_settings" placeholder="<?php echo e(__('Service City')); ?>">
                                         <option value=""><?php echo e(__('Select')); ?></option>
-                                        <option value="all_seller" <?php echo e(get_static_option('service_create_settings')=='all_seller' ? 'selected' : ''); ?> ><?php echo e(__('All Seller')); ?></option>
-                                        <option value="verified_seller" <?php echo e(get_static_option('service_create_settings')=='verified_seller' ? 'selected' : ''); ?> ><?php echo e(__('Only Verified Seller')); ?></option>
+                                        <option value="all_seller" <?php echo e(get_static_option('service_create_settings')=='all_seller' ? 'selected' : ''); ?> ><?php echo e(__('All Service Provider')); ?></option>
+                                        <option value="verified_seller" <?php echo e(get_static_option('service_create_settings')=='verified_seller' ? 'selected' : ''); ?> ><?php echo e(__('Only Verified Service Provider')); ?></option>
                                     </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary mt-3 submit_btn"><?php echo e(__('Submit ')); ?></button>
@@ -110,7 +110,7 @@
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
                                 <h4 class="header-title"><?php echo e(__('Service Create Settings')); ?> </h4>
-                                <p class="mb-3 text-info"><?php echo e(__('You can set the seller create service status auto Approved/Pending from here.')); ?></p>
+                                <p class="mb-3 text-info"><?php echo e(__('You can set the service provider create service status auto Approved/Pending from here.')); ?></p>
                             </div>
                         </div>
                         <form action="<?php echo e(route('admin.service.create.status.settings.update')); ?>" method="post">

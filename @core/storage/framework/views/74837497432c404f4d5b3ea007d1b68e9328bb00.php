@@ -1,5 +1,5 @@
 <?php $__env->startSection('site-title'); ?>
-    <?php echo e(__('Order Details')); ?>
+    <?php echo e(__('Service Request Details')); ?>
 
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('style'); ?>
@@ -41,7 +41,7 @@
                                         <div class="line-charts-wrapper margin-top-40">
 
                                             <div class="line-top-contents mb-2">
-                                                <h4 class="earning-title"><?php echo e(__('Seller Details')); ?></h4>
+                                                <h4 class="earning-title"><?php echo e(__('Service Provider Details')); ?></h4>
                                             </div>
                                             <div class="single-checbox">
                                                 <div class="checkbox-inlines">
@@ -167,16 +167,16 @@
                                             </div>
 
                                             <div class="line-top-contents mb-2">
-                                                <h4 class="earning-title"><?php echo e(__('Order Details')); ?></h4>
+                                                <h4 class="earning-title"><?php echo e(__('Service Request Details')); ?></h4>
                                             </div>
                                             <div class="single-checbox">
                                                 <div class="checkbox-inlines">
-                                                    <label><strong><?php echo e(__('Order ID:')); ?> </strong><?php echo e($order_details->id); ?>
+                                                    <label><strong><?php echo e(__('Service Request ID:')); ?> </strong><?php echo e($order_details->id); ?>
 
                                                     </label>
                                                 </div>
                                                 <div class="checkbox-inlines">
-                                                    <label><strong><?php echo e(__('Order Status: ')); ?></strong>
+                                                    <label><strong><?php echo e(__('Service Request Status: ')); ?></strong>
                                                         <?php if($order_details->status == 0): ?>
                                                             <span><?php echo e(__('Pending')); ?></span>
                                                         <?php endif; ?>
@@ -304,7 +304,7 @@
                                                     <div class="line-top-contents">
                                                         <h4 class="earning-title"><?php echo e(__('Extra Service Details')); ?></h4>
                                                     </div>
-                                                    <span class="info-text d-block mb-4"><?php echo e(__('This is not included in the main service order calculation')); ?></span>
+                                                    <span class="info-text d-block mb-4"><?php echo e(__('This is not included in the main service request calculation')); ?></span>
                                                     <table class="table table-bordered">
                                                         <thead>
                                                         <tr>
@@ -377,13 +377,13 @@
                                         <div class="single-flex-middle-inner">
                                             <div class="line-charts-wrapper oreder_details_rtl margin-top-40">
                                                 <div class="line-top-contents">
-                                                    <h4 class="earning-title"><?php echo e(__('Order Decline History')); ?></h4>
+                                                    <h4 class="earning-title"><?php echo e(__('Service Request Decline History')); ?></h4>
                                                 </div>
                                                 <table class="table table-bordered mt-3">
                                                     <thead>
                                                     <tr>
                                                         <th><?php echo e(__('History ID')); ?></th>
-                                                        <th><?php echo e(__('Seller Details')); ?></th>
+                                                        <th><?php echo e(__('Service Provider Details')); ?></th>
                                                         <th><?php echo e(__('Status')); ?> (<?php echo e(__('Decline Reason')); ?>)</th>
                                                         <th><?php echo e(__('Image File')); ?></th>
                                                     </tr>

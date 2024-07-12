@@ -1,6 +1,6 @@
 
 <?php $__env->startSection('site-title'); ?>
-    <?php echo e(__('Seller Buyer Reports')); ?>
+    <?php echo e(__('Service Provider Customer Reports')); ?>
 
 <?php $__env->stopSection(); ?>
 
@@ -63,16 +63,16 @@
                     <div class="card-body">
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
-                                <h4 class="header-title"><?php echo e(__('Seller Buyer Reports')); ?>  </h4>
+                                <h4 class="header-title"><?php echo e(__('Service Provider Customer Reports')); ?>  </h4>
                             </div>
                         </div>
                         <div class="table-wrap table-responsive">
                             <table class="table table-default">
                                 <thead>
-                                <th><?php echo e(__('Order ID')); ?></th>
+                                <th><?php echo e(__('Service Request ID')); ?></th>
                                 <th><?php echo e(__('Report Details')); ?></th>
-                                <th><?php echo e(__('Seller Details')); ?></th>
-                                <th><?php echo e(__('Buyer Details')); ?></th>
+                                <th><?php echo e(__('Service Provider Details')); ?></th>
+                                <th><?php echo e(__('Customer Details')); ?></th>
                                 <th><?php echo e(__('Action')); ?></th>
                                 </thead>
                                 <tbody>
@@ -89,13 +89,13 @@
                                             <p><strong><?php echo e(__('Name:')); ?></strong> <?php echo e(optional($data->seller)->name); ?></p>
                                             <p><strong><?php echo e(__('Email:')); ?></strong> <?php echo e(optional($data->seller)->email); ?></p>
                                             <p><strong><?php echo e(__('Phone:')); ?></strong> <?php echo e(optional($data->seller)->phone); ?></p>
-                                            <a class="btn btn-info btn-sm" href="<?php echo e(route('admin.order.report.chat.seller',$data->id.'/'.$data->seller_id)); ?>"><?php echo e(__('Chat To Seller')); ?></a>
+                                            <a class="btn btn-info btn-sm" href="<?php echo e(route('admin.order.report.chat.seller',$data->id.'/'.$data->seller_id)); ?>"><?php echo e(__('Chat To Service Provider')); ?></a>
                                         </td>
                                         <td>
                                             <p><strong><?php echo e(__('Name:')); ?></strong> <?php echo e(optional($data->buyer)->name); ?></p>
                                             <p><strong><?php echo e(__('Email:')); ?></strong> <?php echo e(optional($data->buyer)->email); ?></p>
                                             <p><strong><?php echo e(__('Phone:')); ?></strong> <?php echo e(optional($data->buyer)->phone); ?></p>
-                                            <a class="btn btn-info btn-sm" href="<?php echo e(route('admin.order.report.chat.buyer',$data->id.'/'.$data->buyer_id)); ?>"><?php echo e(__('Chat To Buyer')); ?></a>
+                                            <a class="btn btn-info btn-sm" href="<?php echo e(route('admin.order.report.chat.buyer',$data->id.'/'.$data->buyer_id)); ?>"><?php echo e(__('Chat To Customer')); ?></a>
                                         </td>
                                         <td>
                                             <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('report-delete')): ?>

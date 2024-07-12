@@ -68,10 +68,10 @@
                         <div class="table-wrap table-responsive">
                             <table class="table table-default">
                                 <thead>
-                                <th><?php echo e(__('Order ID')); ?></th>
+                                <th><?php echo e(__('Service Request ID')); ?></th>
                                 <th><?php echo e(__('Ticket ID')); ?></th>
                                 <th><?php echo e(__('Job Post ID')); ?></th>
-                                <th><?php echo e(__('Order Message')); ?></th>
+                                <th><?php echo e(__('Service Request Message')); ?></th>
                                 <th><?php echo e(__('Ticket Message')); ?></th>
                                 <th><?php echo e(__('Job Post Message')); ?></th>
                                 <th><?php echo e(__('Status')); ?></th>
@@ -84,7 +84,7 @@
                                         <td><?php echo e($data->ticket_id); ?></td>
                                         <td><?php echo e($data->job_post_id); ?></td>
                                         <td>  <?php if(!empty($data->order_id)): ?> <?php echo e(__('New Order')); ?> #<?php echo e($data->order_id); ?>  <?php endif; ?> </td>
-                                        <td>  <?php if(!empty($data->ticket_id)): ?> <?php echo e(__('New Order Ticket')); ?> #<?php echo e($data->ticket_id); ?> <?php endif; ?>  </td>
+                                        <td>  <?php if(!empty($data->ticket_id)): ?> <?php echo e(__('New Service Request Ticket')); ?> #<?php echo e($data->ticket_id); ?> <?php endif; ?>  </td>
                                         <td>  <?php if(!empty($data->job_post_id)): ?> <?php echo e(__('New Job Created')); ?> #<?php echo e($data->job_post_id); ?> <?php endif; ?>  </td>
                                         <td>
                                             <?php if($data->status == 0): ?> <span class="btn btn-danger btn-sm"><?php echo e(__('Unread')); ?></span>   <?php endif; ?>

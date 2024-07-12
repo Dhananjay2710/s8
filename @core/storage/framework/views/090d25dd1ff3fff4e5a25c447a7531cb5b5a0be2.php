@@ -131,7 +131,7 @@ $footer_variant = !is_null(get_footer_style()) ? get_footer_style() : '02';
             address: "<?php echo e(optional($order_details->buyer)->address); ?>",
 
             // Event Description
-            description: 'Order Successfully Created'
+            description: 'Service Successfully Requested'
         }
     });
 

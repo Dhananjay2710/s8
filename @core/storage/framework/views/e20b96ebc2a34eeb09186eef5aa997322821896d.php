@@ -1,5 +1,5 @@
 <?php $__env->startSection('site-title'); ?>
-    <?php echo e(__('Edit Seller Profile')); ?>
+    <?php echo e(__('Edit Service Provider Profile')); ?>
 
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('style'); ?>

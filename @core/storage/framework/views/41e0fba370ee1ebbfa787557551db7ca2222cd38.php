@@ -162,7 +162,7 @@
                                           <?php endif; ?>
                                     <?php else: ?>
                                    <div class="col-lg-12">
-                                    <div class="alert alert-warning d-flex justify-content-between"><?php echo e(__('you must have to subscribe any of our package in order to start selling your services.')); ?>
+                                    <div class="alert alert-warning d-flex justify-content-between"><?php echo e(__('you must have to subscribe any of our package in service request to start selling your services.')); ?>
 
                                         <a href="<?php echo e(getSlugFromReadingSetting('price_plan_page') ? url('/'.getSlugFromReadingSetting('price_plan_page')) : url('/price-plan')); ?>" target="_self" class="dashboard_table__title__btn btn-bg-1 radius-5"><?php echo e(__('view packages')); ?></a>
                                     </div>

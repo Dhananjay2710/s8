@@ -77,7 +77,7 @@
                                     <input type="checkbox" name="disable_user_email_verify"  <?php if(!empty(get_static_option('disable_user_email_verify'))): ?> checked <?php endif; ?> id="disable_user_email_verify">
                                     <span class="slider-enable-disable"></span>
                                 </label>
-                                <small class="form-text text-muted"><?php echo e(__('Disable, means user must have to verify their email account in order to access his/her dashboard.')); ?></small>
+                                <small class="form-text text-muted"><?php echo e(__('Disable, means user must have to verify their email account in service request to access his/her dashboard.')); ?></small>
                             </div>
                             <div class="form-group">
                                 <label for="site_maintenance_mode"><strong><?php echo e(__('Maintenance Mode')); ?></strong></label>

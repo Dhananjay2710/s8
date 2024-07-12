@@ -1,6 +1,6 @@
 
 <?php $__env->startSection('site-title'); ?>
-    <?php echo e(__('Order Complete Request')); ?>
+    <?php echo e(__('Service Request Complete Request')); ?>
 
 <?php $__env->stopSection(); ?>
 
@@ -63,18 +63,18 @@
                     <div class="card-body">
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
-                                <h4 class="header-title"><?php echo e(__('Order Complete Request')); ?>  </h4>
+                                <h4 class="header-title"><?php echo e(__('Service Request Complete Request')); ?>  </h4>
                                 <small class="text-info py-2"><?php echo e(__('Request from Provider to admin and Customer. Provider will review the request and complete it. Or admin can complete it anytime if Provider not any response')); ?></small>
                             </div>
                         </div>
                         <div class="table-wrap table-responsive">
                             <table class="table table-default">
                                 <thead>
-                                <th><?php echo e(__('Order ID')); ?></th>
-                                <th><?php echo e(__('Order Price')); ?></th>
+                                <th><?php echo e(__('Service Request ID')); ?></th>
+                                <th><?php echo e(__('Service Request Price')); ?></th>
                                 <th><?php echo e(__('Request Date')); ?></th>
-                                <th><?php echo e(__('Seller Details')); ?></th>
-                                <th><?php echo e(__('Buyer Details')); ?></th>
+                                <th><?php echo e(__('Service Provider Details')); ?></th>
+                                <th><?php echo e(__('Customer Details')); ?></th>
                                 <th><?php echo e(__('Action')); ?></th>
                                 </thead>
                                 <tbody>

@@ -158,7 +158,7 @@
                         </div>
                         <div class="contents">
                             <h2 class="order-titles"><?php echo e($total_seller); ?> </h2>
-                            <span class="order-para"> <?php echo e(__('Total Seller')); ?> </span>
+                            <span class="order-para"> <?php echo e(__('Total Service Provider')); ?> </span>
                         </div>
                     </div>
                 </div>
@@ -174,7 +174,7 @@
                         </div>
                         <div class="contents">
                             <h2 class="order-titles"> <?php echo e($total_buyer); ?> </h2>
-                            <span class="order-para"> <?php echo e(__('Total Buyer')); ?></span>
+                            <span class="order-para"> <?php echo e(__('Total Customer')); ?></span>
                         </div>
                     </div>
                 </div>
@@ -207,7 +207,7 @@
                         </div>
                         <div class="contents">
                             <h2 class="order-titles"> <?php echo e($pending_order); ?> </h2>
-                            <span class="order-para"><?php echo e(__('Order Pending')); ?> </span>
+                            <span class="order-para"><?php echo e(__('Pending Service Request')); ?> </span>
                         </div>
                     </div>
                 </div>
@@ -256,6 +256,71 @@
                         <div class="contents">
                             <h2 class="order-titles"><?php echo e($new_user_today); ?></h2>
                             <span class="order-para"><?php echo e(__('New User Today')); ?></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 margin-top-30 orders-child">
+                <div class="single-orders">
+                    <div class="orders-shapes">
+                        <img src="<?php echo e(asset('assets/frontend/img/static/orders-shapes.png')); ?>" alt="">
+                    </div>
+                    <div class="orders-flex-content">
+                        <div class="icon">
+                            <i class="las la-file-invoice-dollar"></i>
+                        </div>
+                        <div class="contents">
+                            <h2 class="order-titles"><?php echo e(float_amount_with_currency_symbol($total_payout)); ?> </h2>
+                            <span class="order-para"><?php echo e(__('Total Service Payout')); ?> </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 margin-top-30 orders-child">
+                <div class="single-orders">
+                    <div class="orders-shapes">
+                        <img src="<?php echo e(asset('assets/frontend/img/static/orders-shapes2.png')); ?>" alt="">
+                    </div>
+                    <div class="orders-flex-content">
+                        <div class="icon">
+                            <i class="las la-file-invoice-dollar"></i>
+                        </div>
+                        <div class="contents">
+                            <h2 class="order-titles"><?php echo e(float_amount_with_currency_symbol($payout_liability)); ?> </h2>
+                            <span class="order-para"> <?php echo e(__('Total Payout Liability')); ?> </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 margin-top-30 orders-child">
+                <div class="single-orders">
+                    <div class="orders-shapes">
+                        <img src="<?php echo e(asset('assets/frontend/img/static/orders-shapes3.png')); ?>" alt="">
+                    </div>
+                    <div class="orders-flex-content">
+                        <div class="icon">
+                            <i class="las la-file-invoice-dollar"></i>
+                        </div>
+                        <div class="contents">
+                            <h2 class="order-titles"> <?php echo e(float_amount_with_currency_symbol($total_amount_paid)); ?> </h2>
+                            <span class="order-para"> <?php echo e(__('Paid Payout Liability')); ?></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 margin-top-30 orders-child">
+                <div class="single-orders">
+                    <div class="orders-shapes">
+                        <img src="<?php echo e(asset('assets/frontend/img/static/orders-shapes4.png')); ?>" alt="">
+                    </div>
+                    <div class="orders-flex-content">
+                        <div class="icon">
+                            <i class="las la-file-invoice-dollar"></i>
+                        </div>
+                        <div class="contents">
+                            <h2 class="order-titles"><?php echo e(float_amount_with_currency_symbol($pending_payout_liability)); ?> </h2>
+                            <span class="order-para"><?php echo e(__('Pending Payout Liability')); ?></span>
                         </div>
                     </div>
                 </div>
@@ -350,7 +415,7 @@
             <div class="col-md-6">
                 <div class="line-charts-wrapper">
                     <div class="line-top-contents">
-                        <h5 class="earning-title"><?php echo e(__('Monthly Order Overview')); ?></h5>
+                        <h5 class="earning-title"><?php echo e(__('Monthly Service Request Overview')); ?></h5>
                     </div>
                     <div class="line-charts">
                         <canvas id="line-chart3"></canvas>
@@ -360,7 +425,7 @@
             <div class="col-md-6">
                 <div class="line-charts-wrapper">
                     <div class="line-top-contents">
-                        <h5 class="earning-title"><?php echo e(__('Daily Order Overview Last 30 Days')); ?></h5>
+                        <h5 class="earning-title"><?php echo e(__('Daily Service Request Overview Last 30 Days')); ?></h5>
                     </div>
                     <div class="line-charts">
                         <canvas id="line-chart4"></canvas>

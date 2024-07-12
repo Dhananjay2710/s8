@@ -64,40 +64,40 @@
 
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label for="pusher_app_push_notification_auth_token"><?php echo e(__('Buyer: Pusher App (Push Notification) Auth Token')); ?></label>
+                                        <label for="pusher_app_push_notification_auth_token"><?php echo e(__('Customer: Pusher App (Push Notification) Auth Token')); ?></label>
                                         <input type="text" name="pusher_app_push_notification_auth_token"  value="<?php echo e(get_static_option('pusher_app_push_notification_auth_token')); ?>" class="form-control">
                                     </div>
                                 </div>
 
                                 <!-- <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label for="pusher_app_cluster"><?php echo e(__('Buyer: Pusher App (push notification) Auth URL')); ?></label>
+                                        <label for="pusher_app_cluster"><?php echo e(__('Customer: Pusher App (push notification) Auth URL')); ?></label>
                                         <input type="text" name="pusher_app_push_notification_auth_url"  value="<?php echo e(get_static_option('pusher_app_push_notification_auth_url')); ?>" class="form-control">
                                     </div>
                                 </div> -->
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label for="pusher_app_cluster"><?php echo e(__('Buyer: Pusher App (push notification) Instance ID')); ?></label>
+                                        <label for="pusher_app_cluster"><?php echo e(__('Customer: Pusher App (push notification) Instance ID')); ?></label>
                                         <input type="text" name="pusher_app_push_notification_instanceId"  value="<?php echo e(get_static_option('pusher_app_push_notification_instanceId')); ?>" class="form-control">
                                     </div>
                                 </div>
 
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label for="pusher_app_push_notification_auth_token"><?php echo e(__('Seller: Pusher App (Push Notification) Auth Token')); ?></label>
+                                        <label for="pusher_app_push_notification_auth_token"><?php echo e(__('Service Provider: Pusher App (Push Notification) Auth Token')); ?></label>
                                         <input type="text" name="seller_pusher_app_push_notification_auth_token"  value="<?php echo e(get_static_option('seller_pusher_app_push_notification_auth_token')); ?>" class="form-control">
                                     </div>
                                 </div>
 
                                 <!-- <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label for="pusher_app_cluster"><?php echo e(__('Seller: Pusher App (push notification) Auth URL')); ?></label>
+                                        <label for="pusher_app_cluster"><?php echo e(__('Service Provider: Pusher App (push notification) Auth URL')); ?></label>
                                         <input type="text" name="seller_pusher_app_push_notification_auth_url"  value="<?php echo e(get_static_option('seller_pusher_app_push_notification_auth_url')); ?>" class="form-control">
                                     </div>
                                 </div> -->
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label for="pusher_app_cluster"><?php echo e(__('Seller: Pusher App (push notification) Instance ID')); ?></label>
+                                        <label for="pusher_app_cluster"><?php echo e(__('Service Provider: Pusher App (push notification) Instance ID')); ?></label>
                                         <input type="text" name="seller_pusher_app_push_notification_instanceId"  value="<?php echo e(get_static_option('seller_pusher_app_push_notification_instanceId')); ?>" class="form-control">
                                     </div>
                                 </div>

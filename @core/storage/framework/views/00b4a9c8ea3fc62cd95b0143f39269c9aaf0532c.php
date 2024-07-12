@@ -107,7 +107,7 @@
 
                             <div class="single-dashboard-input">
                                 <div class="single-info-input margin-top-30">
-                                    <label for="seller_id" class="info-title"> <?php echo e(__('Select Seller*')); ?> </label>
+                                    <label for="seller_id" class="info-title"> <?php echo e(__('Select Service Provider*')); ?> </label>
                                     <select name="seller_id" id="seller_id" class="form-control">
                                         <option value=""><?php echo e(__('Select Seller')); ?></option>
                                         <?php $__currentLoopData = $sellers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $seller): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>

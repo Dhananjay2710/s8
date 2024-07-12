@@ -107,7 +107,7 @@
                                             <a href="<?php echo e(route('admin.orders.details', $data->order_id)); ?>" class="notify-item">
                                                 <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
                                                 <div class="notify-text">
-                                                    <p><?php echo e(__('New order')); ?> #<?php echo e($data->order_id ?? ''); ?></p>
+                                                    <p><?php echo e(__('New service request')); ?> #<?php echo e($data->order_id ?? ''); ?></p>
                                                     <span> <?php echo e(\Carbon\Carbon::parse($data->created_at)->diffForHumans()); ?> </span>
                                                 </div>
                                             </a>
@@ -120,7 +120,7 @@
                                             <a href="<?php echo e(route('admin.ticket.details', $data->ticket_id)); ?>" class="notify-item">
                                                 <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
                                                 <div class="notify-text">
-                                                    <p><?php echo e(__('New order ticket')); ?> #<?php echo e($data->ticket_id ?? ''); ?></p>
+                                                    <p><?php echo e(__('New service request ticket')); ?> #<?php echo e($data->ticket_id ?? ''); ?></p>
                                                     <span> <?php echo e(\Carbon\Carbon::parse($data->created_at)->diffForHumans()); ?> </span>
                                                 </div>
                                             </a>

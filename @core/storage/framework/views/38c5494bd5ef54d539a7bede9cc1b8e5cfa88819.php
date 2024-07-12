@@ -1,5 +1,5 @@
 <?php $__env->startSection('site-title'); ?>
-    <?php echo e(__('Seller Dashboard')); ?>
+    <?php echo e(__('Service Provider Dashboard')); ?>
 
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('style'); ?>
@@ -40,7 +40,7 @@
                     <?php if(empty(auth('web')->user()->subscribedSeller)): ?>
                         <div class="col-lg-12 mt-1">
                                 <div class="alert alert-warning d-flex justify-content-between">
-                                    <strong style="font-size: 16px"><?php echo e(__('you must have to subscribe any of our package in order to start selling your services.')); ?></strong>
+                                    <strong style="font-size: 16px"><?php echo e(__('you must have to subscribe any of our package in service request to start selling your services.')); ?></strong>
                                     <a href="<?php echo e(getSlugFromReadingSetting('price_plan_page') ? url('/'.getSlugFromReadingSetting('price_plan_page')) : url('/price-plan')); ?>" target="_self" class="btn btn-secondary"><?php echo e(__('view packages')); ?></a>
                                 </div>
                         </div>
@@ -73,7 +73,7 @@
                                 <div class="dashboard_promo__flex">
                                     <a href="<?php echo e(route('seller.orders')); ?>">
                                     <div class="dashboard_promo__contents">
-                                        <span class="dashboard_promo__subtitle"><?php echo e(__('Order In Progress')); ?></span>
+                                        <span class="dashboard_promo__subtitle"><?php echo e(__('Service Request In Progress')); ?></span>
                                         <h4 class="dashboard_promo__title mt-2"><?php echo e($active_order); ?></h4>
                                     </div>
                                     </a>
@@ -88,7 +88,7 @@
                                 <div class="dashboard_promo__flex">
                                     <a href="<?php echo e(route('seller.orders')); ?>">
                                     <div class="dashboard_promo__contents">
-                                        <span class="dashboard_promo__subtitle"><?php echo e(__('Order Pending')); ?></span>
+                                        <span class="dashboard_promo__subtitle"><?php echo e(__('Pending Service Request')); ?></span>
                                         <h4 class="dashboard_promo__title mt-2"><?php echo e($pending_order); ?></h4>
                                     </div>
                                     </a>
@@ -103,7 +103,7 @@
                                 <div class="dashboard_promo__flex">
                                     <a href="<?php echo e(route('seller.orders')); ?>">
                                     <div class="dashboard_promo__contents">
-                                        <span class="dashboard_promo__subtitle"><?php echo e(__('Order Completed')); ?></span>
+                                        <span class="dashboard_promo__subtitle"><?php echo e(__('Service Request Completed')); ?></span>
                                         <h4 class="dashboard_promo__title mt-2"><?php echo e($complete_order); ?></h4>
                                     </div>
                                     </a>
@@ -119,7 +119,7 @@
                                 <div class="dashboard_promo__flex">
                                     <a href="<?php echo e(route('seller.orders')); ?>">
                                     <div class="dashboard_promo__contents">
-                                        <span class="dashboard_promo__subtitle"><?php echo e(__('Total Order')); ?></span>
+                                        <span class="dashboard_promo__subtitle"><?php echo e(__('Total Service Request')); ?></span>
                                         <h4 class="dashboard_promo__title mt-2"><?php echo e($total_order); ?></h4>
                                     </div>
                                     </a>
@@ -140,7 +140,7 @@
                                     </div>
                                     </a>
                                     <div class="dashboard_promo__icon">
-                                        <i class="fa-solid fa-dollar"></i>
+                                        <i class="fa-solid fa-indian-rupee-sign"></i>
                                     </div>
                                 </div>
                             </div>
@@ -158,7 +158,7 @@
                                     </div>
                                     </a>
                                     <div class="dashboard_promo__icon">
-                                        <i class="las la-file-invoice-dollar"></i>
+                                        <i class="fa-solid fa-indian-rupee-sign"></i>
                                     </div>
                                 </div>
                             </div>
@@ -219,7 +219,7 @@
                 <div class="row g-4 mt-1">
                     <div class="col-xxl-12">
                         <div class="dashboard_recentOrder dashboard_border  bg-white padding-20 radius-10">
-                            <h4 class="dashboard_recentOrder__title"><?php echo e(__('Recent Order')); ?></h4>
+                            <h4 class="dashboard_recentOrder__title"><?php echo e(__('Recent Service Request')); ?></h4>
                             <div class="dashboard_recentOrder__inner">
                                 <?php if($last_five_order->count() >= 1): ?>
                                     <div class="row g-4 mt-1">
@@ -239,7 +239,7 @@
                                                         </a>
                                                     </div>
                                                     <div class="dashboard_recentOrder__item__service__contents">
-                                                        <a href="<?php echo e(route('seller.order.details', $order->id)); ?>" class="dashboard_recentOrder__item__service__id"><span><?php echo e(__('Order ID:')); ?></span> <?php echo e($order->id); ?></a>
+                                                        <a href="<?php echo e(route('seller.order.details', $order->id)); ?>" class="dashboard_recentOrder__item__service__id"><span><?php echo e(__('Service Request ID:')); ?></span> <?php echo e($order->id); ?></a>
                                                         <h4 class="dashboard_recentOrder__item__service__title mt-1">
                                                             <?php if(!empty($order->job_post_id)): ?>
                                                                 <a href="<?php echo e(route('job.post.details', optional($order->job)->slug)); ?>"> <?php echo e(optional($order->job)->title); ?></a></h4>
@@ -247,8 +247,8 @@
                                                             <a href="<?php echo e(route('service.list.details', optional($order->service)->slug)); ?>"> <?php echo e(optional($order->service)->title); ?></a></h4>
                                                             <?php endif; ?>
                                                         <p class="dashboard_recentOrder__item__service__buyer mt-2">
-                                                            <?php echo e(__('Order Date:')); ?> <strong><?php echo e(Carbon\Carbon::parse($order->created_at)->format('d/m/y')); ?><?php echo e(__(',')); ?></strong>
-                                                            <?php echo e(__('Buyer:')); ?>   <a href="<?php echo e(route('about.buyer.profile',optional($order->buyer)->username)); ?>"> <?php echo e(optional($order->buyer)->name); ?> </a>
+                                                            <?php echo e(__('Service Request Date:')); ?> <strong><?php echo e(Carbon\Carbon::parse($order->created_at)->format('d/m/y')); ?><?php echo e(__(',')); ?></strong>
+                                                            <?php echo e(__('Customer:')); ?>   <a href="<?php echo e(route('about.buyer.profile',optional($order->buyer)->username)); ?>"> <?php echo e(optional($order->buyer)->name); ?> </a>
                                                         </p>
                                                     </div>
                                                 </div>
@@ -271,18 +271,18 @@
                                                 </div>
 
                                                 <div class="dashboard_recentOrder__item__details__item">
-                                                    <p class="dashboard_recentOrder__item__details__item__left"><?php echo e(__('Order type:')); ?></p>
+                                                    <p class="dashboard_recentOrder__item__details__item__left"><?php echo e(__('Service Request type:')); ?></p>
                                                     <p class="dashboard_recentOrder__item__details__item__right">
                                                         <?php $online = __('Online'); $offline = __('Offline')  ?>
                                                         <?php if($order->is_order_online == 1): ?> <?php echo e($online); ?> <?php else: ?> <?php echo e($offline); ?> <?php endif; ?>
                                                     </p>
                                                 </div>
                                                 <div class="dashboard_recentOrder__item__details__item">
-                                                    <p class="dashboard_recentOrder__item__details__item__left"><?php echo e(__('Order amount:')); ?></p>
+                                                    <p class="dashboard_recentOrder__item__details__item__left"><?php echo e(__('Service Request amount:')); ?></p>
                                                     <p class="dashboard_recentOrder__item__details__item__right"><?php echo e(amount_with_currency_symbol($order->total)); ?></p>
                                                 </div>
                                                 <div class="dashboard_recentOrder__item__details__item">
-                                                    <p class="dashboard_recentOrder__item__details__item__left"><?php echo e(__('Order status:')); ?></p>
+                                                    <p class="dashboard_recentOrder__item__details__item__left"><?php echo e(__('Service Request status:')); ?></p>
                                                     <?php if($order->status == 0): ?><div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn pending"><?php echo e(__('Pending')); ?></a> </div> <?php endif; ?>
                                                     <?php if($order->status == 1): ?><div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn active"><?php echo e(__('Active')); ?></a> </div> <?php endif; ?>
                                                     <?php if($order->status == 2): ?><div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn completed"><?php echo e(__('Completed')); ?></a> </div> <?php endif; ?>
@@ -308,7 +308,7 @@
                                     <div class="dashboard_promo bg-white">
                                         <div class="dashboard_promo__flex">
                                             <div class="dashboard_promo__contents">
-                                                <span class="dashboard_promo__subtitle"><?php echo e(__('Order')); ?></span>
+                                                <span class="dashboard_promo__subtitle"><?php echo e(__('Service Request')); ?></span>
                                                 <h4 class="dashboard_promo__title mt-2"><?php echo e($this_month_order_count); ?></h4>
                                             </div>
                                             <div class="dashboard_promo__icon">
@@ -325,7 +325,7 @@
                                                 <h4 class="dashboard_promo__title mt-2"><?php echo e(float_amount_with_currency_symbol($this_month_earnings)); ?></h4>
                                             </div>
                                             <div class="dashboard_promo__icon">
-                                                <i class="fa-solid fa-dollar"></i>
+                                                <i class="fa-solid fa-indian-rupee-sign"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -338,7 +338,7 @@
                                                 <h4 class="dashboard_promo__title mt-2"><?php echo e(float_amount_with_currency_symbol($this_month_balance_without_tax_and_admin_commission)); ?></h4>
                                             </div>
                                             <div class="dashboard_promo__icon">
-                                                <i class="las la-file-invoice-dollar"></i>
+                                                <i class="fa-solid fa-indian-rupee-sign"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -348,7 +348,7 @@
                                     <div class="dashboard_promo bg-white">
                                         <div class="dashboard_promo__flex">
                                             <div class="dashboard_promo__contents">
-                                                <span class="dashboard_promo__subtitle"><?php echo e(__('Total Buyer')); ?></span>
+                                                <span class="dashboard_promo__subtitle"><?php echo e(__('Total Customer')); ?></span>
                                                 <h4 class="dashboard_promo__title mt-2"><?php echo e($buyer_count); ?></h4>
                                             </div>
                                             <div class="dashboard_promo__icon">
@@ -425,7 +425,7 @@
                             <div class="single-flex-middle margin-top-40">
                                 <div class="line-charts-wrapper">
                                     <div class="line-top-contents">
-                                        <h4 class="dashboard_table__title"><?php echo e(__('Total Order Overview')); ?></h4>
+                                        <h4 class="dashboard_table__title"><?php echo e(__('Total Service Request Overview')); ?></h4>
                                     </div>
                                     <div class="line-charts">
                                         <canvas id="line-chart"></canvas>

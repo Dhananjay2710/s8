@@ -10,7 +10,7 @@
                     <?php if(Auth::guard('web')->check()): ?>
                         <i class="las la-bell"></i>
                         <span class="notification-number">
-                    <?php echo e(Auth()->user()->unreadNotifications()->where('data->order_message' , 'You have a new order')->count()); ?>
+                    <?php echo e(Auth()->user()->unreadNotifications()->where('data->order_message' , 'You have a new service request')->count()); ?>
 
                 </span>
                     <?php endif; ?>
@@ -18,7 +18,7 @@
                     <div class="notification-list-item mt-2">
                         <h5 class="notification-title"><?php echo e(__('Notifications')); ?></h5>
                         <div class="list">
-                            <?php if(Auth::guard('web')->check() && Auth::guard('web')->user()->unreadNotifications()->where('data->order_message' , 'You have a new order')->count() >=1): ?>
+                            <?php if(Auth::guard('web')->check() && Auth::guard('web')->user()->unreadNotifications()->where('data->order_message' , 'You have a new service request')->count() >=1): ?>
                                 <span>
                             <?php $__currentLoopData = Auth::user()->unreadNotifications->take(5); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notification): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <?php if(isset($notification->data['order_id'])): ?>
@@ -61,7 +61,13 @@
                 <a href="<?php echo e(route('buyer.dashboard')); ?>"> <?php echo e(__('Dashboard')); ?> </a>
                 <?php endif; ?>
             </li>
-            <li class="list"> <a href="<?php echo e(route('seller.logout')); ?>"> <?php echo e(__('Logout')); ?> </a> </li>
+            <li class="list"> 
+                <?php if(Auth::guard('web')->user()->user_type==0): ?>
+                <a href="<?php echo e(route('seller.logout')); ?>"> <?php echo e(__('Logout')); ?> </a>
+                <?php else: ?>
+                <a href="<?php echo e(route('buyer.logout')); ?>"> <?php echo e(__('Logout')); ?> </a>
+                <?php endif; ?>
+            </li>
         </ul>
     </div>
 </div>

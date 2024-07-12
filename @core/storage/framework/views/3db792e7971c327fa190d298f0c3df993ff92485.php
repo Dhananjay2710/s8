@@ -1,7 +1,7 @@
 
 
 <?php $__env->startSection('site-title'); ?>
-    <?php echo e(__('Order Success Settings')); ?>
+    <?php echo e(__('Service Request Success Settings')); ?>
 
 <?php $__env->stopSection(); ?>
 
@@ -41,28 +41,28 @@
 <?php endif; ?>
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="header-title mb-4"><?php echo e(__("Order Success Settings")); ?></h4>
-                        <small class="text-danger mb-5"><?php echo e(__('You can change order success page text from here.')); ?></small>
+                        <h4 class="header-title mb-4"><?php echo e(__("Service Request Success Settings")); ?></h4>
+                        <small class="text-danger mb-5"><?php echo e(__('You can change service request success page text from here.')); ?></small>
                         <form action="<?php echo e(route('admin.order.success.settings.update')); ?>" method="POST" enctype="multipart/form-data">
                             <?php echo csrf_field(); ?>
                             <div class="form-group">
-                                <label for="success_title"><?php echo e(__('Order Success Title')); ?></label>
+                                <label for="success_title"><?php echo e(__('Service Request Success Title')); ?></label>
                                 <input type="text" name="success_title"  class="form-control" value="<?php echo e(get_static_option('success_title')); ?>" id="success_title">
                             </div>
                             <div class="form-group">
-                                <label for="success_subtitle"><?php echo e(__('Order Success Subtitle')); ?></label>
+                                <label for="success_subtitle"><?php echo e(__('Service Request Success Subtitle')); ?></label>
                                 <input type="text" name="success_subtitle"  class="form-control" value="<?php echo e(get_static_option('success_subtitle')); ?>" id="success_subtitle">
                             </div>
                             <div class="form-group">
-                                <label for="success_details_title"><?php echo e(__('Order Success Details Title')); ?></label>
+                                <label for="success_details_title"><?php echo e(__('Service Request Success Details Title')); ?></label>
                                 <input type="text" name="success_details_title"  class="form-control" value="<?php echo e(get_static_option('success_details_title')); ?>" id="success_details_title">
                             </div>
                             <div class="form-group">
-                                <label for="button_title"><?php echo e(__('Order Success Button Title')); ?></label>
+                                <label for="button_title"><?php echo e(__('Service Request Success Button Title')); ?></label>
                                 <input type="text" name="button_title"  class="form-control" value="<?php echo e(get_static_option('button_title')); ?>" id="button_title">
                             </div>
                             <div class="form-group">
-                                <label for="button_url"><?php echo e(__('Order Success Button Url')); ?></label>
+                                <label for="button_url"><?php echo e(__('Service Request Success Button Url')); ?></label>
                                 <input type="text" name="button_url"  class="form-control" value="<?php echo e(get_static_option('button_url')); ?>" id="button_url">
                             </div>
                             <button type="submit" id="update" class="btn btn-primary mt-4 pr-4 pl-4"><?php echo e(__('Update Changes')); ?></button>

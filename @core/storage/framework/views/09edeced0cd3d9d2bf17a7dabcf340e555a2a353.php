@@ -49,7 +49,7 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('site-title'); ?>
-    <?php echo e(__('All Seller')); ?>
+    <?php echo e(__('All Service Provider')); ?>
 
 <?php $__env->stopSection(); ?>
 
@@ -92,7 +92,7 @@
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
-                                    <h4 class="header-title"><?php echo e(__('All Seller')); ?></h4>
+                                    <h4 class="header-title"><?php echo e(__('All Service Provider')); ?></h4>
                                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('user-delete')): ?>
                                         <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.bulk-action','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -152,9 +152,9 @@
                                                     <td><?php echo e($data->name); ?></td>
                                                     <td>
                                                         <?php if($data->user_type==0): ?>
-                                                            <span class="text-danger"><?php echo e(__('Seller')); ?></span>
+                                                            <span class="text-danger"><?php echo e(__('Service Provider')); ?></span>
                                                         <?php else: ?>
-                                                            <span class="text-success"><?php echo e(__('Buyer')); ?></span>
+                                                            <span class="text-success"><?php echo e(__('Customer')); ?></span>
                                                         <?php endif; ?>
                                                     </td>
                                                     <td>

@@ -59,7 +59,7 @@
                                         <?php endif; ?>
                                         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('seller-subscription-list')): ?>
                                             <li class="<?php echo e(active_menu('admin-home/subscription/seller-subscription')); ?> <?php if(request()->is('admin-home/subscription/seller-subscription/*')): ?> active <?php endif; ?>"><a
-                                                 href="<?php echo e(route('admin.seller.subscription')); ?>"><?php echo e(__('Seller Subscription')); ?></a></li>
+                                                 href="<?php echo e(route('admin.seller.subscription')); ?>"><?php echo e(__('Service Provider Subscription')); ?></a></li>
                                         <?php endif; ?>
                                         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('subscription-coupon-list')): ?>
                                             <li class="<?php echo e(active_menu('admin-home/subscription/coupon')); ?> <?php if(request()->is('admin-home/subscription/coupon/*')): ?> active <?php endif; ?>"><a
@@ -494,7 +494,7 @@
                                                 href="<?php echo e(route('admin.service.book.settings')); ?>"><?php echo e(__('Service Book Settings')); ?></a></li>
                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('order-create-setting')): ?>
                                     <li class="<?php echo e(active_menu('admin-home/services/order-create-settings')); ?>"><a
-                                      href="<?php echo e(route('admin.order.create.settings')); ?>"><?php echo e(__('Order Create Settings')); ?></a></li>
+                                      href="<?php echo e(route('admin.order.create.settings')); ?>"><?php echo e(__('Service Request Create Settings')); ?></a></li>
                                 <?php endif; ?>
                             </ul>
                         </li>
@@ -534,12 +534,12 @@
                             <?php endif; ?>
                             <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('order-success-setting')): ?>
                             <li class="<?php echo e(active_menu('admin-home/orders/order-success-settings')); ?>">
-                                <a href="<?php echo e(route('admin.order.success.settings')); ?>"><?php echo e(__('Order Success Settings')); ?></a>
+                                <a href="<?php echo e(route('admin.order.success.settings')); ?>"><?php echo e(__('Service Request Success Settings')); ?></a>
                             </li>
                             <?php endif; ?>
                             <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('order-request-complete')): ?>
                                 <li class="<?php echo e(active_menu('admin-home/orders/order-request-complete')); ?>">
-                                    <a href="<?php echo e(route('admin.order.complete.request')); ?>"><?php echo e(__('Order Request Complete')); ?></a>
+                                    <a href="<?php echo e(route('admin.order.complete.request')); ?>"><?php echo e(__('Service Request Request Complete')); ?></a>
                                 </li>
                             <?php endif; ?>
                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('order-request-complete')): ?>
@@ -558,7 +558,7 @@
                     
                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('seller-buyer-report')): ?>
                         <li class="<?php echo e(active_menu('admin-home/orders/seller-buyer-report')); ?>">
-                            <a href="<?php echo e(route('admin.order.seller.buyer.report')); ?>"><i class="ti-list-ol"></i> <?php echo e(__('Seller Buyer Report')); ?></a>
+                            <a href="<?php echo e(route('admin.order.seller.buyer.report')); ?>"><i class="ti-list-ol"></i> <?php echo e(__('Service Provider Customer Report')); ?></a>
                         </li>
                     <?php endif; ?>
 
@@ -599,7 +599,7 @@
 
                             <?php if(request()->is('admin-home/seller-settings/*') || request()->is('admin-home/frontend/seller-verify/all')): ?> active <?php endif; ?>">
                             <a href="javascript:void(0)" aria-expanded="true"><i class="ti-back-right"></i>
-                                <span><?php echo e(__('Seller Settings')); ?></span></a>
+                                <span><?php echo e(__('Service Provider Settings')); ?></span></a>
                             <ul class="collapse">
                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['payout-list'])): ?>
                                     <li class="<?php echo e(active_menu('admin-home/seller-settings/payout-request/all')); ?>">
@@ -627,7 +627,7 @@
 
                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['all-seller'])): ?>
                                     <li class="<?php echo e(active_menu('admin-home/frontend/seller-verify/all')); ?>">
-                                        <a href="<?php echo e(route('admin.frontend.seller.all')); ?>" aria-expanded="true"><?php echo e(__('All Seller')); ?></a>
+                                        <a href="<?php echo e(route('admin.frontend.seller.all')); ?>" aria-expanded="true"><?php echo e(__('All Service Provider')); ?></a>
                                     </li>
                                 <?php endif; ?>
                             </ul>

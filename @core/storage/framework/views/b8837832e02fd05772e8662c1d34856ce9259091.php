@@ -65,7 +65,7 @@
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
                                 <h4 class="header-title"><?php echo e(__('Amount Settings')); ?> </h4>
-                                <p class="mb-3"><?php echo e(__('you can set minimum and maximum withdraw amount for seller')); ?></p>
+                                <p class="mb-3"><?php echo e(__('you can set minimum and maximum withdraw amount for service provider')); ?></p>
                             </div>
                         </div>
                         <div class="table-wrap table-responsive">

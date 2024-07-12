@@ -69,10 +69,10 @@
                         <div class="table-wrap table-responsive">
                             <table class="table table-default">
                                 <thead>
-                                <th><?php echo e(__('Main Order ID')); ?></th>
-                                <th><?php echo e(__('Extra Order ID')); ?></th>
-                                <th><?php echo e(__('Buyer Details')); ?></th>
-                                <th><?php echo e(__('Seller Details')); ?></th>
+                                <th><?php echo e(__('Main Service Request ID')); ?></th>
+                                <th><?php echo e(__('Extra Service Request ID')); ?></th>
+                                <th><?php echo e(__('Customer Details')); ?></th>
+                                <th><?php echo e(__('Service Provider Details')); ?></th>
                                 <th><?php echo e(__('Title')); ?></th>
                                 <th><?php echo e(__('Payment Gateway')); ?></th>
                                 <th><?php echo e(__('Payment Status')); ?></th>

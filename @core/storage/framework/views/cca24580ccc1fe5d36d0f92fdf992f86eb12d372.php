@@ -61,8 +61,8 @@
                     <div class="card-body">
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
-                                <h4 class="header-title"><?php echo e(__('Seller Register Settings')); ?> </h4>
-                                <p class="mb-3 text-info"><?php echo e(__('You can set the seller register on/off  and Service Area field required from here.')); ?></p>
+                                <h4 class="header-title"><?php echo e(__('Service Provider Register Settings')); ?> </h4>
+                                <p class="mb-3 text-info"><?php echo e(__('You can set the service provider register on/off  and Service Area field required from here.')); ?></p>
                             </div>
                         </div>
                         <div class="table-wrap table-responsive">
@@ -70,7 +70,7 @@
                             <form action="<?php echo e(route('admin.seller.register.settings.update')); ?>" method="post">
                                 <?php echo csrf_field(); ?>
                                 <div class="form-group">
-                                    <label for="commission_charge"><?php echo e(__('Seller Register On/Off')); ?></label>
+                                    <label for="commission_charge"><?php echo e(__('Service Provider Register On/Off')); ?></label>
                                     <select name="seller_register_on_off" id="seller_register_on_off" class="form-control">
                                         <option value="on" <?php echo e(get_static_option('seller_register_on_off')=== 'on'? 'selected': ''); ?>><?php echo e(__('On')); ?></option>
                                         <option value="off" <?php echo e(get_static_option('seller_register_on_off')=== 'off' ? 'selected': ''); ?> ><?php echo e(__('Off')); ?></option>
@@ -99,7 +99,7 @@
                     <div class="card-body">
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
-                                <h4 class="header-title"><?php echo e(__('Buyer Register Settings')); ?> </h4>
+                                <h4 class="header-title"><?php echo e(__('Customer Register Settings')); ?> </h4>
                                 <p class="mb-3 text-info"><?php echo e(__('You can set the buyer register on/off from here.')); ?></p>
                             </div>
                         </div>
@@ -107,7 +107,7 @@
                             <form action="<?php echo e(route('admin.buyer.register.settings.update')); ?>" method="post">
                                 <?php echo csrf_field(); ?>
                                 <div class="form-group">
-                                    <label for="commission_charge"><?php echo e(__('Buyer Register On/Off')); ?></label>
+                                    <label for="commission_charge"><?php echo e(__('Customer Register On/Off')); ?></label>
                                     <select name="buyer_register_on_off" id="buyer_register_on_off" class="form-control">
                                         <option value="on" <?php echo e(get_static_option('buyer_register_on_off')=== 'on'? 'selected' :''); ?> ><?php echo e(__('On')); ?></option>
                                         <option value="off" <?php echo e(get_static_option('buyer_register_on_off')=== 'off'? 'selected' :''); ?>><?php echo e(__('Off')); ?></option>
@@ -130,7 +130,7 @@
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
                                 <h4 class="header-title"><?php echo e(__('Register Notice')); ?> </h4>
-                                <p class="mb-3 text-info"><?php echo e(__('This notice will show in register page only if the seller and buyer registration off.')); ?></p>
+                                <p class="mb-3 text-info"><?php echo e(__('This notice will show in register page only if the service provider and customer registration off.')); ?></p>
                             </div>
                         </div>
                         <div class="table-wrap table-responsive">

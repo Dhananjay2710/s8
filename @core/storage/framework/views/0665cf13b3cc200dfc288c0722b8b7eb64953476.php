@@ -1,6 +1,6 @@
 
 <?php $__env->startSection('site-title'); ?>
-    <?php echo e(__('Order Complete Request Decline')); ?>
+    <?php echo e(__('Service Request Complete Request Decline')); ?>
 
 <?php $__env->stopSection(); ?>
 
@@ -63,17 +63,17 @@
                     <div class="card-body">
                         <div class="header-wrap d-flex justify-content-between">
                             <div class="left-content">
-                                <h4 class="header-title"><?php echo e(__('Order Complete Request Decline List')); ?>  </h4>
-                                <small class="text-info py-2"><?php echo e(__('These are the order complete request decline lists decline by the buyer')); ?></small>
+                                <h4 class="header-title"><?php echo e(__('Service Request Complete Request Decline List')); ?>  </h4>
+                                <small class="text-info py-2"><?php echo e(__('These are the lists of service requests that were completed or declined by the customer')); ?></small>
                             </div>
                         </div>
                         <div class="table-wrap table-responsive">
                             <table class="table table-default">
                                 <thead>
                                 <th><?php echo e(__('ID')); ?></th>
-                                <th><?php echo e(__('Order ID')); ?></th>
-                                <th><?php echo e(__('Seller Details')); ?></th>
-                                <th><?php echo e(__('Buyer Details')); ?></th>
+                                <th><?php echo e(__('Service Request ID')); ?></th>
+                                <th><?php echo e(__('Service Provider Details')); ?></th>
+                                <th><?php echo e(__('Customer Details')); ?></th>
                                 <th><?php echo e(__('Decline Reason')); ?></th>
                                 <th><?php echo e(__('Action')); ?></th>
                                 </thead>
@@ -96,7 +96,7 @@
                                             <p><?php echo e(__('Name:')); ?> <?php echo e($data->decline_reason); ?></p>
                                         </td>
                                         <td>
-                                            <a class="btn btn-info" href="<?php echo e(route('admin.orders.details',$data->id)); ?>"><?php echo e(__('Order Details')); ?></a>
+                                            <a class="btn btn-info" href="<?php echo e(route('admin.orders.details',$data->id)); ?>"><?php echo e(__('Service Request Details')); ?></a>
                                         </td>
                                     </tr>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

@@ -63,8 +63,8 @@
                                                             </div>
                                                             <div class="col-lg-2 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    <label for="order_id" class="info-title"> <?php echo e(__('Order ID')); ?> </label>
-                                                                    <input class="form--control" name="order_id" value="<?php echo e(request()->get('order_id')); ?>" type="text" placeholder="<?php echo e(__('Order ID')); ?>">
+                                                                    <label for="order_id" class="info-title"> <?php echo e(__('Service Request ID')); ?> </label>
+                                                                    <input class="form--control" name="order_id" value="<?php echo e(request()->get('order_id')); ?>" type="text" placeholder="<?php echo e(__('Service Request ID')); ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="col-lg-5 col-sm-6">
@@ -102,7 +102,7 @@
                             <a href="javascript:void(0)"
                                class="dashboard_table__title__btn btn-bg-1 radius-5"
                                data-bs-toggle="modal"
-                               data-bs-target="#ticketModal"><i class="fa-solid fa-plus"></i> <?php echo e(__('Create Ticket For A Order' )); ?></a>
+                               data-bs-target="#ticketModal"><i class="fa-solid fa-plus"></i> <?php echo e(__('Create Ticket For A Service Request' )); ?></a>
                         </div>
                     </div>
 
@@ -112,7 +112,7 @@
                             <thead>
                             <tr>
                                 <th><?php echo e(__('Ticket Name/ID')); ?></th>
-                                <th><?php echo e(__('Order ID')); ?></th>
+                                <th><?php echo e(__('Service Request ID')); ?></th>
                                 <th><?php echo e(__('Priority')); ?></th>
                                 <th><?php echo e(__('Status')); ?></th>
                                 <th><?php echo e(__('Action')); ?></th>
@@ -291,7 +291,7 @@
                                             <select class="select2_activation" name="order_id">
                                                 <option value=""><?php echo e(__('Select Order')); ?></option>
                                                 <?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                    <option value="<?php echo e($order->id); ?>"><?php echo e(__('Order ID#')); ?> <?php echo e($order->id); ?></option>
+                                                    <option value="<?php echo e($order->id); ?>"><?php echo e(__('Service Request ID#')); ?> <?php echo e($order->id); ?></option>
                                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </select>
                                         </div>

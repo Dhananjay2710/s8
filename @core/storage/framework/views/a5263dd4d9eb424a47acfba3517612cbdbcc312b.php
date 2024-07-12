@@ -140,11 +140,11 @@
     </div>
         <div class="inner-wrap" style="background-color: #fff;text-align: left;box-shadow: 0 0 20px 0 rgba(0,0,0,0.01);">
         <div class="inner-wrap-contents">
-            <p class="wrap-para"><?php echo e(__('Hello, Order Created By:')); ?> <?php echo e(optional($order_details->buyer)->name); ?> <br>
-            <?php echo e(__('Order has been created successfully at:') .optional($order_details->created_at)->toFormattedDateString().','. ucwords(str_replace("_", " ", $order_details->payment_gateway))); ?>
+            <p class="wrap-para"><?php echo e(__('Hello, Service Requested By:')); ?> <?php echo e(optional($order_details->buyer)->name); ?> <br>
+            <?php echo e(__('Service has been requested successfully at:') .optional($order_details->created_at)->toFormattedDateString().','. ucwords(str_replace("_", " ", $order_details->payment_gateway))); ?>
 
             </p>
-            <h4 class="earning-order-title"><?php echo e(__('Your Order ID')); ?> #<?php echo e($order_details->id); ?><br>
+            <h4 class="earning-order-title"><?php echo e(__('Your Service Request ID')); ?> #<?php echo e($order_details->id); ?><br>
                 <?php echo e(__('Total Amount')); ?> <?php echo e(float_amount_with_currency_symbol($order_details->total)); ?><br>
                 <?php echo e(__('Tax Amount')); ?> <?php echo e(float_amount_with_currency_symbol($order_details->tax)); ?> <br> <br>
                 <?php if($order_details->transaction_id !=''): ?>
@@ -158,7 +158,7 @@
         ?>
 
         <?php if($order_includes->count()>=1): ?>
-        <h3 class="earning-title"><?php echo e(__('Order Include Details')); ?></h3>
+        <h3 class="earning-title"><?php echo e(__('Service Request Include Details')); ?></h3>
         <table class="table table-bordered table-responsive" style="margin: 0 auto; border: 1px solid #ddd; border-collapse: collapse; width: 100%; margin-bottom: 30px;overflow-x: auto;">
             <thead>
                 <tr class="table-row">
@@ -203,7 +203,7 @@
         ?>
 
         <?php if($order_additionals->count()>=1): ?>
-        <h3 class="earning-title"><?php echo e(get_static_option('service_extra_title') ?? __('Order Additional Details')); ?></h3>
+        <h3 class="earning-title"><?php echo e(get_static_option('service_extra_title') ?? __('Service Request Additional Details')); ?></h3>
         <table class="table table-bordered" style="margin: 0 auto; border: 1px solid #ddd; border-collapse: collapse; width: 100%; margin-bottom: 30px;">
             <thead>
                 <tr>
@@ -264,7 +264,7 @@
             <p class="wrap-para"><strong><?php echo e(__('Phone:')); ?></strong> <?php echo e($order_details->phone); ?></p>
         </div>
         <div class="earning-wrapper">
-            <h3 class="earning-title"><?php echo e(__('Shipping Details')); ?></h3><hr>
+            <h3 class="earning-title"><?php echo e(__('Service Location Details')); ?></h3><hr>
             <p class="wrap-para"><strong><?php echo e(__('Name:')); ?></strong> <?php echo e($order_details->name); ?></p>
             <p class="wrap-para"><strong><?php echo e(__('Email:')); ?></strong> <?php echo e($order_details->email); ?></p>
             <p class="wrap-para"><strong><?php echo e(__('Phone:')); ?></strong> <?php echo e($order_details->phone); ?></p>
@@ -274,7 +274,7 @@
             <p class="wrap-para"><strong><?php echo e(__('Address:')); ?></strong> <?php echo e($order_details->address); ?></p>
             <p class="wrap-para"><strong><?php echo e(__('Date:')); ?></strong> <?php echo e(__($order_details->date)); ?></p>
             <p class="wrap-para"><strong><?php echo e(__('Schedule:')); ?></strong> <?php echo e(__($order_details->schedule)); ?></p>
-            <p class="wrap-para"><strong><?php echo e(__('Order Create Date:')); ?></strong> <?php echo e(optional($order_details->created_at)->toFormattedDateString()); ?></p>
+            <p class="wrap-para"><strong><?php echo e(__('Requested Service Raise Date:')); ?></strong> <?php echo e(optional($order_details->created_at)->toFormattedDateString()); ?></p>
         </div>
        <?php endif; ?>
 

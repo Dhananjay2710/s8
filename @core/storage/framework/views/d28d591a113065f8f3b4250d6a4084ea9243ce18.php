@@ -6,7 +6,7 @@
 <?php $__env->startSection('content'); ?>
 
 <?php 
-$reg_type = request()->get('type') ?? 'buyer';
+$reg_type = request()->get('type') ?? 'seller';
 ?>
     <!-- Banner Inner area Starts -->
     <div class="banner-inner-area section-bg-2 padding-top-70 padding-bottom-70">
@@ -41,7 +41,7 @@ $reg_type = request()->get('type') ?? 'buyer';
                                                 <i class="las la-briefcase"></i>
                                             </div>
                                             <div class="contents">
-                                                <h4 class="title" id="seller"> <?php echo e(get_static_option('register_seller_title') ?? __('Seller')); ?></h4>
+                                                <h4 class="title" id="seller"> <?php echo e(get_static_option('register_seller_title') ?? __('Service Provider')); ?></h4>
                                             </div>
                                         </div>
                                     </li>
@@ -53,7 +53,7 @@ $reg_type = request()->get('type') ?? 'buyer';
                                                 <i class="las la-user-alt"></i>
                                             </div>
                                             <div class="contents">
-                                                <h4 class="title" id="buyer"> <?php echo e(get_static_option('register_buyer_title') ?? __('Buyer')); ?></h4>
+                                                <h4 class="title" id="buyer"> <?php echo e(get_static_option('register_buyer_title') ?? __('Customer')); ?></h4>
                                             </div>
                                         </div>
                                     </li>

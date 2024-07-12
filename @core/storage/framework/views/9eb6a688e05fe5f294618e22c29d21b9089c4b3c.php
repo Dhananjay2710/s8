@@ -29,8 +29,38 @@
            text-align: center;
            border-radius: 5px;
            font-size: 14px;
-           <?php if(request()->path() == 'seller/job-orders'): ?>padding: 8px;  <?php else: ?> padding: 6px; margin-bottom: -1px; <?php endif; ?>
+           <?php if(request()->path() == 'seller/job-orders' || request()->path() == 'serviceprovider/job-orders'): ?>padding: 8px;  <?php else: ?> padding: 6px; margin-bottom: -1px; <?php endif; ?>
 }    </style>
+<style>
+    .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+    }
+    .pagination li {
+        margin-right: 5px;
+    }
+    .pagination li a,
+    .pagination li span {
+        display: block;
+        padding: 5px 10px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #333;
+    }
+    .pagination li.active a,
+    .pagination li.active span {
+        background-color: #337ab7;
+        color: #fff;
+        border-color: #337ab7;
+    }
+    .pagination li.disabled span {
+        pointer-events: none;
+        color: #777;
+    }
+</style>
     <link rel="stylesheet" href="<?php echo e(asset('assets/common/css/themify-icons.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('assets/frontend/css/font-awesome.min.css')); ?>">
 <?php $__env->stopSection(); ?>
@@ -51,19 +81,39 @@
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
     <?php $default_lang = get_default_language(); ?>
-    <?php echo $__env->make('frontend.user.seller.partials.sidebar-two', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-    <div class="dashboard__right">
-        <?php echo $__env->make('frontend.user.buyer.header.buyer-header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+    <?php if($isHideSideBarAndHeader): ?>
+        <?php echo $__env->make('frontend.user.seller.partials.sidebar-two', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+        <div class="dashboard__right">
+            <?php echo $__env->make('frontend.user.buyer.header.buyer-header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+    <?php else: ?>
+        <div class="dashboard">
+    <?php endif; ?>
         <div class="dashboard__body">
             <div class="dashboard__inner">
                 <!-- search section start-->
                 <div class="dashboard__inner__item dashboard_border padding-20 radius-10 bg-white">
                     <div class="dashboard__wallet">
-                         <form action="<?php if(request()->path() == 'seller/job-orders'): ?>  <?php echo e(route('seller.job.orders')); ?> <?php else: ?> <?php echo e(route('seller.orders')); ?>  <?php endif; ?>" method="GET">
+                         <form action="
+                            <?php if(request()->path() == 'seller/job-orders' || request()->path() == 'serviceprovider/job-orders'): ?>  
+                                <?php if($isHideSideBarAndHeader): ?> 
+                                    <?php echo e(route('seller.job.orders')); ?>
+
+                                <?php else: ?> 
+                                    <?php echo e(route('seller.job.servicerequests')); ?> 
+                                <?php endif; ?> 
+                            <?php else: ?> 
+                                <?php if($isHideSideBarAndHeader): ?> 
+                                    <?php echo e(route('seller.orders')); ?>
+
+                                <?php else: ?>
+                                    <?php echo e(route('seller.servicerequests')); ?> 
+                                <?php endif; ?> 
+                                  
+                            <?php endif; ?>" method="GET">
                             <div class="dashboard__headerGlobal__flex">
                                 <div class="dashboard__headerGlobal__content">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        <h4 class="dashboard_table__title"><?php echo e(__('Search Order Module')); ?></h4> <i class="las la-angle-down search_by_all"></i>
+                                        <h4 class="dashboard_table__title"><?php echo e(__('Search Service Request Module')); ?></h4> <i class="las la-angle-down search_by_all"></i>
                                     </button>
                                 </div>
                                 <div class="dashboard__headerGlobal__btn">
@@ -94,15 +144,19 @@
                                                         <div class="row g-4 mt-3">
                                                             <div class="col-lg-4 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    <label for="order_id" class="info-title"> <?php echo e(__('Order ID')); ?> </label>
-                                                                    <input class="form--control" name="order_id" value="<?php echo e(request()->get('order_id')); ?>" type="text" placeholder="<?php echo e(__('Order ID')); ?>">
+                                                                    <label for="order_id" class="info-title"> <?php echo e(__('Service Request ID')); ?> </label>
+                                                                    <?php if(!$isHideSideBarAndHeader): ?>
+                                                                        <input type="hidden" name="serviceproviderId" value="<?php echo e($serviceProviderId); ?>">
+                                                                        <input type="hidden" name="token" value="<?php echo e($token); ?>">
+                                                                    <?php endif; ?>
+                                                                    <input class="form--control" name="order_id" value="<?php echo e(request()->get('order_id')); ?>" type="text" placeholder="<?php echo e(__('Service Request ID')); ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="col-lg-4 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    <label for="order_status" class="info-title"> <?php echo e(__('Order Status')); ?> </label>
+                                                                    <label for="order_status" class="info-title"> <?php echo e(__('Service Request Status')); ?> </label>
                                                                     <select name="order_status">
-                                                                        <option value=""><?php echo e(__('Select Order Status')); ?></option>
+                                                                        <option value=""><?php echo e(__('Select Service Request Status')); ?></option>
                                                                          <option value="pending" <?php if(request()->get('order_status') == 'pending'): ?> selected <?php endif; ?>><?php echo e(__('Pending')); ?></option>
                                                                          <option value="1" <?php if(request()->get('order_status') == 1): ?> selected <?php endif; ?>><?php echo e(__('Active')); ?></option>
                                                                          <option value="2" <?php if(request()->get('order_status') == 2): ?> selected <?php endif; ?>><?php echo e(__('completed')); ?></option>
@@ -123,7 +177,7 @@
                                                         <div class="row g-4 mt-2">
                                                             <div class="col-lg-4 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    <?php if(request()->path() == 'seller/job-orders'): ?>
+                                                                    <?php if(request()->path() == 'seller/job-orders' || request()->path() == 'serviceprovider/job-orders'): ?>
                                                                         <input type="hidden" value="job_order" name="job_order_request">
                                                                         <label for="job_title" class="info-title"> <?php echo e(__('Job Title')); ?> </label>
                                                                         <input class="form--control" name="job_title" value="<?php echo e(request()->get('job_title')); ?>" type="text" placeholder="<?php echo e(__('Job Title')); ?>">
@@ -135,8 +189,8 @@
                                                             </div>
                                                             <div class="col-lg-4 col-sm-6">
                                                                 <div class="single-info-input">
-                                                                    <label for="buyer_name" class="info-title"> <?php echo e(__('Buyer Name')); ?> </label>
-                                                                    <input class="form--control" name="buyer_name" value="<?php echo e(request()->get('buyer_name')); ?>" type="text" placeholder="<?php echo e(__('Buyer Name')); ?>">
+                                                                    <label for="buyer_name" class="info-title"> <?php echo e(__('Customer Name')); ?> </label>
+                                                                    <input class="form--control" name="buyer_name" value="<?php echo e(request()->get('buyer_name')); ?>" type="text" placeholder="<?php echo e(__('Customer Name')); ?>">
                                                                 </div>
                                                             </div>
                                                             <div class="col-lg-3 col-sm-6">
@@ -166,7 +220,7 @@
 
                 <!-- order table section start-->
                 <div class="dashboard_table__wrapper dashboard_border  padding-20 radius-10 bg-white">
-                    <?php if(request()->path() == 'seller/job-orders'): ?>
+                    <?php if(request()->path() == 'seller/job-orders' || request()->path() == 'serviceprovider/job-orders'): ?>
                         <h4 class="dashboards-title mb-3"><?php echo e(__('All Job Orders')); ?></h4>
                     <?php else: ?>
                         <h4 class="dashboards-title mb-3"><?php echo e(__('All Service Orders')); ?></h4>
@@ -188,6 +242,9 @@
                         </div>
                         <div class="paymentGateway_add__item_seller_order custom_radio__single_seller_order radius-10">
                             <label for="Cancelled" class="paymentGateway_add__item__img"><?php echo e(__('Cancelled')); ?> <strong class="numbers"><?php echo e($cancel_orders->count()); ?></strong></label>
+                        </div>
+                        <div class="paymentGateway_add__item_seller_order custom_radio__single_seller_order radius-10">
+                            <label for="Incompetent" class="paymentGateway_add__item__img"><?php echo e(__('Incompetent')); ?> <strong class="numbers"><?php echo e($incompetent_orders->count()); ?></strong></label>
                         </div>
                         <div class="paymentGateway_add__item_seller_order custom_radio__single_seller_order radius-10">
                             <label for="All" class="paymentGateway_add__item__img"><?php echo e(__('All')); ?> <strong class="numbers"><?php echo e($orders->count()); ?></strong> </label>
@@ -231,17 +288,17 @@
                         <table>
                             <thead>
                             <tr>
-                                <th><?php echo e(__('Order item')); ?></th>
+                                <th><?php echo e(__('Service Request item')); ?></th>
 
-                                <?php if(request()->path() == 'seller/orders'): ?>
+                                <?php if(request()->path() == 'seller/orders' || request()->path() == 'serviceprovider/orders'): ?>
                                     <th><?php echo e(__('Booking Date and Time')); ?></th>
                                 <?php endif; ?>
 
-                                <th><?php echo e(__('Order amount')); ?></th>
-                                <th><?php echo e(__('Order type')); ?></th>
+                                <th><?php echo e(__('Service Request amount')); ?></th>
+                                <th><?php echo e(__('Service Request type')); ?></th>
                                 <th><?php echo e(__('Payment Details')); ?></th>
-                                <th><?php echo e(__('Order Complete Request')); ?></th>
-                                <th><?php echo e(__('Order status')); ?></th>
+                                <th><?php echo e(__('Service Request Complete Request')); ?></th>
+                                <th><?php echo e(__('Service Request status')); ?></th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -253,7 +310,7 @@
                                     <div class="dashboard_table__main__order">
                                         <div class="dashboard_table__main__order__flex">
                                             <div class="dashboard_table__main__order__thumb">
-                                            <?php if(request()->path() == 'seller/job-orders'): ?>
+                                            <?php if(request()->path() == 'seller/job-orders' || request()->path() == 'serviceprovider/job-orders'): ?>
                                                 <?php if(!empty(render_image_markup_by_attachment_id(optional($order->job)->image, '', 'thumb'))): ?>
                                                     <?php echo render_image_markup_by_attachment_id(optional($order->job)->image, '', 'thumb'); ?>
 
@@ -271,22 +328,22 @@
 
                                             </div>
                                             <div class="dashboard_table__main__order__contents">
-                                                <?php if(request()->path() == 'seller/job-orders'): ?>
+                                                <?php if(request()->path() == 'seller/job-orders' || request()->path() == 'serviceprovider/job-orders'): ?>
                                                     <h5 class="dashboard_table__main__order__contents__title"> <?php if($order->order_from_job == 'yes'): ?> <?php echo e(Str::limit(optional($order->job)->title,60)); ?> <?php endif; ?> </h5>
                                                 <?php else: ?>
                                                     <h5 class="dashboard_table__main__order__contents__title"><?php echo e(optional($order->service)->title); ?></h5>
                                                 <?php endif; ?>
                                                 <span class="dashboard_table__main__order__contents__subtitle mt-2">
-                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__id"> <strong class="text-dark"><?php echo e(__('Order ID:')); ?></strong> <?php echo e($order->id); ?></a> ,
-                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark"><?php echo e(__('Buyer Name:')); ?></strong><?php echo e(optional($order->buyer)->name); ?> </a>
+                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__id"> <strong class="text-dark"><?php echo e(__('Service Request ID:')); ?></strong> <?php echo e($order->id); ?></a> ,
+                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark"><?php echo e(__('Customer Name:')); ?></strong><?php echo e(optional($order->buyer)->name); ?> </a>
                                                 </span>
-                                                <span><strong><?php echo e(__('Order Date:')); ?></strong>  <?php echo e(Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y')); ?></span>
+                                                <span><strong><?php echo e(__('Service Request Date:')); ?></strong>  <?php echo e(Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y')); ?></span>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
 
-                                <?php if(request()->path() == 'seller/orders'): ?>
+                                <?php if(request()->path() == 'seller/orders' || request()->path() == 'serviceprovider/orders'): ?>
                                 <td>
                                     <div class="dashboard_table__main__date">
                                         <span class="date">
@@ -341,7 +398,7 @@
                                         <?php endif; ?>
                                     <?php endif; ?>
                                     <?php if($order->payment_status == 'complete'): ?>
-                                     <div class="dashboard_table__main__priority"><strong><?php echo e(__('Payment Status: ')); ?></strong> <span class="priorityBtn completed"><?php echo e(__('Complete')); ?></span> </div>
+                                     <div class="dashboard_table__main__priority"><strong><?php echo e(__('Payment Status: ')); ?></strong> <span class="priorityBtn completed"><?php echo e(__('Payment_AMC')); ?></span> </div>
                                     <?php endif; ?>
                                     <?php if(empty($order->payment_status)): ?>
                                          <div class="dashboard_table__main__priority"><strong><?php echo e(__('Payment Status: ')); ?></strong>  <span class="priorityBtn pending"><?php echo e(__('Pending')); ?></span> </div>
@@ -361,9 +418,13 @@
                                 <!-- payment status end -->
 
                                 <!-- order complete request start-->
-                                <td data-label="Order Status" >
+                                <td data-label="Service Request Status" >
                                 <span class="<?php echo e(in_array($order->order_complete_request,[0,1]) ? 'pending' : ' completed'); ?> d-block">
-                                    <?php  $review_count = \App\Review::where('order_id',$order->id)->where('type', 1)->where('seller_id',Auth::guard('web')->user()->id)->get(); ?>
+                                    <?php if($isHideSideBarAndHeader): ?>
+                                        <?php  $review_count = \App\Review::where('order_id',$order->id)->where('type', 1)->where('seller_id',Auth::guard('web')->user()->id)->get(); ?>
+                                    <?php else: ?>
+                                        <?php  $review_count = \App\Review::where('order_id',$order->id)->where('type', 1)->where('seller_id',$serviceProviderId)->get(); ?>
+                                    <?php endif; ?>
                                     <?php if(in_array($order->order_complete_request,[0,1])): ?>
                                         <?php if($order->payment_status != 'pending'): ?>
                                             <?php if($order->order_complete_request == 0): ?>
@@ -382,7 +443,7 @@
                                         <?php endif; ?>
 
                                     <?php elseif($order->order_complete_request == 2): ?>
-                                        <div class="dashboard_table__main__priority   <?php if(request()->path() == 'seller/orders'): ?> mt-5 <?php else: ?> mt-4 <?php endif; ?> ">
+                                        <div class="dashboard_table__main__priority   <?php if(request()->path() == 'seller/orders' || request()->path() == 'serviceprovider/orders'): ?> mt-5 <?php else: ?> mt-4 <?php endif; ?> ">
                                             <a href="javascript:void(0)" class="priorityBtn completed"><?php echo e(__('Completed')); ?></a>
                                         </div>
                                     <?php endif; ?>
@@ -401,7 +462,7 @@
 
                                     <?php endif; ?>
                                 </span>
-                                    <?php if(request()->path() == 'seller/orders'): ?>
+                                    <?php if(request()->path() == 'seller/orders' || request()->path() == 'serviceprovider/orders'): ?>
                                         <!-- order complete request start-->
                                         <?php if($order->status == 0 && $order->payment_status == 'pending'): ?>
                                             <span class="mx-1 pending"> <?php echo e(__('No Request Created')); ?></span>
@@ -447,11 +508,69 @@
 
                                 <!-- Order status start -->
                                 <td>
-                                   <?php if($order->status == 0): ?><div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn pending"><?php echo e(__('Pending')); ?></a> </div> <?php endif; ?>
-                                   <?php if($order->status == 1): ?><div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn active"><?php echo e(__('Active')); ?></a> </div> <?php endif; ?>
+                                   <?php if($order->status == 0): ?>
+                                    
+                                    <div style="margin-bottom: 5px;">
+                                        <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.accept-order','data' => ['url' => route('seller.order.accept.cod.payment.pending',$order->id)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('accept-order'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('seller.order.accept.cod.payment.pending',$order->id))]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
+                                    <div> 
+                                    <div style="margin-top: 5px;">      
+                                        <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.decline-order','data' => ['url' => route('seller.order.decline.cod.payment.pending',$order->id)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('decline-order'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('seller.order.decline.cod.payment.pending',$order->id))]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
+                                    </div>
+                                   <?php endif; ?>
+                                   <?php if($order->status == 1): ?>
+                                    <div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn active"><?php echo e(__('Active')); ?></a></div> 
+                                    <?php if($order->order_complete_request == 0): ?>
+                                        <div style="margin-top: 5px;">      
+                                            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.incompetent-order','data' => ['url' => route('seller.order.incompetent.cod.payment.pending',$order->id)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('incompetent-order'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('seller.order.incompetent.cod.payment.pending',$order->id))]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                   <?php endif; ?>
                                    <?php if($order->status == 2): ?><div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn completed"><?php echo e(__('Completed')); ?></a> </div> <?php endif; ?>
                                    <?php if($order->status == 3): ?><div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn delivered"><?php echo e(__('Delivered')); ?></a> </div> <?php endif; ?>
                                    <?php if($order->status == 4): ?><div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn cancel"><?php echo e(__('Cancel')); ?></a> </div> <?php endif; ?>
+                                   <?php if($order->status == 5): ?><div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn cancel"><?php echo e(__('Incompetent')); ?></a> </div> <?php endif; ?>
                                 </td>
                                 <!-- Order status end -->
                                 <td>
@@ -519,8 +638,47 @@
 
                         <div class="blog-pagination margin-top-55">
                             <div class="custom-pagination mt-4 mt-lg-5">
-                                <?php echo $all_orders->links(); ?>
+                                <?php if($isHideSideBarAndHeader): ?>
+                                    <?php echo $all_orders->links(); ?>
 
+                                <?php else: ?>
+                                    <div class="blog-pagination margin-top-55">
+                                        <div class="custom-pagination mt-4 mt-lg-5">
+                                            <?php if($all_orders->lastPage() > 1): ?>
+                                                <ul class="pagination">
+                                                    
+                                                    <?php if($all_orders->onFirstPage()): ?>
+                                                        <li class="disabled" aria-disabled="true" aria-label="<?php echo app('translator')->get('pagination.previous'); ?>">
+                                                            <span aria-hidden="true">&laquo;</span>
+                                                        </li>
+                                                    <?php else: ?>
+                                                        <li>
+                                                            <a href="<?php echo e($all_orders->previousPageUrl() . '&serviceproviderId=' . $serviceProviderId . '&token=' . $token); ?>" rel="prev" aria-label="<?php echo app('translator')->get('pagination.previous'); ?>">&laquo;</a>
+                                                        </li>
+                                                    <?php endif; ?>
+
+                                                    
+                                                    <?php $__currentLoopData = $all_orders->getUrlRange(1, $all_orders->lastPage()); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page => $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <li class="<?php echo e(($all_orders->currentPage() == $page) ? 'active' : ''); ?>">
+                                                            <a href="<?php echo e($url . '&serviceproviderId=' . $serviceProviderId . '&token=' . $token); ?>"><?php echo e($page); ?></a>
+                                                        </li>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+                                                    
+                                                    <?php if($all_orders->hasMorePages()): ?>
+                                                        <li>
+                                                            <a href="<?php echo e($all_orders->nextPageUrl() . '&serviceproviderId=' . $serviceProviderId . '&token=' . $token . '&page2='); ?>" rel="next" aria-label="<?php echo app('translator')->get('pagination.next'); ?>">&raquo;</a>
+                                                        </li>
+                                                    <?php else: ?>
+                                                        <li class="disabled" aria-disabled="true" aria-label="<?php echo app('translator')->get('pagination.next'); ?>">
+                                                            <span aria-hidden="true">&raquo;</span>
+                                                        </li>
+                                                    <?php endif; ?>
+                                                </ul>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
 
@@ -545,7 +703,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModal"><?php echo e(__('Create Order Complete Request')); ?></h5>
+                        <h5 class="modal-title" id="editModal"><?php echo e(__('Create Service Request Complete Request')); ?></h5>
                     </div>
                     <div class="modal-body">
 
@@ -554,8 +712,10 @@
                             <select name="status" id="status" class="form-control">
                                 <option value=""><?php echo e(__('Select Status')); ?></option>
                                 <option value="2"><?php echo e(__('Completed')); ?></option>
+                                
                             </select>
-                            <p class="text-info mt-2"><?php echo e(__('Completed: Order is completed and closed.')); ?></p>
+                            <p id="completed-text" class="text-info mt-2" style="display: none;"><?php echo e(__('Completed: Service Request is completed and closed.')); ?></p>
+                            
                         </div>
 
                         <div class="form-group m-3">
@@ -814,6 +974,57 @@
                     });
                 });
 
+                //order decline status
+                $(document).on('click','.swal_status_change_decline',function(e){
+                    e.preventDefault();
+                    Swal.fire({
+                        title: '<?php echo e(__("Are you sure to decline the order")); ?>',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: "<?php echo e(__('Yes, decline it!')); ?>"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $(this).next().find('.swal_form_submit_btn_decline_order').trigger('click');
+                        }
+                    });
+                });
+
+                //order incompetent status
+                $(document).on('click','.swal_status_change_incompetent',function(e){
+                    e.preventDefault();
+                    Swal.fire({
+                        title: '<?php echo e(__("Are you incompetent to complete this order")); ?>',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: "<?php echo e(__('Yes, I am incompetent!')); ?>"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $(this).next().find('.swal_form_submit_btn_incompetent_order').trigger('click');
+                        }
+                    });
+                });
+
+                //order accept status
+                $(document).on('click','.swal_status_change_order_accept',function(e){
+                    e.preventDefault();
+                    Swal.fire({
+                        title: '<?php echo e(__("Are you sure to accept the order")); ?>',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: "<?php echo e(__('Yes, Accept it!')); ?>"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $(this).next().find('.swal_form_submit_btn_accept_order').trigger('click');
+                        }
+                    });
+                });
+
                 $(document).on('click', '.edit_payment_status_modal', function(e) {
                     e.preventDefault();
                     let modalContainer = $('#editPaymentStatusModal');
@@ -884,6 +1095,21 @@
 
         })(jQuery);
 
+        $(document).ready(function() {
+            $('#status').change(function() {
+                var selectedValue = $(this).val();
+                if (selectedValue == "2") {
+                    $('#completed-text').show();
+                    $('#incompetent-text').hide();
+                } else if (selectedValue == "3") {
+                    $('#completed-text').hide();
+                    $('#incompetent-text').show();
+                } else {
+                    $('#completed-text').hide();
+                    $('#incompetent-text').hide();
+                }
+            });
+        });
     </script>
 <?php $__env->stopSection(); ?>
 

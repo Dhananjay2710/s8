@@ -43,7 +43,7 @@
                             <div class="dashboard-settings margin-top-40">
                                 <h4 class="dashboards-title"> <?php echo e(__('All Schedules')); ?> </h4>
                                 <div class="notice-board">
-                                    <p class="text-danger"><?php echo e(__('schedules will show while a customer booking your order')); ?></p>
+                                    <p class="text-danger"><?php echo e(__('schedules will show while a customer booking your service request')); ?></p>
                                 </div>
                             </div>
                         </div>
@@ -73,12 +73,12 @@
                                     <?php
                                         $allow_or_not = App\Schedule::select('allow_multiple_schedule')->first();
                                     ?>
-                                    <label class="total_day_label label_title"> <?php echo e(__('Allow Multiple Order to Same Schedule ')); ?> </label>
+                                    <label class="total_day_label label_title"> <?php echo e(__('Allow Multiple Service Request to Same Schedule ')); ?> </label>
                                     <select name="allow_multiple_schedule">
                                         <option value="<?php echo e(__('yes')); ?>" <?php if($allow_or_not?->allow_multiple_schedule=='yes'): ?> selected <?php endif; ?>> <?php echo e(__('Yes')); ?></option>
                                         <option value="<?php echo e(__('no')); ?>" <?php if($allow_or_not?->allow_multiple_schedule=='no'): ?> selected <?php endif; ?>> <?php echo e(__('No')); ?></option>
                                     </select>
-                                    <p class="text-warning mt-3"><?php echo e(__('If you select yes than buyer will place multiple order at the same schedule')); ?></p>
+                                    <p class="text-warning mt-3"><?php echo e(__('If you select yes than customer will place multiple service request at the same schedule')); ?></p>
                                 </div>
                                 <div class="btn-wrapper mt-3">
                                     <button type="submit" class="dashboard_table__title__btn btn-bg-1 radius-5" style="border: none"><?php echo e(__('Submit')); ?></button>

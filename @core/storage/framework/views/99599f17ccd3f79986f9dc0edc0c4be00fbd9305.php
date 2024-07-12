@@ -95,11 +95,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="terms_and_conditions_link"><?php echo e(__('Trems and Conditions Link')); ?></label> </br>
-                                <small class="text-danger"><?php echo e(__('This link will be set in order confirmation terms and conditions.')); ?></small>
+                                <small class="text-danger"><?php echo e(__('This link will be set in service request confirmation terms and conditions.')); ?></small>
                                 <input type="text" name="terms_and_conditions_link"  class="form-control" value="<?php echo e(get_static_option('terms_and_conditions_link')); ?>" id="terms_and_conditions_link">
                             </div>
                             <div class="form-group">
-                                <label for="service_order_confirm_title"><?php echo e(__('Service Order Confirm Title')); ?></label>
+                                <label for="service_order_confirm_title"><?php echo e(__('Service Service Request Confirm Title')); ?></label>
                                 <input type="text" name="service_order_confirm_title"  class="form-control" value="<?php echo e(get_static_option('service_order_confirm_title')); ?>" id="service_order_confirm_title">
                             </div>
 

@@ -85,14 +85,14 @@
                             <table class="table table-default">
                                 <thead>
                                 <th><?php echo e(__('ID')); ?></th>
-                                <th><?php echo e(__('Buyer Name')); ?></th>
-                                <th><?php echo e(__('Buyer Email')); ?></th>
-                                <th><?php echo e(__('Buyer Phone')); ?></th>
-                                <th><?php echo e(__('Buyer Address')); ?></th>
+                                <th><?php echo e(__('Customer Name')); ?></th>
+                                
+                                <th><?php echo e(__('Customer Address')); ?></th>
+                                <th><?php echo e(__('Service Provider Deatils')); ?></th>
                                 <th><?php echo e(__('Total Amount')); ?></th>
                                 <th><?php echo e(__('Payment Status')); ?></th>
-                                <th><?php echo e(__('Order Status')); ?></th>
-                                <th><?php echo e(__('Order Type')); ?></th>
+                                <th><?php echo e(__('Service Request Status')); ?></th>
+                                <th><?php echo e(__('Service Request Type')); ?></th>
                                 <th><?php echo e(__('Action')); ?></th>
                                 </thead>
                                 <tbody>
@@ -114,7 +114,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModal"><?php echo e(__('Change Order Status ')); ?></h5>
+                        <h5 class="modal-title" id="editModal"><?php echo e(__('Change Service Request Status ')); ?></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -166,12 +166,63 @@
                     ajax: "<?php echo e(route('admin.orders')); ?>",
                     columns: [
                         {data: 'id', name: 'id'},
-                        {data: 'name', name: '', orderable: true, searchable: true},
-                        {data: 'email', name: '', orderable: true, searchable: true},
-                        {data: 'phone', name: '', orderable: true, searchable: true},
+                        {
+                            data: 'customer_provider_details',
+                            name: 'service_provider_details',
+                            orderable: true,
+                            searchable: true,
+                            render: function(data, type, row) {
+                                if (type === 'display') {
+                                    return `
+                                        <table">
+                                            <tr>
+                                                <td><p>Name : ${data.name}</p>
+                                                <p>Email : ${data.email}</p>
+                                                <p>Phone : ${data.phone}</p></td>
+                                            </tr>
+                                        </table>
+                                    `;
+                                } else {
+                                    return data;
+                                }
+                            }
+                        },
+                        // {data: 'name', name: '', orderable: true, searchable: true},
+                        // {data: 'email', name: '', orderable: true, searchable: true},
+                        // {data: 'phone', name: '', orderable: true, searchable: true},
                         {data: 'address', name: '', orderable: true, searchable: true},
+                        {
+                            data: 'service_provider_details',
+                            name: 'service_provider_details',
+                            orderable: true,
+                            searchable: true,
+                            render: function(data, type, row) {
+                                if (type === 'display') {
+                                    return `
+                                        <table">
+                                            <tr>
+                                                <td><p>Name : ${data.name}</p>
+                                                <p>Email : ${data.email}</p>
+                                                <p>Phone : ${data.phone}</p></td>
+                                            </tr>
+                                        </table>
+                                    `;
+                                } else {
+                                    return data;
+                                }
+                            }
+                        },
                         {data: 'amount', name: '', orderable: true, searchable: true},
-                        {data: 'payment_status', name: '',orderable: true, searchable: true},
+                        // {data: 'payment_status', name: '',orderable: true, searchable: true},
+                        {
+                            data: 'payment_status',
+                            name: '',
+                            orderable: true,
+                            searchable: true,
+                            render: function(data, type, row) {
+                                return data === 'complete' ? 'Payment_AMC' : data;
+                            }
+                        },
                         {data: 'status', name: ''},
                         {data: 'is_order_online', name: '',orderable: true, searchable: true},
                         {data: 'action', name: '', orderable: false, searchable: true},

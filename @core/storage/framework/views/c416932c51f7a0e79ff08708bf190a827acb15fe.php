@@ -232,13 +232,13 @@
 
                                 </button>
                             </div>
-                            <small class="text-info"><?php echo e(__('upload your payment proof for, seller so that seller understand you have processed the payment')); ?></small>
+                            <small class="text-info"><?php echo e(__('upload your payment proof for, service provider so that service provider understand you have processed the payment')); ?></small>
                         </div>
 
                         <div class="form-group mt-5">
                             <label for="amount"><?php echo e(__('Note')); ?></label>
                             <textarea class="form-control" name="admin_note" id="admin_note" cols="30" rows="7"></textarea>
-                            <small class="text-info"><?php echo e(__('you can write additional note for seller, to explain your payout process, if you have any')); ?></small>
+                            <small class="text-info"><?php echo e(__('you can write additional note for service provider, to explain your payout process, if you have any')); ?></small>
                         </div>
 
                     </div>

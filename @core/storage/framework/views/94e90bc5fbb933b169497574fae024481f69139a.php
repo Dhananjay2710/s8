@@ -130,7 +130,7 @@
 
                                 </li>
                                 <li class="list" data-tab="tab2">
-                                    <?php echo e(get_static_option('service_details_about_seller_title') ?? __('About Seller')); ?>
+                                    <?php echo e(get_static_option('service_details_about_seller_title') ?? __('About Service Provider')); ?>
 
                                 </li>
                                 <li class="list" data-tab="tab3">
@@ -210,7 +210,7 @@
                                                 <h5 class="title"> <a href="<?php echo e(route('about.seller.profile',optional($service_details->seller)->username)); ?>"> <?php echo e(optional($service_details->seller)->name); ?> </a> </h5>
                                                 <?php if($completed_order >=1): ?>
                                                     <div class="about-seller-list">
-                                                        <span class="icon"><?php echo e(__('Order Completed')); ?></span>
+                                                        <span class="icon"><?php echo e(__('Service Request Completed')); ?></span>
                                                         <span class="reviews">(<?php echo e($completed_order); ?>) </span>
                                                     </div>
                                                 <?php endif; ?>
@@ -226,7 +226,7 @@
                                                     </strong>
                                                 </li>
                                                 <?php if(!empty($seller_since)): ?>
-                                                    <li class="box-list"> <?php echo e(__('Seller Since')); ?>
+                                                    <li class="box-list"> <?php echo e(__('Service Provider Since')); ?>
 
                                                         <strong>
                                                             <?php echo e(Carbon\Carbon::parse($seller_since->created_at)->year); ?>
@@ -235,14 +235,14 @@
                                                     </li>
                                                 <?php endif; ?>
                                                 <?php if($order_completion_rate>=1): ?>
-                                                    <li class="box-list"> <?php echo e(__('Order Completion Rate')); ?>
+                                                    <li class="box-list"> <?php echo e(__('Service Request Completion Rate')); ?>
 
                                                         <strong> <?php echo e(ceil($order_completion_rate)); ?>%
                                                         </strong>
                                                     </li>
                                                 <?php endif; ?>
                                                 <?php if($completed_order>=1): ?>
-                                                    <li class="box-list"><?php echo e(__('Order Completed')); ?>
+                                                    <li class="box-list"><?php echo e(__('Service Request Completed')); ?>
 
                                                         <strong>
                                                             <?php echo e($completed_order); ?>
@@ -372,7 +372,7 @@
                     <?php if($another_service->count() > 0): ?>
                         <div class="another-details-wrapper padding-top-100">
                             <div class="section-title-two">
-                                <h3 class="title"><?php echo e(get_static_option('service_details_another_service_title') ?? __('Another Service of this Seller')); ?></h3>
+                                <h3 class="title"><?php echo e(get_static_option('service_details_another_service_title') ?? __('Another Service of this Service Provider')); ?></h3>
                                 <a href="<?php echo e(route('seller.service.all',$service_details->seller_id)); ?>" class="section-btn"><?php echo e(get_static_option('service_details_explore_all_title') ?? __('Explore All')); ?></a>
                             </div>
                             <div class="row padding-top-20">
@@ -473,13 +473,13 @@
                         <div class="order-pagkages">
                             <?php if($completed_order >=1): ?>
                                 <span class="single-order"> <i class="las la-check"></i>
-                                <?php echo e($completed_order); ?> <?php echo e(__('Order Completed')); ?>
+                                <?php echo e($completed_order); ?> <?php echo e(__('Service Request Completed')); ?>
 
                             </span>
                             <?php endif; ?>
                             <?php if($seller_rating_percentage_value >=1): ?>
                                 <span class="single-order"> <i class="las la-star"></i>
-                                <?php echo e(__('Seller Rating:')); ?>
+                                <?php echo e(__('Service Provider Rating:')); ?>
 
                                     <?php echo e(ceil($seller_rating_percentage_value)); ?>%
                             </span>

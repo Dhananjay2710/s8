@@ -16,6 +16,10 @@
                 --main-color-one: #2163b3;
                 --main-color-one-rgb: 33, 99, 179;
               <?php endif; ?>
+              <?php if(request()->is('serviceprovider/*')): ?>
+                --main-color-one: #2163b3;
+                --main-color-one-rgb: 33, 99, 179;
+              <?php endif; ?>
             <?php endif; ?>
             <?php endif; ?>
         }

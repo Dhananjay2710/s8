@@ -51,8 +51,8 @@
                                                     <div class="row g-4 mt-3">
                                                         <div class="col-lg-4 col-sm-6">
                                                             <div class="single-info-input">
-                                                                <label for="title" class="info-title"> <?php echo e(__('Order ID')); ?> </label>
-                                                                <input class="form--control" name="order_id" value="<?php echo e(request()->get('order_id')); ?>" type="text" placeholder="<?php echo e(__('Order ID')); ?>">
+                                                                <label for="title" class="info-title"> <?php echo e(__('Service Request ID')); ?> </label>
+                                                                <input class="form--control" name="order_id" value="<?php echo e(request()->get('order_id')); ?>" type="text" placeholder="<?php echo e(__('Service Request ID')); ?>">
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-4 col-sm-6">
@@ -94,10 +94,10 @@
                             <table>
                                 <thead>
                                 <tr>
-                                    <th> <?php echo e(__('Order ID')); ?> </th>
+                                    <th> <?php echo e(__('Service Request ID')); ?> </th>
                                     <th> <?php echo e(__('Report ID')); ?> </th>
                                     <th> <?php echo e(__('Report Details')); ?> </th>
-                                    <th> <?php echo e(__('Buyer Details')); ?> </th>
+                                    <th> <?php echo e(__('Customer Details')); ?> </th>
                                     <th> <?php echo e(__('Conversation')); ?> </th>
                                 </tr>
                                 </thead>

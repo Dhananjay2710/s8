@@ -119,12 +119,13 @@
                                     <?php if(Auth::guard('web')->check() && Auth::guard('web')->user()->user_type==1): ?>
                                         <a href="<?php echo e(route('buyer.profile')); ?>" class="dashboard__header__author__wrapper__list__item"><?php echo e(__('Profile')); ?></a>
                                         <a href="<?php echo e(route('buyer.account.settings')); ?>" class="dashboard__header__author__wrapper__list__item"><?php echo e(__('Settings')); ?></a>
+                                        <a href="<?php echo e(route('buyer.logout')); ?>" class="dashboard__header__author__wrapper__list__item"><?php echo e(__('Logout')); ?></a>
                                     <?php endif; ?>
                                     <?php if(Auth::guard('web')->check() && Auth::guard('web')->user()->user_type==0): ?>
                                         <a href="<?php echo e(route('seller.profile')); ?>" class="dashboard__header__author__wrapper__list__item"><?php echo e(__('Profile')); ?></a>
                                         <a href="<?php echo e(route('seller.account.settings')); ?>" class="dashboard__header__author__wrapper__list__item"><?php echo e(__('Settings')); ?></a>
+                                        <a href="<?php echo e(route('seller.logout')); ?>" class="dashboard__header__author__wrapper__list__item"><?php echo e(__('Logout')); ?></a>
                                     <?php endif; ?>
-                                    <a href="<?php echo e(route('seller.logout')); ?>" class="dashboard__header__author__wrapper__list__item"><?php echo e(__('Logout')); ?></a>
                                 </div>
                             </div>
                         </div>

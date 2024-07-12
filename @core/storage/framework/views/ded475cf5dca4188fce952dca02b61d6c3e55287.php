@@ -1,10 +1,10 @@
 
 <?php $__env->startSection('site-title'); ?>
-    <?php echo e(__('Order Success')); ?>
+    <?php echo e(__('Service Request Success')); ?>
 
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('page-meta-data'); ?>
-    <title><?php echo e(__('Order Success')); ?></title>
+    <title><?php echo e(__('Service Request Success')); ?></title>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('page-title'); ?>
     <?php
@@ -27,7 +27,7 @@
 
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('inner-title'); ?>
-    <?php echo e(__('Order')); ?>
+    <?php echo e(__('Service Request')); ?>
 
 <?php $__env->stopSection(); ?> 
 
@@ -45,15 +45,15 @@
                             <a href="<?php echo e(route('homepage')); ?>" class="succcess-icon">
                                 <i class="las la-check"></i>
                             </a>
-                            <h5 class="purple-text text-center"><?php echo e(get_static_option('success_subtitle') ?? __('Your Order Successfully Completed')); ?></h5>
+                            <h5 class="purple-text text-center"><?php echo e(get_static_option('success_subtitle') ?? __('Your Service Successfully Requested')); ?></h5>
                             <div class="btn-wrapper margin-top-35">
-                                <h4 class="mb-3"><?php echo e(get_static_option('success_details_title') ?? __('Your Order Details')); ?></h4>
+                                <h4 class="mb-3"><?php echo e(get_static_option('success_details_title') ?? __('Your Service Request Details')); ?></h4>
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th><?php echo e(__('Date & Schedule')); ?></th>
                                             <th><?php echo e(__('Amount Details')); ?></th>
-                                            <th><?php echo e(__('Order Status')); ?></th>
+                                            <th><?php echo e(__('Service Request Status')); ?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -85,7 +85,7 @@
                                                 <label><strong><?php echo e(__('Payment Status:')); ?> </strong><?php echo e(__(ucfirst($order_details->payment_status))); ?></label> <br>
                                             </td>
                                             <td>
-                                                <label><strong><?php echo e(__('Order Status:')); ?></strong>
+                                                <label><strong><?php echo e(__('Service Request Status:')); ?></strong>
                                                     <?php if($order_details->status == 0): ?> <span><?php echo e(__('Pending')); ?></span><?php endif; ?>
                                                     <?php if($order_details->status == 1): ?> <span><?php echo e(__('Active')); ?></span><?php endif; ?>
                                                     <?php if($order_details->status == 2): ?> <span><?php echo e(__('Completed')); ?></span><?php endif; ?>

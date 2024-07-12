@@ -1,6 +1,6 @@
 
 <?php $__env->startSection('site-title'); ?>
-    <?php echo e(__('Order Details')); ?>
+    <?php echo e(__('Service Request Details')); ?>
 
 <?php $__env->stopSection(); ?>
 
@@ -13,7 +13,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="checkbox-inlines">
-                                <label><strong><?php echo e(__('Order ID:')); ?> </strong>#<?php echo e($order_details->id); ?></label>
+                                <label><strong><?php echo e(__('Service Request ID:')); ?> </strong>#<?php echo e($order_details->id); ?></label>
                             </div>
                         </div>
                     </div>
@@ -25,7 +25,7 @@
                         <div class="card-body">
 
                             <div class="border-bottom mb-3">
-                                <h5><?php echo e(__('Seller Details')); ?></h5>
+                                <h5><?php echo e(__('Service Provider Details')); ?></h5>
                             </div>
                             <div class="single-checbox">
                                 <div class="checkbox-inlines">
@@ -115,7 +115,7 @@
                         <div class="card-body">
 
                             <div class="border-bottom mb-3">
-                                <h5><?php echo e(__('Buyer Details')); ?></h5>
+                                <h5><?php echo e(__('Customer Details')); ?></h5>
                             </div>
                             <div class="single-checbox">
                                 <div class="checkbox-inlines">
@@ -221,11 +221,11 @@
                             </div>
 
                             <div class="border-bottom mb-3 mt-4">
-                                <h5><?php echo e(__('Order Status')); ?></h5>
+                                <h5><?php echo e(__('Service Request Status')); ?></h5>
                             </div>
                             <div class="single-checbox">
                                 <div class="checkbox-inlines">
-                                    <label><strong><?php echo e(__('Order Status: ')); ?></strong>
+                                    <label><strong><?php echo e(__('Service Request Status: ')); ?></strong>
                                         <?php if($order_details->status == 0): ?> <span><?php echo e(__('Pending')); ?></span><?php endif; ?>
                                         <?php if($order_details->status == 1): ?> <span><?php echo e(__('Active')); ?></span><?php endif; ?>
                                         <?php if($order_details->status == 2): ?> <span><?php echo e(__('Completed')); ?></span><?php endif; ?>
@@ -318,7 +318,7 @@
                                                 <div class="line-top-contents">
                                                     <h5 class="earning-title"><?php echo e(__('Extra Service Details')); ?></h5>
                                                 </div>
-                                                <span class="info-text d-block mb-4"><?php echo e(__('This is not included in the main service order calculation')); ?></span>
+                                                <span class="info-text d-block mb-4"><?php echo e(__('This is not included in the main service service request calculation')); ?></span>
 
                                                 <table class="table table-bordered">
                                                     <thead>

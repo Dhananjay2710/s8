@@ -730,7 +730,7 @@
 
                                 @can('general-settings-payment-gateway')
                                     <li class="{{ active_menu('admin-home/general-settings/payment-gateway-settings') }}"><a
-                                            href="{{ route('admin.general.global.payment.settings') }}">{{ __('Payment Gateway Settings') }}</a>
+                                            href="{{ route('admin.general.global.payment.settings') }}">{{ __('Payment Method Settings') }}</a>
                                     </li>
                                 @endcan
 

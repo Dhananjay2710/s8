@@ -159,7 +159,7 @@ class FeatureServiceTwo extends \App\PageBuilder\PageBuilderBase
                         <i class="las la-award"></i>
                     </div>
                     <div class="country_city_location color-three">
-                    <span class="single_location"> <i class="las la-map-marker-alt"></i> {$service_country}, {$service_city} </span>
+                    <span class="single_location"> <i class="las la-map-marker-alt"></i> {$service_city}, {$service_country} </span>
                     </div>
                 </a>
                 <div class="services-contents content-padding-reverse">

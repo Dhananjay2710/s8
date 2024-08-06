@@ -392,7 +392,6 @@ class BuyerJobController extends Controller
 
                 if(!empty($wallet_balance)){
                     if($wallet_balance->balance >= $order_details->total){
-                        //Send order email to buyer for cash on delivery
                         try {
                             $message_for_buyer = get_static_option('new_order_buyer_message') ?? __('You have successfully requested a service #');
                             $message_for_seller_admin = get_static_option('new_order_admin_seller_message') ?? __('You have a new service request #');

@@ -1921,6 +1921,17 @@ class SellerController extends Controller
 
     }
 
+    public function orderDetailsForUpdate(Request $request)
+    {
+        $order_details = Order::where('id',$request->id)->first();
+        $order_declines_history = OrderCompleteDecline::where('order_id',$request->id)->latest()->get();
+        if(!empty($order_details)){
+            return $order_details;
+        }else{
+            abort(404);
+        }
+    }
+    
     public function orderStatus(Request $request,$id=null)
     {
 
@@ -2220,7 +2231,7 @@ class SellerController extends Controller
                 'payment_gateway' => 'required|string|max:191',
             ],[
                 'amount.required' => __('Amount required'),
-                'amount.numeric' => __('Amount must be numeric'),
+                'amount.numeric' => serviceProviderRequests__('Amount must be numeric'),
                 'payment_gateway.required' =>  __('Payment Gateway required'),
             ]);
 
@@ -2649,6 +2660,7 @@ class SellerController extends Controller
                 SellerVerify::create([
                     'seller_id' => $user,
                     'national_id' => $request->national_id ?? optional($old_image)->national_id,
+                    'address' => $request->address ?? optional($old_image)->address,
                     'verification_data' => $verificationOrgData
                 ]);
             }else{
@@ -2656,6 +2668,7 @@ class SellerController extends Controller
                     ->update([
                         'seller_id' => $user,
                         'national_id' => $request->national_id ?? optional($old_image)->national_id,
+                        'address' => $request->address ?? optional($old_image)->address,
                         'verification_data' => $verificationData->verification_data
                     ]);
             }

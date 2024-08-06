@@ -499,7 +499,7 @@
                     }
                     if($('input[name="selected_payment_gateway"]').val() == ''){
                         //error msg
-                        Command: toastr["warning"]("{{__('Please select payment gateway.!')}}", "Aviso")
+                        Command: toastr["warning"]("{{__('Please select payment method.!')}}", "Aviso")
                         toastr.options = {
                             "closeButton": true,
                             "debug": false,

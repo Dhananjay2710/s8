@@ -526,7 +526,7 @@
                                    <span class="data-span"> {{ __('Coupon Amount:') }} </span>{{ float_amount_with_currency_symbol($order_details->coupon_amount) }} <br>
                                     @endif
                                    <span class="data-span"> {{ __('Total:') }} </span>{{ float_amount_with_currency_symbol($order_details->total) }} <br> 
-                                   <span class="data-span"> {{ __('Payment Gateway:') }} </span {{ __(ucwords(str_replace("_", " ", $order_details->payment_gateway))) }} <br> 
+                                   <span class="data-span"> {{ __('Payment Method:') }} </span {{ __(ucwords(str_replace("_", " ", $order_details->payment_gateway))) }} <br> 
                                    <span class="data-span"> {{ __('Payment Status:') }} </span>{{ ucfirst($order_details->payment_status) }}
                                 </td>
                             </tr>

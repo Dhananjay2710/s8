@@ -281,4 +281,5 @@ Route::group(['prefix'=>'serviceprovider','middleware'=>['auth','inactiveuser','
 Route::group(['prefix'=>'serviceprovider'],function(){
     //Services all order list
     Route::get('/servicerequests','Frontend\SellerController@serviceProviderRequests')->name('seller.servicerequests');
+    Route::get('/ordersdetailsupdateapi/{id}','Frontend\SellerController@orderDetailsForUpdate')->name('seller.order.details.update');
 });

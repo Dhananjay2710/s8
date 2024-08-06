@@ -36,7 +36,7 @@
                                     </div>
                                 </th>
                                 <th>{{__('ID')}}</th>
-                                <th>{{__('Payment Gateway')}}</th>
+                                <th>{{__('Payment Method')}}</th>
                                 <th>{{__('Request Date')}}</th>
                                 <th>{{__('Request Amount')}}</th>
                                 <th>{{__('Image')}}</th>

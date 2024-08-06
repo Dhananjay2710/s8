@@ -41,6 +41,7 @@ use Xgenious\Paymentgateway\Facades\XgPaymentGateway;
 use Str;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\BasicMail;
+use App\Doc8yAPI;
 
 
 class ServiceListController extends Controller
@@ -305,6 +306,7 @@ class ServiceListController extends Controller
 
     public function createServiceOrder(Request $request) {
         header('Content-type: application/json');
+        $todayDate = date('d-m-Y');
         $customerId = '';
         $commission = AdminCommission::first();
         \Log::debug('User name : ' . $request->name . 
@@ -320,7 +322,7 @@ class ServiceListController extends Controller
             \Log::debug("Result : " . print_r($status,true));
             exit(json_encode($status));
         }
-        if($request->selected_payment_gateway=='cash_on_delivery' || $request->selected_payment_gateway == 'manual_payment'){
+        if($request->selected_payment_gateway=='cash_on_delivery' || $request->selected_payment_gateway == 'manual_payment' || $request->selected_payment_gateway === 'annual_maintenance_charge'){
             $payment_status='complete';
         }else{
             $payment_status='';
@@ -398,6 +400,58 @@ class ServiceListController extends Controller
                     }
                 }
                 $customerId = $user->id;
+
+                // User Register inside Doc8
+                \Log::debug("User registration start inside Doc8");
+                $nameParts = explode(' ', $request->name);
+                $firstName = $nameParts[0];
+                $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
+
+                $cityData = DB::table("service_cities")->where("id", $request->choose_service_city)->first();
+                if ($cityData != null){
+                    $serviceCityName = $cityData->service_city;
+                } else {
+                    $serviceCityName = "NA";
+                }
+
+                $countryData = DB::table("countries")->where("id", $request->choose_service_country)->first();
+                if ($countryData != null){
+                    $countryName = $countryData->country;
+                } else {
+                    $countryName = "NA";
+                }
+
+                $userDataToSubmit = [
+                    "email" => $request->email,
+                    'firstname' => $firstName,
+                    'lastname' => $lastName ?? "",
+                    'useremail' => 'vandana@gmail.com',
+                    'phonenumber' => $request->phone,
+                    'address' => $request->address,
+                    'city' => $serviceCityName,
+                    'postalcode' => $request->post_code,
+                    'state' => "NA",
+                    'country' => $countryName,
+                    'pannumber' => 'NA',
+                    'aadhaarnumber' => 'NA',
+                    'signingparty' => 'SA',
+                    'company' => 'NA',
+                    'companygstin' => '',
+                    'companybusinesspannumber' => '',
+                    'companyudyamnumber' => '',
+                    'companyyoe' => '',
+                    'companyaddress' => '',
+                    'companycityname' => '',
+                    'companypostalcode' => '',
+                    'companystatename' => '',
+                    'companycountryname' => '',
+                    'producttype' => 'Service Form',
+                    'iswhatsappmessagesend' => 'false',
+                ];
+
+                $resultOfUserRegister = Doc8yAPI::userRegister($userDataToSubmit);
+                $decodedData = json_decode($resultOfUserRegister,true);
+                \Log::debug("Result of User Register : " . print_r($decodedData,true));
             }
         }
 
@@ -445,6 +499,13 @@ class ServiceListController extends Controller
                 'order_note' => $request->order_note,
                 'payment_gateway' => $request->selected_payment_gateway,
                 'payment_status' => $payment_status,
+                'file_id' => 0,
+                'service_provider_file_link' => '',
+                'customer_file_link' => '',
+                'admin_file_link' => '',       
+                'service_provider_signing_status' => 'Pending', 
+                'customer_signing_status' => 'Pending',         
+                'admin_signing_status' => 'Pending', 
             ]);
         }else{
             if(Auth::guard('web')->check() && Auth::guard('web')->user()->user_type == 1 ){
@@ -474,6 +535,13 @@ class ServiceListController extends Controller
                     'order_note' => $request->order_note,
                     'payment_gateway' => $request->selected_payment_gateway,
                     'payment_status' => $payment_status,
+                    'file_id' => 0,
+                    'service_provider_file_link' => '',
+                    'customer_file_link' => '',
+                    'admin_file_link' => '',       
+                    'service_provider_signing_status' => 'Pending', 
+                    'customer_signing_status' => 'Pending',         
+                    'admin_signing_status' => 'Pending',
                 ]);
             }else{
                if( get_static_option('order_create_settings') !== 'anyone'){
@@ -505,6 +573,13 @@ class ServiceListController extends Controller
                     'order_note' => $request->order_note,
                     'payment_gateway' => $request->selected_payment_gateway,
                     'payment_status' => $payment_status,
+                    'file_id' => 0,
+                    'service_provider_file_link' => '',
+                    'customer_file_link' => '',
+                    'admin_file_link' => '',       
+                    'service_provider_signing_status' => 'Pending', 
+                    'customer_signing_status' => 'Pending',         
+                    'admin_signing_status' => 'Pending', 
                 ]);
 
             }
@@ -734,7 +809,6 @@ class ServiceListController extends Controller
 
                 if(!empty($wallet_balance)){
                     if($wallet_balance->balance >= $order_details->total){
-                        //Send order email to buyer for cash on delivery
                         try {
                             $message_for_buyer = get_static_option('new_order_buyer_message') ?? __('You have successfully placed an service request #');
                             $message_for_seller_admin = get_static_option('new_order_admin_seller_message') ?? __('You have a new service request #');
@@ -759,6 +833,33 @@ class ServiceListController extends Controller
 
                 }
 
+                $formDataToSubmit = [
+                    "ServiceProviderName" => $seller->name,
+                    "ServiceProviderEmail" => $seller->email,
+                    "ServiceProviderPhone" => $seller->phone,
+                    "ServiceName" => $service->include_service_title ?? "NA",
+                    "ServiceAmount" => $total,
+                    "CutomerName" => $request->name,
+                    "CutomerEmail" => $request->email,
+                    "CutomerPhone" => $request->phone,
+                    "ServiceId" => $last_order_id,
+                    "Date" => $todayDate
+                ];
+
+                $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
+                $DecodeData = json_decode($resultOfFormSubmiation,true);
+                \Log::debug("Result of Form Creation : " . print_r($DecodeData,true));
+                $fileId = $DecodeData['fileid'];
+                $signingLink = $DecodeData['signinglinks'];
+                \Log::debug("File ID : " . $fileId . "\nSigning Link : " . $signingLink);
+
+                Order::where('id',$last_order_id)->update([
+                    'file_id' => $fileId,
+                    'service_provider_file_link' => $signingLink[0],
+                    'customer_file_link' => $signingLink[1],
+                    'admin_file_link' => $signingLink[2],
+                ]);
+
                 $resultData = [
                     "status" => "success",
                     "title" => "API Success",
@@ -773,13 +874,12 @@ class ServiceListController extends Controller
             }
         }
 
-        if ($request->selected_payment_gateway === 'cash_on_delivery') {
+        if ($request->selected_payment_gateway === 'cash_on_delivery' || $request->selected_payment_gateway === 'annual_maintenance_charge') {
             $order_details = Order::find($last_order_id);
             $random_order_id_1 = Str::random(30);
             $random_order_id_2 = Str::random(30);
             $new_order_id = $random_order_id_1.$last_order_id.$random_order_id_2;
 
-            //Send order email to buyer for cash on delivery
             try {
                 $message_for_buyer = get_static_option('new_order_buyer_message') ?? __('You have successfully placed an service Rrequest #');
                 $message_for_seller_admin = get_static_option('new_order_admin_seller_message') ?? __('You have a new service request #');
@@ -789,6 +889,44 @@ class ServiceListController extends Controller
             } catch (\Exception $e) {
                 \Toastr::error($e->getMessage());
             }
+            
+            $formDataToSubmit = [
+                "ServiceProviderName" => $seller->name,
+                "ServiceProviderEmail" => $seller->email,
+                "ServiceProviderPhone" => $seller->phone,
+                "ServiceName" => $service->include_service_title ?? "NA",
+                "ServiceAmount" => $total,
+                "CutomerName" => $request->name,
+                "CutomerEmail" => $request->email,
+                "CutomerPhone" => $request->phone,
+                "ServiceId" => $last_order_id,
+                "Date" => $todayDate
+            ];
+            // $resultOfFormSubmiation = Doc8yAPI::sumbitData($seller->phone, $formDataToSubmit);
+            $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
+            $decodeData = json_decode($resultOfFormSubmiation,true);
+            \Log::debug("Result of Form Creation : " . print_r($decodeData,true));
+            
+            if ($decodeData['status'] == 'error'){
+                Order::where('id', $last_order_id)->delete();
+                $status = [
+                    "status" => "error",
+                    "title" => "API Failed",
+                    "message" => "Creation of document get failed",
+                ];
+                exit(json_encode($status));
+            }
+
+            $fileId = $decodeData['file_id'];
+            $signingLink = $decodeData['signinglinks'];
+            \Log::debug("File ID : " . $fileId . "\nSigning Link : " . print_r($signingLink,true));
+
+            Order::where('id',$last_order_id)->update([
+                'file_id' => $fileId,
+                'service_provider_file_link' => $signingLink[0],
+                'customer_file_link' => $signingLink[1],
+                'admin_file_link' => $signingLink[2],
+            ]);
 
             $status = [
                 "status" => "success",
@@ -828,7 +966,6 @@ class ServiceListController extends Controller
                 }
             }
 
-            //Send order email to buyer for cash on delivery
             try {
                 $message_for_buyer = get_static_option('new_order_buyer_message') ?? __('You have successfully placed an service request #');
                 $message_for_seller_admin = get_static_option('new_order_admin_seller_message') ?? __('You have a new service request #');
@@ -838,6 +975,33 @@ class ServiceListController extends Controller
             } catch (\Exception $e) {
                 \Toastr::error($e->getMessage());
             }
+
+            $formDataToSubmit = [
+                "ServiceProviderName" => $seller->name,
+                "ServiceProviderEmail" => $seller->email,
+                "ServiceProviderPhone" => $seller->phone,
+                "ServiceName" => $service->include_service_title ?? "NA",
+                "ServiceAmount" => $total,
+                "CutomerName" => $request->name,
+                "CutomerEmail" => $request->email,
+                "CutomerPhone" => $request->phone,
+                "ServiceId" => $last_order_id,
+                "Date" => $todayDate
+            ];
+           
+            $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
+            $DecodeData = json_decode($resultOfFormSubmiation,true);
+            \Log::debug("Result of Form Creation : " . print_r($DecodeData,true));
+            $fileId = $DecodeData['fileid'];
+            $signingLink = $DecodeData['signinglinks'];
+            \Log::debug("File ID : " . $fileId . "\nSigning Link : " . $signingLink);
+
+            Order::where('id',$last_order_id)->update([
+                'file_id' => $fileId,
+                'service_provider_file_link' => $signingLink[0],
+                'customer_file_link' => $signingLink[1],
+                'admin_file_link' => $signingLink[2],
+            ]);
 
             $status = [
                 "status" => "success",
@@ -852,7 +1016,6 @@ class ServiceListController extends Controller
             exit(json_encode($status));
         } else {
             if ($request->selected_payment_gateway === 'paypal') {
-
                 try{
                     $paypal_mode = getenv('PAYPAL_MODE');
                     $client_id = $paypal_mode === 'sandbox' ? getenv('PAYPAL_SANDBOX_CLIENT_ID') : getenv('PAYPAL_LIVE_CLIENT_ID');
@@ -887,8 +1050,7 @@ class ServiceListController extends Controller
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
 
-            }
-            elseif($request->selected_payment_gateway === 'paytm'){
+            } elseif($request->selected_payment_gateway === 'paytm'){
                 try{
                     $paytm_merchant_id = getenv('PAYTM_MERCHANT_ID');
                     $paytm_merchant_key = getenv('PAYTM_MERCHANT_KEY');
@@ -927,8 +1089,7 @@ class ServiceListController extends Controller
                 }catch(\Exception $e){
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
-            }
-            elseif($request->selected_payment_gateway === 'mollie'){
+            } elseif($request->selected_payment_gateway === 'mollie'){
                 try{
                     $mollie_key = getenv('MOLLIE_KEY');
                     $mollie = XgPaymentGateway::mollie();
@@ -955,8 +1116,7 @@ class ServiceListController extends Controller
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
 
-            }
-            elseif($request->selected_payment_gateway === 'stripe'){
+            } elseif($request->selected_payment_gateway === 'stripe'){
                 try{
                     $stripe_public_key = getenv('STRIPE_PUBLIC_KEY');
                     $stripe_secret_key = getenv('STRIPE_SECRET_KEY');
@@ -988,9 +1148,7 @@ class ServiceListController extends Controller
                 }
 
 
-            }
-            elseif($request->selected_payment_gateway === 'razorpay'){
-
+            } elseif($request->selected_payment_gateway === 'razorpay'){
                 try{
                     $razorpay_api_key = getenv('RAZORPAY_API_KEY');
                     $razorpay_api_secret = getenv('RAZORPAY_API_SECRET');
@@ -1020,8 +1178,7 @@ class ServiceListController extends Controller
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
 
-            }
-            elseif($request->selected_payment_gateway === 'flutterwave'){
+            } elseif($request->selected_payment_gateway === 'flutterwave'){
                 try{
                     $flutterwave_public_key = getenv("FLW_PUBLIC_KEY");
                     $flutterwave_secret_key = getenv("FLW_SECRET_KEY");
@@ -1054,8 +1211,7 @@ class ServiceListController extends Controller
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
 
-            }
-            elseif($request->selected_payment_gateway === 'paystack'){
+            } elseif($request->selected_payment_gateway === 'paystack'){
                 try{
                     $paystack_public_key = getenv('PAYSTACK_PUBLIC_KEY');
                     $paystack_secret_key = getenv('PAYSTACK_SECRET_KEY');
@@ -1089,14 +1245,10 @@ class ServiceListController extends Controller
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
 
-            }
-            elseif($request->selected_payment_gateway === 'payfast'){
-
+            } elseif($request->selected_payment_gateway === 'payfast'){
                 try{
-
                     $random_order_id_1 = Str::random(30);
                     $random_order_id_2 = Str::random(30);
-
 
                     $payfast_merchant_id = getenv('PF_MERCHANT_ID');
                     $payfast_merchant_key = getenv('PF_MERCHANT_KEY');
@@ -1130,9 +1282,7 @@ class ServiceListController extends Controller
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
 
-            }
-            elseif($request->selected_payment_gateway === 'cashfree'){
-
+            } elseif($request->selected_payment_gateway === 'cashfree'){
                 try{
                     $cashfree_env = getenv('CASHFREE_TEST_MODE') === 'true';
                     $cashfree_app_id = getenv('CASHFREE_APP_ID');
@@ -1165,8 +1315,7 @@ class ServiceListController extends Controller
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
 
-            }
-            elseif($request->selected_payment_gateway === 'instamojo'){
+            } elseif($request->selected_payment_gateway === 'instamojo'){
 
                 try{
                     $instamojo_client_id = getenv('INSTAMOJO_CLIENT_ID');
@@ -1200,8 +1349,7 @@ class ServiceListController extends Controller
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
 
-            }
-            elseif($request->selected_payment_gateway === 'marcadopago'){
+            } elseif($request->selected_payment_gateway === 'marcadopago'){
                 try{
                     $mercadopago_client_id = getenv('MERCADO_PAGO_CLIENT_ID');
                     $mercadopago_client_secret = getenv('MERCADO_PAGO_CLIENT_SECRET');
@@ -1234,8 +1382,7 @@ class ServiceListController extends Controller
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
 
-            }
-            elseif($request->selected_payment_gateway === 'midtrans'){
+            } elseif($request->selected_payment_gateway === 'midtrans'){
 
                 try{
                     $midtrans_env =  getenv('MIDTRANS_ENVAIRONTMENT') === 'true';
@@ -1269,9 +1416,7 @@ class ServiceListController extends Controller
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
 
-            }
-            elseif($request->selected_payment_gateway === 'squareup'){
-
+            } elseif($request->selected_payment_gateway === 'squareup'){
                 try{
                     $squareup_env =  !empty(get_static_option('squareup_test_mode'));
                     $squareup_location_id = get_static_option('squareup_location_id');
@@ -1305,9 +1450,7 @@ class ServiceListController extends Controller
                 }catch(\Exception $e){
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
-
-            }
-            elseif($request->selected_payment_gateway === 'cinetpay'){
+            } elseif($request->selected_payment_gateway === 'cinetpay'){
                 try{
                     $cinetpay_env =  !empty(get_static_option('cinetpay_test_mode'));
                     $cinetpay_site_id = get_static_option('cinetpay_site_id');
@@ -1339,10 +1482,8 @@ class ServiceListController extends Controller
                 }catch(\Exception $e){
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
-            }
-            elseif($request->selected_payment_gateway === 'paytabs'){
+            } elseif ($request->selected_payment_gateway === 'paytabs'){
                 try{
-
                     $paytabs_env =  !empty(get_static_option('paytabs_test_mode'));
                     $paytabs_region = get_static_option('paytabs_region');
                     $paytabs_profile_id = get_static_option('paytabs_profile_id');
@@ -1375,9 +1516,8 @@ class ServiceListController extends Controller
                 }catch(\Exception $e){
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
-            }elseif($request->selected_payment_gateway === 'billplz'){
+            } elseif($request->selected_payment_gateway === 'billplz'){
                 try{
-
                     $billplz_env =  !empty(get_static_option('billplz_test_mode'));
                     $billplz_key =  get_static_option('billplz_key');
                     $billplz_xsignature =  get_static_option('billplz_xsignature');
@@ -1414,10 +1554,8 @@ class ServiceListController extends Controller
                 }catch(\Exception $e){
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
-            }elseif($request->selected_payment_gateway === 'zitopay'){
+            } elseif($request->selected_payment_gateway === 'zitopay'){
                 try{
-
-
                     $zitopay_env =  !empty(get_static_option('zitopay_test_mode'));
                     $zitopay_username =  get_static_option('zitopay_username');
 
@@ -1450,7 +1588,7 @@ class ServiceListController extends Controller
                 }catch(\Exception $e){
                     return back()->with(['msg' => $e->getMessage(),'type' => 'danger']);
                 }
-            }else{
+            } else {
                 //todo check qixer meta data for new payment gateway
                 $module_meta =  new ModuleMetaData();
                 $list = $module_meta->getAllPaymentGatewayList();
@@ -1489,6 +1627,47 @@ class ServiceListController extends Controller
         }
     }
 
+    /*
+     * Update Service Request File Status
+     */
+    public function updateServiceRequestFileStatus(Request $request) {
+        header('Content-type: application/json');
+        \Log::debug('File ID : ' . $request->fileId .
+                    "\nFile Status : " . $request->fileStatus .
+                    "\nSigning Link : " . $request->signinglink);
+        
+        $orderData = Order::where('file_id', $request->fileId)->first();
+        if ($orderData->service_provider_file_link == $request->signinglink){
+            $updateResult = Order::where('file_id', $request->fileId)->update([
+                'service_provider_signing_status' => $request->fileStatus,
+            ]);
+        } else if ($orderData->customer_file_link == $request->signinglink){
+            $updateResult = Order::where('file_id', $request->fileId)->update([
+                'customer_signing_status' => $request->fileStatus,
+            ]);
+        } else if ($orderData->admin_file_link == $request->signinglink) {
+            $updateResult = Order::where('file_id', $request->fileId)->update([
+                'admin_signing_status' => $request->fileStatus,
+            ]);
+        } else {
+            $updateResult = 0;
+            \Log::debug("Link Not Found");
+        }
+
+        if ($updateResult == 1){
+            $response = [
+                "status" => "success",
+                "message" => "Status updated successfully"
+            ];
+        } else {
+            $response = [
+                "status" => "error",
+                "message" => "Error while updating status"
+            ];
+        }
+        return response()->json($response);
+    }
+
     public function createOrder(Request $request)
     {
         $customerId = '';
@@ -1511,7 +1690,7 @@ class ServiceListController extends Controller
         }
         $commission = AdminCommission::first();
 
-        if($request->selected_payment_gateway=='cash_on_delivery' || $request->selected_payment_gateway == 'manual_payment'){
+        if($request->selected_payment_gateway=='cash_on_delivery' || $request->selected_payment_gateway == 'manual_payment' || $request->selected_payment_gateway === 'annual_maintenance_charge'){
             $payment_status='complete';
         }else{
             $payment_status='';
@@ -1618,6 +1797,13 @@ class ServiceListController extends Controller
                 'order_note' => $request->order_note,
                 'payment_gateway' => $request->selected_payment_gateway,
                 'payment_status' => $payment_status,
+                'file_id' => 0,
+                'service_provider_file_link' => '',
+                'customer_file_link' => '',
+                'admin_file_link' => '',       
+                'service_provider_signing_status' => 'Pending', 
+                'customer_signing_status' => 'Pending',         
+                'admin_signing_status' => 'Pending',
             ]);
         }else{
             if(Auth::guard('web')->check() && Auth::guard('web')->user()->user_type == 1 ){
@@ -1647,6 +1833,13 @@ class ServiceListController extends Controller
                     'order_note' => $request->order_note,
                     'payment_gateway' => $request->selected_payment_gateway,
                     'payment_status' => $payment_status,
+                    'file_id' => 0,
+                    'service_provider_file_link' => '',
+                    'customer_file_link' => '',
+                    'admin_file_link' => '',       
+                    'service_provider_signing_status' => 'Pending', 
+                    'customer_signing_status' => 'Pending',         
+                    'admin_signing_status' => 'Pending',
                 ]);
             }else{
                if( get_static_option('order_create_settings') !== 'anyone'){
@@ -1678,6 +1871,13 @@ class ServiceListController extends Controller
                     'order_note' => $request->order_note,
                     'payment_gateway' => $request->selected_payment_gateway,
                     'payment_status' => $payment_status,
+                    'file_id' => 0,
+                    'service_provider_file_link' => '',
+                    'customer_file_link' => '',
+                    'admin_file_link' => '',       
+                    'service_provider_signing_status' => 'Pending', 
+                    'customer_signing_status' => 'Pending',         
+                    'admin_signing_status' => 'Pending',
                 ]);
 
             }
@@ -1910,7 +2110,6 @@ class ServiceListController extends Controller
 
                 if(!empty($wallet_balance)){
                     if($wallet_balance->balance >= $order_details->total){
-                        //Send order email to buyer for cash on delivery
                         try {
                             $message_for_buyer = get_static_option('new_order_buyer_message') ?? __('You have successfully placed an rervice request #');
                             $message_for_seller_admin = get_static_option('new_order_admin_seller_message') ?? __('You have a new service request #');
@@ -1939,13 +2138,12 @@ class ServiceListController extends Controller
         }
 
 
-        if ($request->selected_payment_gateway === 'cash_on_delivery') {
+        if ($request->selected_payment_gateway === 'cash_on_delivery' || $request->selected_payment_gateway === 'annual_maintenance_charge') {
             $order_details = Order::find($last_order_id);
             $random_order_id_1 = Str::random(30);
             $random_order_id_2 = Str::random(30);
             $new_order_id = $random_order_id_1.$last_order_id.$random_order_id_2;
 
-            //Send order email to buyer for cash on delivery
             try {
                 $message_for_buyer = get_static_option('new_order_buyer_message') ?? __('You have successfully placed an service request #');
                 $message_for_seller_admin = get_static_option('new_order_admin_seller_message') ?? __('You have a new service request #');
@@ -1984,7 +2182,6 @@ class ServiceListController extends Controller
                 }
             }
 
-            //Send order email to buyer for cash on delivery
             try {
                 $message_for_buyer = get_static_option('new_order_buyer_message') ?? __('You have successfully placed an service request #');
                 $message_for_seller_admin = get_static_option('new_order_admin_seller_message') ?? __('You have a new service request #');

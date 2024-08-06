@@ -27,7 +27,7 @@ return [
      * Company/Business/Store Name: The name of your store
      *
      */
-    'title' => env('RAVE_TITLE', 'Rave Payment Gateway'),
+    'title' => env('RAVE_TITLE', 'Rave Payment Method'),
 
     /**
      * Environment: This can either be 'staging' or 'live'

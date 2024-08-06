@@ -4,7 +4,7 @@
         "use strict"
         $(document).ready(function(){
             $('#search_by_city').select2({
-                placeholder: `{{__('search city')}}`,
+                // placeholder: `{{__('search city')}}`,
                 ajax: {
                     type: 'get',
                     url: "{{route('user.country.city.ajax.search')}}",

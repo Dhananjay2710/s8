@@ -634,6 +634,9 @@ class GeneralSettingsController extends Controller
             // cash on delivery (COD)
             'cash_on_delivery_gateway' => 'nullable|string|max:191',
             'cash_on_delivery_preview_logo' => 'nullable|string|max:191',
+            // (AMC)
+            'annual_maintenance_charge_gateway' => 'nullable|string|max:191',
+            'annual_maintenance_charge_preview_logo' => 'nullable|string|max:191',
             // flutterwave
             'flutterwave_preview_logo' => 'nullable|string|max:191',
             'flutterwave_gateway' => 'nullable|string|max:191',

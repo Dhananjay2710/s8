@@ -67,109 +67,6 @@
                     </div>   
                     <div class="card">
                         <div class="card-body">
-                            <div class="border-bottom mb-3">
-                                <h5>{{ __('Service Provider Account Details') }}</h5>
-                            </div>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th><strong>{{ __('Item') }} </strong></th>
-                                        <th><strong>{{ __('Deatils As Per Bank Account') }} </strong></th>
-                                        <th><strong>{{ __('Status') }} </strong></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><strong>Account Number</strong></td>
-                                        <td>{{ $seller_verification_data['account_number'] == "" ? "NA" : $seller_verification_data['account_number']}}</td>
-                                        <td>
-                                            @if($seller_verification_data['is_account_verified']!="")
-                                                @if($seller_verification_data['is_account_verified']==1)
-                                                    <span class="text-success"><strong style="background: green; padding: 6px; color: white;">{{ __('Verified') }}</strong></span>
-                                                    
-                                                @else
-                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;">{{ __('Not Verified') }}</strong></span>
-                                                    
-                                                @endif
-                                            @else
-                                                <span class="text-info"><strong>{{ __('NA') }}</strong></span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>IFSC Number</strong></td>
-                                        <td>{{ $seller_verification_data['ifsc_number'] == "" ? "NA" : $seller_verification_data['ifsc_number']}}</td>
-                                        <td>
-                                            @if($seller_verification_data['is_account_verified']!="")
-                                                @if($seller_verification_data['is_account_verified']==1)
-                                                    <span class="text-success"><strong style="background: green; padding: 6px; color: white;" >{{ __('Matched') }}</strong></span>
-                                                    
-                                                @else
-                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;">{{ __('Not Matched') }}</strong></span>
-                                                    
-                                                @endif
-                                            @else
-                                                <span class="text-info"><strong>{{ __('NA') }}</strong></span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Mobile Number</strong></td>
-                                        <td>{{ $seller_verification_data['mobile_number'] == "" ? "NA" : $seller_verification_data['mobile_number']}}</td>
-                                        <td>
-                                            @if($seller_verification_data['is_account_verified']!="")
-                                                @if($seller_verification_data['is_account_verified']==1)
-                                                    <span class="text-success"><strong style="background: green; padding: 6px; color: white;">{{ __('Matched') }}</strong></span>
-                                                    
-                                                @else
-                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;">{{ __('Not Matched') }}</strong></span>
-                                                    
-                                                @endif
-                                            @else
-                                                <span class="text-info"><strong>{{ __('NA') }}</strong></span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Name</strong></td>
-                                        <td>{{ $seller_verification_data['name_as_per_bank_account_number'] == "" ? "NA" : $seller_verification_data['name_as_per_bank_account_number']}}</td>
-                                        <td>
-                                            @if($seller_verification_data['is_account_verified']!="")
-                                                @if($seller_verification_data['is_account_verified']==1)
-                                                    <span class="text-info"><strong style="background: green; padding: 6px; color: white;">{{ __('Matched') }}</strong></span>
-                                                @else
-                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;">{{ __('Not Matched') }}</strong></span>
-                                                @endif
-                                            @else
-                                                <span class="text-info"><strong>{{ __('NA') }}</strong></span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>   
-                </div>
-                <div class="col-lg-7 mt-5">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="border-bottom mb-3">
-                                <h5>{{ __('Service Provider National ID') }}</h5>
-                            </div>
-                            <div class="single-checbox">
-                                <div class="checkbox-inlines">
-                                    {!! render_image_markup_by_attachment_id(optional($seller_details->sellerVerify)->national_id,'','large') !!}
-                                </div>
-                            </div>   
-                            <br>
-                            <div class="border-bottom mt-5 mb-3">
-                                <h5>{{ __('Service Provider Address') }}</h5>
-                            </div>
-                            <div class="single-checbox">
-                                <div class="checkbox-inlines">
-                                    {!! render_image_markup_by_attachment_id(optional($seller_details->sellerVerify)->address,'','large') !!}
-                                </div>
-                            </div>
                             <div class="border-bottom mt-5 mb-3">
                                 <h5>{{ __('Service Provider Aadhaar Deatils') }}</h5>
                             </div>
@@ -282,6 +179,111 @@
                                                 @else
                                                     <span class="text-danger"><strong style="background: red; padding: 6px; color: white;">{{ __('Not Matched') }}</strong></span>
                                                     
+                                                @endif
+                                            @else
+                                                <span class="text-info"><strong>{{ __('NA') }}</strong></span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>   
+                </div>
+                <div class="col-lg-7 mt-5">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="border-bottom mb-3">
+                                <h5>{{ __('Service Provider National ID') }}</h5>
+                            </div>
+                            <div class="single-checbox">
+                                <div class="checkbox-inlines">
+                                    {!! render_image_markup_by_attachment_id(optional($seller_details->sellerVerify)->national_id,'','large') !!}
+                                </div>
+                            </div>   
+                            <br>
+                            <div class="border-bottom mt-5 mb-3">
+                                <h5>{{ __('Service Provider Address') }}</h5>
+                            </div>
+                            <div class="single-checbox">
+                                <div class="checkbox-inlines">
+                                    {!! render_image_markup_by_attachment_id(optional($seller_details->sellerVerify)->address,'','large') !!}
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="border-bottom mb-3">
+                                <h5>{{ __('Service Provider Account Details') }}</h5>
+                            </div>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th><strong>{{ __('Item') }} </strong></th>
+                                        <th><strong>{{ __('Deatils As Per Bank Account') }} </strong></th>
+                                        <th><strong>{{ __('Status') }} </strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Account Number</strong></td>
+                                        <td>{{ $seller_verification_data['account_number'] == "" ? "NA" : $seller_verification_data['account_number']}}</td>
+                                        <td>
+                                            @if($seller_verification_data['is_account_verified']!="")
+                                                @if($seller_verification_data['is_account_verified']==1)
+                                                    <span class="text-success"><strong style="background: green; padding: 6px; color: white;">{{ __('Verified') }}</strong></span>
+                                                    
+                                                @else
+                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;">{{ __('Not Verified') }}</strong></span>
+                                                    
+                                                @endif
+                                            @else
+                                                <span class="text-info"><strong>{{ __('NA') }}</strong></span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>IFSC Number</strong></td>
+                                        <td>{{ $seller_verification_data['ifsc_number'] == "" ? "NA" : $seller_verification_data['ifsc_number']}}</td>
+                                        <td>
+                                            @if($seller_verification_data['is_account_verified']!="")
+                                                @if($seller_verification_data['is_account_verified']==1)
+                                                    <span class="text-success"><strong style="background: green; padding: 6px; color: white;" >{{ __('Matched') }}</strong></span>
+                                                    
+                                                @else
+                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;">{{ __('Not Matched') }}</strong></span>
+                                                    
+                                                @endif
+                                            @else
+                                                <span class="text-info"><strong>{{ __('NA') }}</strong></span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Mobile Number</strong></td>
+                                        <td>{{ $seller_verification_data['mobile_number'] == "" ? "NA" : $seller_verification_data['mobile_number']}}</td>
+                                        <td>
+                                            @if($seller_verification_data['is_account_verified']!="")
+                                                @if($seller_verification_data['is_account_verified']==1)
+                                                    <span class="text-success"><strong style="background: green; padding: 6px; color: white;">{{ __('Matched') }}</strong></span>
+                                                    
+                                                @else
+                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;">{{ __('Not Matched') }}</strong></span>
+                                                    
+                                                @endif
+                                            @else
+                                                <span class="text-info"><strong>{{ __('NA') }}</strong></span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Name</strong></td>
+                                        <td>{{ $seller_verification_data['name_as_per_bank_account_number'] == "" ? "NA" : $seller_verification_data['name_as_per_bank_account_number']}}</td>
+                                        <td>
+                                            @if($seller_verification_data['is_account_verified']!="")
+                                                @if($seller_verification_data['is_account_verified']==1)
+                                                    <span class="text-info"><strong style="background: green; padding: 6px; color: white;">{{ __('Matched') }}</strong></span>
+                                                @else
+                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;">{{ __('Not Matched') }}</strong></span>
                                                 @endif
                                             @else
                                                 <span class="text-info"><strong>{{ __('NA') }}</strong></span>

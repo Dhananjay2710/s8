@@ -104,7 +104,7 @@
                                                     <label><strong>{{ __('Admin Charge:') }} </strong>{{ float_amount_with_currency_symbol($order_details->commission_amount) }}</label>
                                                 </div>
                                                 <div class="checkbox-inlines">
-                                                    <label><strong>{{ __('Payment Gateway:') }} </strong>{{ __(ucwords(str_replace("_", " ", $order_details->payment_gateway))) }}</label>
+                                                    <label><strong>{{ __('Payment Method:') }} </strong>{{ __(ucwords(str_replace("_", " ", $order_details->payment_gateway))) }}</label>
                                                 </div>
                                                 <div class="checkbox-inlines">
                                                     <label><strong>{{ __('Payment Status:') }} </strong>{{ __(ucfirst($order_details->payment_status)) }}</label>

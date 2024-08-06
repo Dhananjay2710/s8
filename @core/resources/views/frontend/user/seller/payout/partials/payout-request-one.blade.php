@@ -110,7 +110,7 @@
                                         <thead>
                                         <tr>
                                             <th> {{ __('ID') }}</th>
-                                            <th> {{ __('Payment Gateway') }} </th>
+                                            <th> {{ __('Payment Method') }} </th>
                                             <th> {{ __('Request Date') }} </th>
                                             <th> {{ __('Request Amount') }} </th>
                                             <th> {{ __('Request Status') }} </th>
@@ -121,7 +121,7 @@
                                         @foreach($all_payout_request as $pay_request)
                                             <tr>
                                                 <td data-label="{{ __('ID') }}">{{ $pay_request->id }} </td>
-                                                <td data-label="{{ __('Payment Gateway') }}">{{ __($pay_request->payment_gateway) }}</td>
+                                                <td data-label="{{ __('Payment Method') }}">{{ __($pay_request->payment_gateway) }}</td>
                                                 <td data-label="{{ __('Request Date') }}">{{ $pay_request->created_at->diffForHumans() }} </td>
                                                 <td data-label="{{ __('Request Amount') }}"> {{ float_amount_with_currency_symbol($pay_request->amount) }} </td>
                                                 <td data-label="{{ __('Request Status') }}">
@@ -174,9 +174,9 @@
                             <input type="number" class="form-control" name="amount" id="amount">
                         </div>
                         <div class="form-group">
-                            <label for="payment_gateway">{{ __('Payment Gateway') }}</label>
+                            <label for="payment_gateway">{{ __('Payment Method') }}</label>
                             <select name="payment_gateway" id="payment_gateway" class="form-control nice-select">
-                                <option value="">{{ __('Select Payment gateway') }}</option>
+                                <option value="">{{ __('Select Payment Method') }}</option>
                                 @php
                                     $all_gateways = ['paypal','manual_payment','mollie','paytm','stripe','razorpay','flutterwave','paystack','marcadopago','instamojo','cashfree','payfast','midtrans'];
                                 @endphp

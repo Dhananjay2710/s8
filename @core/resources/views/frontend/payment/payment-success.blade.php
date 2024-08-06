@@ -77,7 +77,7 @@
                                                     <label><strong>{{ __('Coupon Amount:') }} </strong>{{ float_amount_with_currency_symbol($order_details->coupon_amount) }}</label> <br>
                                                 @endif
                                                 <label><strong>{{ __('Total:') }} </strong>{{ float_amount_with_currency_symbol($order_details->total) }}</label> <br>
-                                                <label><strong>{{ __('Payment Gateway:') }} </strong>{{ __(ucwords(str_replace("_", " ", $order_details->payment_gateway))) }}</label> <br>
+                                                <label><strong>{{ __('Payment Method:') }} </strong>{{ __(ucwords(str_replace("_", " ", $order_details->payment_gateway))) }}</label> <br>
                                                 <label><strong>{{ __('Payment Status:') }} </strong>{{ __(ucfirst($order_details->payment_status)) }}</label> <br>
                                             </td>
                                             <td>

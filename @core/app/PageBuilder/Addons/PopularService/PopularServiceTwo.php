@@ -156,7 +156,7 @@ class PopularServiceTwo extends \App\PageBuilder\PageBuilderBase
                         <a href="{$route}" class="service-thumb service-bg-thumb-format" {$image}>
                         {$featured}
                         <div class="country_city_location color-three">
-                        <span class="single_location"> <i class="las la-map-marker-alt"></i> {$service_country}, {$service_city} </span>
+                        <span class="single_location"> <i class="las la-map-marker-alt"></i> {$service_city}, {$service_country} </span>
                         </div>
                         </a>
                         <div class="services-contents">

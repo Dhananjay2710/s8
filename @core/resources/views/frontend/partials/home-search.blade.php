@@ -63,7 +63,7 @@
 
 
         $('#service_city_id').select2({
-          placeholder: `{{__('search city')}}`,
+          // placeholder: `{{__('search city')}}`,
           ajax: {
             type: 'get',
             url: "{{route('user.country.city.ajax.search')}}",

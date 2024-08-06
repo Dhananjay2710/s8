@@ -424,7 +424,7 @@
                                 <div class="products-item">
                                 <span>{{ __('Payout ID:') }} {{ $payout_details->id }}</span> <br>
                                 <span>{{ __('Payout Amount:') }} {{ float_amount_with_currency_symbol($payout_details->amount) }}</span><br>
-                                <span>{{ __('Payment Gateway:') }} {{ __($payout_details->payment_gateway) }}</span><br>
+                                <span>{{ __('Payment Method:') }} {{ __($payout_details->payment_gateway) }}</span><br>
                                 <span>{{ __('Request Date:') }} {{ $payout_details->created_at->toFormattedDateString() }}</span><br>
                                 <span>{{ __('Payment Status:') }}
                                     @if ($payout_details->status == 0) <span class="text-danger">{{ __('Pending') }}</span>@endif

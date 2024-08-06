@@ -68,7 +68,7 @@
                                     <td>{{$attendance_details->quantity}}</td>
                                 </tr>
                                 <tr>
-                                    <td>{{__('Payment Gateway')}}</td>
+                                    <td>{{__('Payment Method')}}</td>
                                     <td class="text-capitalize">
                                         @if($payment_gateway == 'manual_payment')
                                             {{get_static_option('site_manual_payment_name')}}

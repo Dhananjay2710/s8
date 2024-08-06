@@ -17,6 +17,8 @@
     </style>
     <link rel="stylesheet" href="{{asset('assets/common/css/themify-icons.css')}}">
     <link rel="stylesheet" href="{{asset('assets/frontend/css/font-awesome.min.css')}}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 @endsection
 @section('content')
     <x-frontend.seller-buyer-preloader/>
@@ -239,6 +241,10 @@
                                         @if($order->payment_gateway == 'cash_on_delivery')
                                             <span class="text-info"><strong>{{__('Payment Type: ')}}</strong> <br>  {{ __('Cash on Delivery') }}</span> <br>
                                             <span><x-cancel-order :url="route('buyer.order.cancel.cod.payment.pending',$order->id)"/></span>
+                                        @elseif ($order->payment_gateway == 'annual_maintenance_charge')
+                                            <span class="text-info"><strong>{{__('Payment Type: ')}}</strong>{{ __('AMC') }}</span>
+                                            <br>
+                                            <span><x-cancel-order :url="route('buyer.order.cancel.cod.payment.pending',$order->id)"/></span>
                                         @endif
                                     @endif
                                     @if ($order->payment_status == 'complete')
@@ -440,8 +446,36 @@
                                         <label for="ticketTitle" class="label_title">{{ __('Comments') }}</label>
                                         <textarea id="message" name="message" cols="20" rows="4"  class="form--control radius-10 textarea-input" placeholder="{{ __('Post Comments') }}"></textarea>
                                     </div>
+                                    <div class="form-group m-3">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="media-upload-btn-wrapper">
+                                                    <div class="img-wrap"></div>
+                                                    <p id="fileLinkOfCustomer"></p>
+                                                    <button id="signDocumentBtnOfCustomer" type="button" class="btn btn-info" data-order_customer_file_link="">
+                                                        {{ __('Sign Document') }}
+                                                    </button>
+                                                    <small>{{ __('Sign the document') }}</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="media-upload-btn-wrapper" style="padding-top: 5px">
+                                                    <div id="timerDisplay">Time left: 3:00</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="media-upload-btn-wrapper">
+                                                    <div id="iframeContainerOfCustomer" style="margin-top: 20px;">
+                                                        <p>{{ __('Signing Status') }}</p>
+                                                        <p id="fileStatusOfCustomer"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
                                 <button type="submit" class="btn btn-primary">{{ __('Send Review') }}</button>
@@ -541,6 +575,8 @@
                 var CompleteOrderId = "{{\Illuminate\Support\Facades\Session::get('CompleteOrderId')}}";
                 var seller_id = "{{\Illuminate\Support\Facades\Session::get('seller_id')}}";
                 var service_id = "{{\Illuminate\Support\Facades\Session::get('service_id')}}";
+                var customer_file_link = "{{\Illuminate\Support\Facades\Session::get('customer_file_link')}}";
+                var customer_signing_status = "{{\Illuminate\Support\Facades\Session::get('customer_signing_status')}}";
                 if(openReviewModal === 'yes'){
                     $('.review_add_modal[data-order_id="'+CompleteOrderId+'"]').trigger("click");
                     // $('.review_add_modal[data-order_id="'+CompleteOrderId+'"]').dispatchEvent(new MouseEvent("click"))
@@ -550,9 +586,98 @@
                     $('#reviewModal input[name="seller_id"]').val(seller_id);
                     $('#reviewModal input[name="service_id"]').val(service_id);
                     $('#reviewModal input[name="order_id"]').val(CompleteOrderId);
+                    $('#fileStatusOfCustomer').text(customer_signing_status);
+                    fetchUpdatedData();
                     myModal.show();
                 }
 
+                // for reviewModal model after click on yes
+                document.getElementById('signDocumentBtnOfCustomer').addEventListener('click', function() {
+                    if (customer_file_link) {
+                        const width = 1000;
+                        const height = 800;
+                        const left = (screen.width / 2) - (width / 2);
+                        const top = (screen.height / 2) - (height / 2);
+                        var signWindow = window.open(customer_file_link, 'signDocumentForCustomer', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
+                        // Set the timer duration (in seconds)
+                        let timerDuration = 180;
+                        const timerDisplay = document.getElementById('timerDisplay');
+
+                        // Update the timer every second
+                        const countdownTimer = setInterval(function () {
+                            if (timerDuration > 0) {
+                                timerDuration--;
+                                const minutes = Math.floor(timerDuration / 60);
+                                const seconds = timerDuration % 60;
+                                timerDisplay.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                            } else {
+                                clearInterval(countdownTimer);
+                            }
+                        }, 1000);
+
+                        // Close the window after 3 minutes (180000 milliseconds)
+                        const autoCloseTimer = setTimeout(function () {
+                            signWindow.close();
+                        }, 180000);
+
+                        // Check if the window is closed manually
+                        const checkWindowClosed = setInterval(function () {
+                            if (signWindow.closed) {
+                                clearInterval(checkWindowClosed);
+                                clearInterval(countdownTimer);
+                                clearTimeout(autoCloseTimer);
+                                timerDisplay.textContent = "Signing window has closed.";
+                                fetchUpdatedData();
+                            }
+                        }, 500);
+                    } else {
+                        alert('No document link is available.');
+                    }
+                });
+
+                // fetch updated data using xhr call
+                function fetchUpdatedData() {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', `/s8/serviceprovider/ordersdetailsupdateapi/${CompleteOrderId}`, true);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 200) {
+                                console.log("XHR Success");
+                                const response = JSON.parse(xhr.responseText);
+                                const updatedCustomerFileSigningStatus = response.customer_signing_status;
+                                console.log("Updated Status", updatedCustomerFileSigningStatus);
+                                const customerFileLink = response.customer_file_link;
+                                updateDOM(updatedCustomerFileSigningStatus, customerFileLink);
+                            } else {
+                                console.error('Failed to fetch updated data. Status:', xhr.status);
+                            }
+                        }
+                    };
+                    xhr.send();
+                }
+
+                // update DOM
+                function updateDOM(status, link) {
+                    const fileStatusElement = document.querySelector('#fileStatusOfCustomer');
+                    fileStatusElement.textContent = status;
+                    setFileStatusColor(status);
+                    const signDocumentBtnOfCustomer = document.querySelector('#signDocumentBtnOfCustomer');
+                    signDocumentBtnOfCustomer.setAttribute('data-order_customer_file_link', link);
+                    signDocumentBtnOfCustomer.disabled = !link || status === 'Signed';
+                    timerDisplay.textContent = '';
+                }
+
+                // set file status color
+                function setFileStatusColor(status) {
+                    const fileStatusElement = document.querySelector('#fileStatusOfCustomer');
+                    if (status === 'Pending') {
+                        fileStatusElement.style.color = 'red';
+                    } else if (status === 'Signed') {
+                        fileStatusElement.style.color = 'green';
+                    } else {
+                        fileStatusElement.style.color = 'black'; 
+                    }
+                }
 
                 // date range
                 $('.flatpickr_input').flatpickr({

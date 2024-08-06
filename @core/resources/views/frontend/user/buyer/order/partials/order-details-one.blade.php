@@ -121,7 +121,7 @@
                                                     </label>
                                                 </div>
                                                 <div class="checkbox-inlines">
-                                                    <label><strong>{{ __('Payment Gateway:') }} </strong>{{ __(ucwords(str_replace("_", " ", $order_details->payment_gateway))) }}
+                                                    <label><strong>{{ __('Payment Method:') }} </strong>{{ __(ucwords(str_replace("_", " ", $order_details->payment_gateway))) }}
                                                     </label>
                                                 </div>
                                                 <div class="checkbox-inlines">

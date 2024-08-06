@@ -178,7 +178,7 @@
                                 <thead>
                                 <tr>
                                     <th> {{ __('ID') }}</th>
-                                    <th> {{ __('Payment Gateway') }} </th>
+                                    <th> {{ __('Payment Method') }} </th>
                                     <th> {{ __('Request Date') }} </th>
                                     <th> {{ __('Request Amount') }} </th>
                                     <th> {{ __('Request Status') }} </th>
@@ -251,9 +251,9 @@
                             <input type="number" class="form-control" name="amount" id="amount" placeholder="{{ __('amount') }}">
                         </div>
                         <div class="form-group mt-2">
-                            <label for="payment_gateway" class="label_title">{{ __('Payment Gateway') }}</label>
+                            <label for="payment_gateway" class="label_title">{{ __('Payment Method') }}</label>
                             <select name="payment_gateway" id="payment_gateway" class="form-control nice-select">
-                                <option value="">{{ __('Select Payment gateway') }}</option>
+                                <option value="">{{ __('Select Payment Method') }}</option>
                                 @php
                                     $all_gateways = ['paypal','manual_payment','mollie','paytm','stripe','razorpay','flutterwave','paystack','marcadopago','instamojo','cashfree','payfast','midtrans'];
                                 @endphp

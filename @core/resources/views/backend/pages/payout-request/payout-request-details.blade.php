@@ -18,7 +18,7 @@
                         <div class="card-body">
                             <div class="checkbox-inlines">
                                 <h5><strong>{{ __('Payout Request ID: ') }}</strong>#{{ $request_details->id }}</h5>
-                                <p class="text-info"><small>{{__('checkout all the info of service provider before process the payment. you should get service provider payout request details which payment gateway service provider want to get paid, and service provider payment account details should show in place of service provider note. you have to check these thing and have to pay service provider manually, then you will change the payment status with a screenshort of proof of payment.')}}</small></p>
+                                <p class="text-info"><small>{{__('checkout all the info of service provider before process the payment. you should get service provider payout request details which payment method service provider want to get paid, and service provider payment account details should show in place of service provider note. you have to check these thing and have to pay service provider manually, then you will change the payment status with a screenshort of proof of payment.')}}</small></p>
                             </div>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
                                     <label><strong>{{ __('Amount:') }} </strong>{{ float_amount_with_currency_symbol($request_details->amount) }}</label>
                                 </div>
                                 <div class="checkbox-inlines">
-                                    <label><strong>{{ __('Payment Gateway:') }} </strong>{{ $request_details->payment_gateway }}</label>
+                                    <label><strong>{{ __('Payment Method:') }} </strong>{{ $request_details->payment_gateway }}</label>
                                 </div>                            
                                 <div class="checkbox-inlines">
                                     <label><strong>{{ __('Request Status:') }}</strong></label>

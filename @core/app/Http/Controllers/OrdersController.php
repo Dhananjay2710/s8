@@ -21,6 +21,7 @@ use Modules\JobPost\Entities\JobRequest;
 use Yajra\DataTables\Facades\DataTables;
 use App\Helpers\DataTableHelpers\General;
 use App\Events\UpdateTicket;
+use App\Helpers\TokenGenrateHelper;
 
 class OrdersController extends Controller
 {
@@ -82,9 +83,9 @@ class OrdersController extends Controller
                 ->addColumn('service_provider_details', function ($row) {
                     $user = User::find($row->seller_id);
                     return [
-                        "name" => $user->name,
-                        "email" => $user->email,
-                        "phone" => $user->phone
+                        "name" => $user->name ?? "NA",
+                        "email" => $user->email ?? "NA",
+                        "phone" => $user->phone ?? "NA"
                     ];
                 })
                      
@@ -248,6 +249,7 @@ class OrdersController extends Controller
     }
 
     public function orderDetails($id){
+        \Log::debug("Order Deatils Start");
         $order_details = Order::where('id',$id)->first();
         $order_includes = OrderInclude::where('order_id',$id)->get();
         $order_additionals = OrderAdditional::where('order_id',$id)->get();
@@ -259,8 +261,37 @@ class OrdersController extends Controller
                 AdminNotification::where('order_id', $id)->update(['status' => 1]);
             }
         }
+        $isHideMenu = false;
+        \Log::debug("Order Deatils Start");
+        return view('backend.pages.orders.order-details',compact('order_details','order_includes','order_additionals','isHideMenu'));
+    }
 
-        return view('backend.pages.orders.order-details',compact('order_details','order_includes','order_additionals'));
+    public function serviceRequestDetails(Request $request, $id){
+
+        \Log::debug("Service Request Deatils Start");
+        $token = $request->token;
+        \Log::debug("Id : " . $id . "\nToken : " . $token);
+
+        $order_details = Order::where('id',$id)->first();
+        $order_includes = OrderInclude::where('order_id',$id)->get();
+        $order_additionals = OrderAdditional::where('order_id',$id)->get();
+
+        \Log::debug("Seller Id : " . $order_details->seller_id);
+        $finalToken = TokenGenrateHelper::genrateToken($order_details->seller_id);
+        if($token !== $finalToken){
+            abort(401);
+        }
+
+        // admin notification
+        $notification = AdminNotification::where('order_id', $id)->first();
+        if (!empty($notification)){
+            if ($notification->status == 0){
+                AdminNotification::where('order_id', $id)->update(['status' => 1]);
+            }
+        }
+        $isHideMenu = true;
+        \Log::debug("Service Request Deatils End");
+        return view('backend.pages.orders.order-details',compact('order_details','order_includes','order_additionals','isHideMenu'));
     }
 
     public function orderStatus(Request $request)

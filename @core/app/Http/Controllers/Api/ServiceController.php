@@ -813,7 +813,7 @@ class ServiceController extends Controller
 
         $order_details = Order::find($last_order_id);
 
-        //Send order email to buyer for cash on delivery
+        //Send order email to buyer for cash on delivery or annual maintenance charge
         try {
             $subject = __('You have successfully created order');
             Mail::to($order_details->email)->send(new OrderMail($subject,$order_details));

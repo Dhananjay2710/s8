@@ -32,10 +32,11 @@ class PaymentGatewayController extends Controller
             'cinetpay',
             'paytabs',
             'billplz',
-            'zitopay'
+            'zitopay',
+            'annual_maintenance_charge',
         ];
         
-        // implemented payment gateways in mobile app:  Paypal, cashmere, flutter wave, instamojo, mercado, paystack, razor pay, stripe, bank transfer, cash on delivery
+        // implemented payment gateways in mobile app:  Paypal, cashmere, flutter wave, instamojo, mercado, paystack, razor pay, stripe, bank transfer, cash on delivery, annual maintenance charge
 
         
         foreach($gateway_list as $glist ){

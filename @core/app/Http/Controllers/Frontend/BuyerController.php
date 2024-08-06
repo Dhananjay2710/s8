@@ -215,8 +215,10 @@ class BuyerController extends Controller
         \Session::flash('CompleteOrderId', $id);
         \Session::flash('seller_id', $orderDetails->seller_id);
         \Session::flash('service_id', $orderDetails->service_id);
+        \Session::flash('customer_file_link', $orderDetails->customer_file_link);
+        \Session::flash('customer_signing_status', $orderDetails->customer_signing_status);
         return redirect()->back();
-    }
+    }   
 
     public function orderCancel($id=null)
     {

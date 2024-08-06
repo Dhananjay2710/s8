@@ -47,6 +47,13 @@ class Order extends Model
         'manual_payment_image',
         'order_from_job',
         'job_post_id',
+        'file_id',
+        'service_provider_file_link',
+        'customer_file_link',
+        'admin_file_link',       
+        'service_provider_signing_status', 
+        'customer_signing_status',      
+        'admin_signing_status',
     ];
     
     protected $casts = [

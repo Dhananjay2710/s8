@@ -31,7 +31,7 @@
                                 <th>{{__('Customer Details')}}</th>
                                 <th>{{__('Service Provider Details')}}</th>
                                 <th>{{__('Title')}}</th>
-                                <th>{{__('Payment Gateway')}}</th>
+                                <th>{{__('Payment Method')}}</th>
                                 <th>{{__('Payment Status')}}</th>
                                 </thead>
                                 <tbody>

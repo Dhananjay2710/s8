@@ -6,7 +6,7 @@
 @endsection
 
 @section('site-title')
-    {{__('Payment Gateway Settings')}}
+    {{__('Payment Method Settings')}}
 @endsection
 
 @section('content')
@@ -16,7 +16,7 @@
                 @include('backend.partials.message')
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="header-title">{{__("Payment Gateway Settings")}}</h4>
+                        <h4 class="header-title">{{__("Payment Method Settings")}}</h4>
                         @include('backend/partials/error')
                         <form action="{{route('admin.general.payment.settings')}}" method="POST"
                               enctype="multipart/form-data">
@@ -67,7 +67,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="site_default_payment_gateway">{{__('Default Payment Gateway')}}</label>
+                                        <label for="site_default_payment_gateway">{{__('Default Payment Method')}}</label>
                                         <select name="site_default_payment_gateway" class="form-control" >
                                             @php
                                                 $all_gateways = \App\Helpers\PaymentGatewayRenderHelper::listOfPaymentGateways();
@@ -1520,6 +1520,67 @@
                                                 </div>
                                             </div>
 
+                                            <div class="card">
+                                                <div class="card-header" id="annual_maintenance_charge_settings">
+                                                    <h5 class="mb-0">
+                                                        <button class="btn btn-link collapsed" type="button"
+                                                                data-toggle="collapse"
+                                                                data-target="#annual_maintenance_charge_settings_content"
+                                                                aria-expanded="false">
+                                                            <span class="page-title"> {{__('Annual Maintenance Charge Settings')}}</span>
+                                                        </button>
+                                                    </h5>
+                                                </div>
+                                                <div id="annual_maintenance_charge_settings_content" class="collapse"
+                                                     data-parent="#accordion-payment">
+                                                    <div class="card-body">
+                                                        <div class="form-group">
+                                                            <label for="cash_on_delivery_gateway"><strong>{{__('Enable Annual Maintenance Charge')}}</strong></label>
+                                                            <label class="switch">
+                                                                <input type="checkbox" name="annual_maintenance_charge_gateway"
+                                                                       @if(!empty(get_static_option('annual_maintenance_charge_gateway'))) checked
+                                                                       @endif id="annual_maintenance_charge_gateway">
+                                                                <span class="slider onff"></span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="site_logo"><strong>{{__('Annual Maintenance Charge Logo')}}</strong></label>
+                                                            <div class="media-upload-btn-wrapper">
+                                                                <div class="img-wrap">
+                                                                    @php
+                                                                        $paypal_img = get_attachment_image_by_id(get_static_option('cash_on_delivery_preview_logo'),null,true);
+                                                                        $paypal_image_btn_label = 'Upload Image';
+                                                                    @endphp
+                                                                    @if (!empty($paypal_img))
+                                                                        <div class="attachment-preview">
+                                                                            <div class="thumbnail">
+                                                                                <div class="centered">
+                                                                                    <img class="avatar user-thumb"
+                                                                                         src="{{$paypal_img['img_url']}}"
+                                                                                         alt="">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        @php  $paypal_image_btn_label = 'Change Image'; @endphp
+                                                                    @endif
+                                                                </div>
+                                                                <input type="hidden" id="annual_maintenance_charge_preview_logo"
+                                                                       name="annual_maintenance_charge_preview_logo"
+                                                                       value="{{get_static_option('annual_maintenance_charge_logo')}}">
+                                                                <button type="button"
+                                                                        class="btn btn-info media_upload_form_btn"
+                                                                        data-btntitle="Select Image"
+                                                                        data-modaltitle="Upload Image"
+                                                                        data-toggle="modal"
+                                                                        data-target="#media_upload_modal">
+                                                                    {{__($paypal_image_btn_label)}}
+                                                                </button>
+                                                            </div>
+                                                            <small class="form-text text-muted">{{__('allowed image format: jpg,jpeg,png. Recommended image size 160x50')}}</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             {{-- render payment gateway setting using qixermeta from module start --}}
                                             {!! (new \App\Helpers\ModuleMetaData())->renderAllPaymentGatewaySettingsBlade() !!}
                                             {{-- render payment gateway setting using qixermeta from module end --}}

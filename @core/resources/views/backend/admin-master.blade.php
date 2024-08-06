@@ -63,123 +63,247 @@
 </div>
 @endif
 <div class="page-container">
-    @include('backend/partials/sidebar')
+    @if(isset($isHideMenu))
+        @if(!$isHideMenu)
+            @include('backend/partials/sidebar')
+        @endif
+    @else
+        @include('backend/partials/sidebar')
+    @endif
     <div class="main-content">
+        @if(isset($isHideMenu))
+            @if(!$isHideMenu)
+                <div class="header-area">
+                    <div class="row align-items-center">
 
-        <div class="header-area">
-            <div class="row align-items-center">
+                        <div class="col-md-3 col-sm-3 clearfix">
+                            <div class="nav-btn pull-left">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="col-md-9 col-sm-9 clearfix">
+                            <ul class="notification-area pull-right">
+                            @php
+                                $unread_count = 0;
 
-                <div class="col-md-3 col-sm-3 clearfix">
-                    <div class="nav-btn pull-left">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                                    $admin_unread_notifications = [];
+                                    try{
+                                        $unread_count = \App\AdminNotification::where('status', 0)->count();
+                                        $admin_unread_notifications = \App\AdminNotification::where('status', 0)->take(5)->get();
+                                    }catch(\Exception $e){  }
+                                    
+                                @endphp
+                                <li class="dropdown">
+                                    <i class="ti-bell dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <span>{{ $unread_count }}</span>
+                                    </i>
+                                    <div class="dropdown-menu bell-notify-box notify-box" x-placement="top-start">
+                                        <span class="notify-title">{{ __('Notifications') }}
+                                            <a href="{{ route('admin.notifications.all') }}">{{ __('view all') }}</a>
+                                        </span>
+
+                                        <div class="slimScrollDiv">
+                                            <div class="nofity-list">
+                                                <!-- Order section start -->
+                                                @foreach($admin_unread_notifications as $data)
+                                                    @if(!empty($data->order_id))
+                                                    <a href="{{ route('admin.orders.details', $data->order_id) }}" class="notify-item">
+                                                        <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
+                                                        <div class="notify-text">
+                                                            <p>{{ __('New service request') }} #{{ $data->order_id ?? '' }}</p>
+                                                            <span> {{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }} </span>
+                                                        </div>
+                                                    </a>
+                                                    @endif
+                                                @endforeach
+                                                <!-- Order section end -->
+                                                <!-- Tickets section start -->
+                                                @foreach($admin_unread_notifications as $data)
+                                                    @if(!empty($data->ticket_id))
+                                                    <a href="{{ route('admin.ticket.details', $data->ticket_id) }}" class="notify-item">
+                                                        <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
+                                                        <div class="notify-text">
+                                                            <p>{{ __('New service request ticket') }} #{{ $data->ticket_id ?? '' }}</p>
+                                                            <span> {{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }} </span>
+                                                        </div>
+                                                    </a>
+                                                    @endif
+                                                @endforeach
+                                                <!-- Tickets section end -->
+                                                <!-- Job post section start -->
+                                                @foreach($admin_unread_notifications as $data)
+                                                    @if(!empty($data->job_post_id))
+                                                    <a href="{{ route('job.post.details', optional($data->buyerJob)->slug) }}" class="notify-item">
+                                                        <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
+                                                        <div class="notify-text">
+                                                            <p>{{ __('New Job Created') }} #{{ $data->job_post_id ?? '' }}</p>
+                                                            <span> {{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }} </span>
+                                                        </div>
+                                                    </a>
+                                                    @endif
+                                                @endforeach
+                                                <!-- Job Post section end -->
+                                            </div>
+                                            <div class="slimScrollBar"></div><div class="slimScrollRail">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li ><label class="switch yes">
+                                    <input id="darkmode" type="checkbox" data-mode={{ get_static_option('site_admin_dark_mode') }} @if(get_static_option('site_admin_dark_mode') == 'on') checked @else @endif>
+                                    <span class="slider-color-mode onff"></span>
+                                </label></li>
+                                <li id="full-view"><i class="ti-fullscreen"></i></li>
+                                <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
+                                <li><a class="btn @if(get_static_option('site_admin_dark_mode') == 'off')btn-primary @else btn-dark  @endif" target="_blank" href="{{url('/')}}"><i class="fas fa-external-link-alt mr-1"></i>   {{__('View Site')}} </a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-9 col-sm-9 clearfix">
-                    <ul class="notification-area pull-right">
-                    @php
-                        $unread_count = 0;
 
-                             $admin_unread_notifications = [];
-                             try{
-                                $unread_count = \App\AdminNotification::where('status', 0)->count();
-                                $admin_unread_notifications = \App\AdminNotification::where('status', 0)->take(5)->get();
-                             }catch(\Exception $e){  }
-                            
-                        @endphp
-                        <li class="dropdown">
-                            <i class="ti-bell dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                <span>{{ $unread_count }}</span>
-                            </i>
-                            <div class="dropdown-menu bell-notify-box notify-box" x-placement="top-start">
-                                <span class="notify-title">{{ __('Notifications') }}
-                                    <a href="{{ route('admin.notifications.all') }}">{{ __('view all') }}</a>
-                                </span>
-
-                                <div class="slimScrollDiv">
-                                    <div class="nofity-list">
-                                        <!-- Order section start -->
-                                        @foreach($admin_unread_notifications as $data)
-                                            @if(!empty($data->order_id))
-                                            <a href="{{ route('admin.orders.details', $data->order_id) }}" class="notify-item">
-                                                <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
-                                                <div class="notify-text">
-                                                    <p>{{ __('New service request') }} #{{ $data->order_id ?? '' }}</p>
-                                                    <span> {{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }} </span>
-                                                </div>
-                                            </a>
-                                              @endif
-                                         @endforeach
-                                        <!-- Order section end -->
-                                        <!-- Tickets section start -->
-                                        @foreach($admin_unread_notifications as $data)
-                                            @if(!empty($data->ticket_id))
-                                            <a href="{{ route('admin.ticket.details', $data->ticket_id) }}" class="notify-item">
-                                                <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
-                                                <div class="notify-text">
-                                                    <p>{{ __('New service request ticket') }} #{{ $data->ticket_id ?? '' }}</p>
-                                                    <span> {{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }} </span>
-                                                </div>
-                                            </a>
-                                              @endif
-                                         @endforeach
-                                        <!-- Tickets section end -->
-                                        <!-- Job post section start -->
-                                        @foreach($admin_unread_notifications as $data)
-                                            @if(!empty($data->job_post_id))
-                                            <a href="{{ route('job.post.details', optional($data->buyerJob)->slug) }}" class="notify-item">
-                                                <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
-                                                <div class="notify-text">
-                                                    <p>{{ __('New Job Created') }} #{{ $data->job_post_id ?? '' }}</p>
-                                                    <span> {{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }} </span>
-                                                </div>
-                                            </a>
-                                              @endif
-                                         @endforeach
-                                        <!-- Job Post section end -->
-                                    </div>
-                                    <div class="slimScrollBar"></div><div class="slimScrollRail">
-                                    </div>
+                <div class="page-title-area">
+                    <div class="row align-items-center">
+                        <div class="col-sm-6">
+                            <div class="breadcrumbs-area clearfix">
+                                <h4 class="page-title pull-left">@yield('site-title')</h4>
+                                <ul class="breadcrumbs pull-left">
+                                    <li><a href="{{route('admin.home')}}">{{__('Home')}}</a></li>
+                                    <li><span>@yield('site-title')</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 clearfix">
+                            <div class="user-profile pull-right">
+                                {!! render_image_markup_by_attachment_id(auth()->guard('admin')->user()->image,'avatar user-thumb') !!}
+                                <h4 class="user-name dropdown-toggle" data-toggle="dropdown">{{ Auth::user()->name }} <i class="fa fa-angle-down"></i></h4>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{{route('admin.profile.update')}}">{{__('Edit Profile')}}</a>
+                                    <a class="dropdown-item" href="{{route('admin.password.change')}}">{{__('Password Change')}}</a>
+                                    <a class="dropdown-item" href="{{ route('admin.logout') }}">{{ __('Logout') }}</a>
                                 </div>
                             </div>
-                        </li>
-                        <li ><label class="switch yes">
-                            <input id="darkmode" type="checkbox" data-mode={{ get_static_option('site_admin_dark_mode') }} @if(get_static_option('site_admin_dark_mode') == 'on') checked @else @endif>
-                            <span class="slider-color-mode onff"></span>
-                        </label></li>
-                        <li id="full-view"><i class="ti-fullscreen"></i></li>
-                        <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
-                        <li><a class="btn @if(get_static_option('site_admin_dark_mode') == 'off')btn-primary @else btn-dark  @endif" target="_blank" href="{{url('/')}}"><i class="fas fa-external-link-alt mr-1"></i>   {{__('View Site')}} </a></li>
-                    </ul>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            @endif
+        @else
+            <div class="header-area">
+                <div class="row align-items-center">
 
-        <div class="page-title-area">
-            <div class="row align-items-center">
-                <div class="col-sm-6">
-                    <div class="breadcrumbs-area clearfix">
-                        <h4 class="page-title pull-left">@yield('site-title')</h4>
-                        <ul class="breadcrumbs pull-left">
-                            <li><a href="{{route('admin.home')}}">{{__('Home')}}</a></li>
-                            <li><span>@yield('site-title')</span></li>
+                    <div class="col-md-3 col-sm-3 clearfix">
+                        <div class="nav-btn pull-left">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-sm-9 clearfix">
+                        <ul class="notification-area pull-right">
+                        @php
+                            $unread_count = 0;
+
+                                $admin_unread_notifications = [];
+                                try{
+                                    $unread_count = \App\AdminNotification::where('status', 0)->count();
+                                    $admin_unread_notifications = \App\AdminNotification::where('status', 0)->take(5)->get();
+                                }catch(\Exception $e){  }
+                                
+                            @endphp
+                            <li class="dropdown">
+                                <i class="ti-bell dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    <span>{{ $unread_count }}</span>
+                                </i>
+                                <div class="dropdown-menu bell-notify-box notify-box" x-placement="top-start">
+                                    <span class="notify-title">{{ __('Notifications') }}
+                                        <a href="{{ route('admin.notifications.all') }}">{{ __('view all') }}</a>
+                                    </span>
+
+                                    <div class="slimScrollDiv">
+                                        <div class="nofity-list">
+                                            <!-- Order section start -->
+                                            @foreach($admin_unread_notifications as $data)
+                                                @if(!empty($data->order_id))
+                                                <a href="{{ route('admin.orders.details', $data->order_id) }}" class="notify-item">
+                                                    <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
+                                                    <div class="notify-text">
+                                                        <p>{{ __('New service request') }} #{{ $data->order_id ?? '' }}</p>
+                                                        <span> {{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }} </span>
+                                                    </div>
+                                                </a>
+                                                @endif
+                                            @endforeach
+                                            <!-- Order section end -->
+                                            <!-- Tickets section start -->
+                                            @foreach($admin_unread_notifications as $data)
+                                                @if(!empty($data->ticket_id))
+                                                <a href="{{ route('admin.ticket.details', $data->ticket_id) }}" class="notify-item">
+                                                    <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
+                                                    <div class="notify-text">
+                                                        <p>{{ __('New service request ticket') }} #{{ $data->ticket_id ?? '' }}</p>
+                                                        <span> {{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }} </span>
+                                                    </div>
+                                                </a>
+                                                @endif
+                                            @endforeach
+                                            <!-- Tickets section end -->
+                                            <!-- Job post section start -->
+                                            @foreach($admin_unread_notifications as $data)
+                                                @if(!empty($data->job_post_id))
+                                                <a href="{{ route('job.post.details', optional($data->buyerJob)->slug) }}" class="notify-item">
+                                                    <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
+                                                    <div class="notify-text">
+                                                        <p>{{ __('New Job Created') }} #{{ $data->job_post_id ?? '' }}</p>
+                                                        <span> {{ \Carbon\Carbon::parse($data->created_at)->diffForHumans() }} </span>
+                                                    </div>
+                                                </a>
+                                                @endif
+                                            @endforeach
+                                            <!-- Job Post section end -->
+                                        </div>
+                                        <div class="slimScrollBar"></div><div class="slimScrollRail">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li ><label class="switch yes">
+                                <input id="darkmode" type="checkbox" data-mode={{ get_static_option('site_admin_dark_mode') }} @if(get_static_option('site_admin_dark_mode') == 'on') checked @else @endif>
+                                <span class="slider-color-mode onff"></span>
+                            </label></li>
+                            <li id="full-view"><i class="ti-fullscreen"></i></li>
+                            <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
+                            <li><a class="btn @if(get_static_option('site_admin_dark_mode') == 'off')btn-primary @else btn-dark  @endif" target="_blank" href="{{url('/')}}"><i class="fas fa-external-link-alt mr-1"></i>   {{__('View Site')}} </a></li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-sm-6 clearfix">
-                    <div class="user-profile pull-right">
-                        {!! render_image_markup_by_attachment_id(auth()->guard('admin')->user()->image,'avatar user-thumb') !!}
-                        <h4 class="user-name dropdown-toggle" data-toggle="dropdown">{{ Auth::user()->name }} <i class="fa fa-angle-down"></i></h4>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{{route('admin.profile.update')}}">{{__('Edit Profile')}}</a>
-                            <a class="dropdown-item" href="{{route('admin.password.change')}}">{{__('Password Change')}}</a>
-                            <a class="dropdown-item" href="{{ route('admin.logout') }}">{{ __('Logout') }}</a>
+            </div>
+
+            <div class="page-title-area">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <div class="breadcrumbs-area clearfix">
+                            <h4 class="page-title pull-left">@yield('site-title')</h4>
+                            <ul class="breadcrumbs pull-left">
+                                <li><a href="{{route('admin.home')}}">{{__('Home')}}</a></li>
+                                <li><span>@yield('site-title')</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 clearfix">
+                        <div class="user-profile pull-right">
+                            {!! render_image_markup_by_attachment_id(auth()->guard('admin')->user()->image,'avatar user-thumb') !!}
+                            <h4 class="user-name dropdown-toggle" data-toggle="dropdown">{{ Auth::user()->name }} <i class="fa fa-angle-down"></i></h4>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{route('admin.profile.update')}}">{{__('Edit Profile')}}</a>
+                                <a class="dropdown-item" href="{{route('admin.password.change')}}">{{__('Password Change')}}</a>
+                                <a class="dropdown-item" href="{{ route('admin.logout') }}">{{ __('Logout') }}</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
         @yield('content')
     </div>
 

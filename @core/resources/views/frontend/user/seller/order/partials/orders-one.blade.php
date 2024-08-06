@@ -103,6 +103,10 @@
                                                                 <span class="text-info"><strong>{{__('Payment Type: ')}}</strong>{{ __('Cash on Delivery') }}</span>
                                                                 <br>
                                                                 <span><x-cancel-order :url="route('seller.order.cancel.cod.payment.pending',$order->id)"/></span>
+                                                            @elseif ($order->payment_gateway == 'annual_maintenance_charge')
+                                                                <span class="text-info"><strong>{{__('Payment Type: ')}}</strong>{{ __('AMC') }}</span>
+                                                                <br>
+                                                                <span><x-cancel-order :url="route('seller.order.cancel.cod.payment.pending',$order->id)"/></span>
                                                             @endif
                                                         @endif
                                                         @if ($order->payment_status == 'complete')

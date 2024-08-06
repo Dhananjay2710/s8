@@ -169,7 +169,7 @@
                                                    $job_country =  optional($job->country)->country;
                                                    $job_city =  optional($job->city)->service_city;
                                                    if($job_country){
-                                                        $job_location = $job_country .' , '. $job_city;
+                                                        $job_location = $job_city .' , '. $job_country;
                                                     }else{
                                                         $job_location = __('Online');
                                                     }

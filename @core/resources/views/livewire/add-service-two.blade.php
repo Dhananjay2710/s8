@@ -229,6 +229,7 @@
                                                                 </div>
                                                             </div>
 
+                                                            @if(is_array($includes_services))
                                                             @foreach($includes_services as $key => $value)
                                                                 <div wire:ignore.self>
                                                                     <div class="single-dashboard-input what-include-element mt-4">
@@ -260,6 +261,15 @@
                                                                     </div>
                                                                 </div>
                                                             @endforeach
+                                                            @else
+                                                                <div class="single-dashboard-input what-include-element mt-4">
+                                                                    <div class="row align-items-center g-4">
+                                                                        <div class="col-lg-4 col-sm-6">
+                                                                            <p>Data Not Found</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endif
                                                         </div>
 
 
@@ -681,7 +691,7 @@
                     <!-- service Media Uploads end-->
 
                     <!-- service Set Availability start-->
-                    <div   wire:ignore class="tab-pane fade @if($current_tab === "service-set-availability-tab") show active @endif step" id="service-set-availability" role="tabpanel" aria-labelledby="service-set-availability-tab">
+                    <div wire:ignore.self class="tab-pane fade @if($current_tab === "service-set-availability-tab") show active @endif step" id="service-set-availability" role="tabpanel" aria-labelledby="service-set-availability-tab">
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="row g-4">
@@ -691,6 +701,65 @@
                                             <div class="dashboard-switch-single d-flex">
                                                 <input class="hide_show_check_box_new custom-switch is_service_all_cities" id="is_service_all_cities" type="checkbox" wire:model.defer="services.is_service_all_cities"/>
                                                 <label class="switch-label mt-2" for="is_service_all_cities"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xxl-10 col-md-9 col-sm-8">
+                                <div class="row g-4">
+                                    <div class="col-xl-12">
+                                        <div class="tab-content service-set-availability" id="service-set-availabilityContent">
+                                            <div wire:ignore.self class="tab-pane fade active show" id="address-service" role="tabpanel" aria-labelledby="address-service-tab">
+                                                <div class="single-settings">
+                                                    <div>
+                                                        <div class="add-input append-additional-includes mt-4">
+                                                            <div wire:ignore class="single-dashboard-input what-include-element">
+                                                                <div class="row g-4">
+                                                                    <div class="col-lg-4 col-sm-6">
+                                                                        <div class="single-info-input">
+                                                                            <label class="label_title">{{ __('Post Code') }} <span class="text-danger">*</span> </label>
+                                                                            <input class="form--control" type="number" wire:model.defer="include_service_postcode.0" placeholder="{{__('Post Code')}}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            @if(is_array($address_service))
+                                                                @foreach($address_service as $key => $value)
+                                                                    <div wire:ignore.self>
+                                                                        <div class="single-dashboard-input what-include-element mt-4">
+                                                                            <div class="row align-items-center g-4">
+                                                                                <div class="col-lg-4 col-sm-6">
+                                                                                    <div class="single-info-input">
+                                                                                        <label class="label_title">{{ __('Post Code') }} <span class="text-danger">*</span> </label>
+                                                                                        <input class="form--control" type="number" wire:model.defer="include_service_postcode.{{ $key }}" placeholder="{{__('Post Code')}}">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class=" col-lg-2 col-sm-6 is_service_online_hide">
+                                                                                    <button class="btn btn-danger remove-include mt-3" wire:click.prevent="removeAddressServices({{$key}})"><i class="las la-times"></i></button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            @else
+                                                                <div class="single-dashboard-input what-include-element mt-4">
+                                                                    <div class="row align-items-center g-4">
+                                                                        <div class="col-lg-4 col-sm-6">
+                                                                            <p>Data Not Found</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                        <div  wire:ignore.self class="btn-wrapper mt-3">
+                                                            <a href="javascript:void(0)" class="btn-see-more style-02 color-3 hide_service_and_show" wire:click="addAddressServices({{ $a_include }})"> {{__('Add More')}} </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

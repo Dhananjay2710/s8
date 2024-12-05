@@ -9,7 +9,7 @@ class Tax extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['tax','country_id'];
+    protected $fillable = ['tax','tds','gstlimit','tdalimit','country_id',];
 
     public function country()
     {

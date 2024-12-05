@@ -48,6 +48,8 @@ class User extends Authenticatable
         'country_code',
         'google_id',
         'facebook_id',
+        'company_id',
+        'service_provider_type',
     ];
 
     protected $hidden = [

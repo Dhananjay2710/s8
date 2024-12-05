@@ -51,7 +51,13 @@ class AdminDashboardController extends Controller
         ->take(10)
         ->get();
 
-        $most_sell_10_services = Order::selectRaw('service_id, COUNT(orders.service_id) as total')
+        // $most_sell_10_services = Order::selectRaw('service_id, COUNT(orders.service_id) as total')
+        //     ->with('service')
+        //     ->groupBy('service_id')
+        //     ->orderBy('total','desc')
+        //     ->take(10)
+        //     ->get();
+        $most_sell_10_services = Order::selectRaw('service_id, COUNT(s8_orders.service_id) as total')
             ->with('service')
             ->groupBy('service_id')
             ->orderBy('total','desc')

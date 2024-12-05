@@ -12,10 +12,13 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-6">   
+                                <div class="col-md-4">   
                                     <div class="checkbox-inlines">
                                         <label><strong>{{ __('Service Request ID:') }} </strong>#{{ $order_details->id }}</label>
                                     </div>
+                                </div>
+                                <div class="col-md-2"> 
+                                    <button type="button" class="btn btn-info" onclick="goBack()">Go Back</button>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="checkbox-inlines">
@@ -468,7 +471,7 @@
         // fetch updated data using xhr call
         function fetchUpdatedData() {
             const xhr = new XMLHttpRequest();
-            xhr.open('GET', `/s8/serviceprovider/ordersdetailsupdateapi/${order_id}`, true);
+            xhr.open('GET', `/providers/serviceprovider/ordersdetailsupdateapi/${order_id}`, true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
@@ -505,6 +508,11 @@
             } else {
                 fileStatusOfAdmin.style.color = 'black'; 
             }
+        }
+    </script>
+    <script>
+        function goBack() {
+          window.history.back();
         }
     </script>
 @endsection

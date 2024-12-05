@@ -78,6 +78,7 @@
                                 <?php elseif(request()->get('service_title')): ?> show
                                 <?php elseif(request()->get('online_offline_status')): ?> show
                                 <?php elseif(request()->get('service_price')): ?> show
+                                <?php elseif(request()->get('service_post_code')): ?> show
                                 <?php elseif(request()->get('service_date')): ?> show
                                 <?php endif; ?>
                              " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
@@ -116,6 +117,13 @@
                                                                 <div class="single-info-input">
                                                                     <label for="service_price" class="info-title"> <?php echo e(__('Service Price')); ?> </label>
                                                                     <input class="form--control" name="service_price" value="<?php echo e(request()->get('service_price')); ?>" type="number" placeholder="<?php echo e(__('Service Price')); ?>">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-4 col-sm-6">
+                                                                <div class="single-info-input">
+                                                                    <label for="service_post_code" class="info-title"> <?php echo e(__('Service Post Code')); ?> </label>
+                                                                    <input class="form--control" name="service_post_code" value="<?php echo e(request()->get('service_post_code')); ?>" type="number" placeholder="<?php echo e(__('Service Post Code')); ?>">
                                                                 </div>
                                                             </div>
 

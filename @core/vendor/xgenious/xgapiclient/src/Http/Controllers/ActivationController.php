@@ -43,7 +43,13 @@ class ActivationController extends Controller
             $type = 'licensed' == $licenseStatus ? 'success' : 'danger';
 
             if ($result['message'] === 'License is Activated') {
-                DB::table('xg_ftp_infos')->updateOrInsert([
+                // DB::table('xg_ftp_infos')->updateOrInsert([
+                //     'item_license_key' => $data['product_activation_key'],
+                //     'item_license_status' => $licenseStatus,
+                //     'item_license_msg' => $result['message'],
+                //     'item_version' => $result['0']['version']
+                // ], ['id' => 1]);
+                DB::table('s8_xg_ftp_infos')->updateOrInsert([
                     'item_license_key' => $data['product_activation_key'],
                     'item_license_status' => $licenseStatus,
                     'item_license_msg' => $result['message'],

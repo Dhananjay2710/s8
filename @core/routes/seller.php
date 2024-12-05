@@ -13,6 +13,15 @@ Route::group(['prefix'=>'seller','middleware'=>['auth','inactiveuser','BuyerChec
     Route::post('account/delete','Frontend\SellerController@accountDelete')->name('seller.account.delete');
     Route::get('/logout','Frontend\SellerController@sellerLogout')->name('seller.logout');
 
+    // Company
+    Route::get('/company','Frontend\SellerController@sellerCompany')->name('seller.company');
+    Route::match(['get','post'],'/company-edit','Frontend\SellerController@sellerCompanyEdit')->name('seller.company.edit');
+    Route::post('/company/add-company','Frontend\SellerController@addCompany')->name('seller.company.add');
+    Route::post('/company/add-company-member','Frontend\SellerController@addCompanyMember')->name('seller.company.add.member');
+    Route::post('/company/member/change-status/{id}','Frontend\SellerController@changeMemberStatus')->name('seller.company.member.status');
+    Route::match(['get','post'],'/member/company-edit','Frontend\SellerController@sellerCompanyMemberEdit')->name('seller.company.member.edit');
+    Route::post('/company/member/delete/{id}','Frontend\SellerController@memberDelete')->name('seller.company.member.delete');
+
     //service coupons
     Route::get('/coupons','Frontend\SellerController@serviceCoupon')->name('seller.service.coupon');
     Route::post('/coupons/add-coupon','Frontend\SellerController@addServiceCoupon')->name('seller.service.coupon.add');
@@ -153,6 +162,15 @@ Route::group(['prefix'=>'serviceprovider','middleware'=>['auth','inactiveuser','
     Route::get('/account-deactive/cancel/{id}','Frontend\SellerController@accountDeactiveCancel')->name('seller.account.deactive.cancel');
     Route::post('account/delete','Frontend\SellerController@accountDelete')->name('seller.account.delete');
     Route::get('/logout','Frontend\SellerController@sellerLogout')->name('seller.logout');
+
+    // Company 
+    Route::get('/company','Frontend\SellerController@sellerCompany')->name('seller.company');
+    Route::match(['get','post'],'/company-edit','Frontend\SellerController@sellerCompanyEdit')->name('seller.company.edit');
+    Route::post('/company/add-company','Frontend\SellerController@addCompany')->name('seller.company.add');
+    Route::post('/company/add-company-member','Frontend\SellerController@addCompanyMember')->name('seller.company.add.member');
+    Route::post('/company/member/change-status/{id}','Frontend\SellerController@changeMemberStatus')->name('seller.company.member.status');
+    Route::match(['get','post'],'/member/company-edit','Frontend\SellerController@sellerCompanyMemberEdit')->name('seller.company.member.edit');
+    Route::post('/company/member/delete/{id}','Frontend\SellerController@memberDelete')->name('seller.company.member.delete');
 
     //service coupons
     Route::get('/coupons','Frontend\SellerController@serviceCoupon')->name('seller.service.coupon');

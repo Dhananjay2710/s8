@@ -70,7 +70,10 @@
                                 <thead>
                                 <th><?php echo e(__('ID')); ?></th>
                                 <th><?php echo e(__('Country')); ?></th>
-                                <th><?php echo e(__('Tax(%)')); ?></th>
+                                <th><?php echo e(__('GST(%)')); ?></th>
+                                <th><?php echo e(__('GST Limit')); ?></th>
+                                <th><?php echo e(__('TDS(%)')); ?></th>
+                                <th><?php echo e(__('TDS Limit')); ?></th>
                                 <th><?php echo e(__('Action')); ?></th>
                                 </thead>
                                 <tbody>
@@ -79,6 +82,9 @@
                                         <td><?php echo e($data->id); ?></td>
                                         <td><?php echo e(optional($data->country)->country); ?></td>
                                         <td><?php echo e($data->tax); ?></td>
+                                        <td><?php echo e($data->gstlimit); ?></td>
+                                        <td><?php echo e($data->tds); ?></td>
+                                        <td><?php echo e($data->tdslimit); ?></td>
                                         <td>
                                             <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('slider-delete')): ?>
                                                 <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
@@ -104,6 +110,9 @@
                                                    class="btn btn-primary btn-xs mb-3 mr-1 tax_edit_btn"
                                                    data-id="<?php echo e($data->id); ?>"
                                                    data-tax="<?php echo e($data->tax); ?>"
+                                                   data-tds="<?php echo e($data->tds); ?>"
+                                                   data-gstlimit="<?php echo e($data->gstlimit); ?>"
+                                                   data-tdslimit="<?php echo e($data->tdslimit); ?>"
                                                    data-country_id="<?php echo e($data->country_id); ?>">
                                                     <i class="ti-pencil"></i>
                                                 </a>
@@ -129,10 +138,6 @@
                             <?php echo csrf_field(); ?>
                             <div class="tab-content margin-top-40">
                                 <div class="form-group">
-                                    <label for="tax"><?php echo e(__('Tax')); ?>(%)</label>
-                                    <input type="number" class="form-control" step="0.05" name="tax" placeholder="<?php echo e(__('Enter tax percentage')); ?>">
-                                </div>
-                                <div class="form-group">
                                     <label for="country_id"><?php echo e(__('Country')); ?></label>
                                     <select name="country_id" class="form-control">
                                         <option value=""><?php echo e(__('Select Country')); ?></option>
@@ -140,6 +145,22 @@
                                             <option value="<?php echo e($country->id); ?>"><?php echo e($country->country); ?></option>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tax"><?php echo e(__('GST')); ?>(%)</label>
+                                    <input type="number" class="form-control" step="0.05" name="tax" placeholder="<?php echo e(__('Enter gst percentage')); ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label for="tda"><?php echo e(__('GST Limit')); ?></label>
+                                    <input type="number" class="form-control" step="0.05" name="gstlimit" placeholder="<?php echo e(__('Enter gst limit')); ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label for="tda"><?php echo e(__('TDS')); ?>(%)</label>
+                                    <input type="number" class="form-control" step="0.05" name="tds" placeholder="<?php echo e(__('Enter tds percentage')); ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label for="tda"><?php echo e(__('TDS Limit')); ?></label>
+                                    <input type="number" class="form-control" step="0.05" name="tdslimit" placeholder="<?php echo e(__('Enter tds limit')); ?>">
                                 </div>
                                 <button type="submit" class="btn btn-primary mt-3 submit_btn"><?php echo e(__('Submit')); ?></button>
                             </div>
@@ -163,8 +184,20 @@
                         <?php echo csrf_field(); ?>
                         <input type="hidden" name="up_id" id="up_id">
                         <div class="form-group">
-                            <label for="up_code"><?php echo e(__('Coupon Code')); ?></label>
-                            <input type="text" class="form-control" name="tax" id="tax" step="0.05" placeholder="<?php echo e(__('Enter tax')); ?>">
+                            <label for="up_code"><?php echo e(__('GST')); ?>(%)</label>
+                            <input type="text" class="form-control" name="tax" id="tax" step="0.05" placeholder="<?php echo e(__('Enter GST')); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="up_code"><?php echo e(__('GST Limit')); ?></label>
+                            <input type="text" class="form-control" name="gstlimit" id="gstlimit" step="0.05" placeholder="<?php echo e(__('Enter GST Limit')); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="up_code"><?php echo e(__('TDS')); ?>(%)</label>
+                            <input type="text" class="form-control" name="tds" id="tds" step="0.05" placeholder="<?php echo e(__('Enter TDS')); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="up_code"><?php echo e(__('TDS Limit')); ?></label>
+                            <input type="text" class="form-control" name="tdslimit" id="tdslimit" step="0.05" placeholder="<?php echo e(__('Enter TDS Limit')); ?>">
                         </div>
                         <div class="form-group">
                             <label for="country_id"><?php echo e(__('Country')); ?></label>
@@ -226,10 +259,16 @@
                 $(document).on('click','.tax_edit_btn',function(){
                     let id = $(this).data('id');
                     let tax = $(this).data('tax');
+                    let tds = $(this).data('tds');
+                    let gstlimit = $(this).data('gstlimit');
+                    let tdslimit = $(this).data('tdslimit');
                     let country_id = $(this).data('country_id');
                     let form = $('#tax_edit_modal');
                     form.find('#up_id').val(id);
                     form.find('#tax').val(tax);
+                    form.find('#tds').val(tds);
+                    form.find('#gstlimit').val(gstlimit);
+                    form.find('#tdslimit').val(tdslimit);
                     form.find('#country_id').val(country_id);
                 });
             });

@@ -638,7 +638,7 @@
                 // fetch updated data using xhr call
                 function fetchUpdatedData() {
                     const xhr = new XMLHttpRequest();
-                    xhr.open('GET', `/s8/serviceprovider/ordersdetailsupdateapi/${CompleteOrderId}`, true);
+                    xhr.open('GET', `/providers/serviceprovider/ordersdetailsupdateapi/${CompleteOrderId}`, true);
                     xhr.onreadystatechange = function () {
                         if (xhr.readyState === 4) {
                             if (xhr.status === 200) {

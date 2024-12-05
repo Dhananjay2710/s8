@@ -193,8 +193,10 @@ class FrontendController extends Controller
         }
         
         $token_id = Str::random(30);
-        $existing_token = DB::table('password_resets')->where('email', $user_info->email)->delete();
-        DB::table('password_resets')->insert(['email' => $user_info->email, 'token' => $token_id]);
+        // $existing_token = DB::table('password_resets')->where('email', $user_info->email)->delete();
+        // DB::table('password_resets')->insert(['email' => $user_info->email, 'token' => $token_id]);
+        $existing_token = DB::table('s8_password_resets')->where('email', $user_info->email)->delete();
+        DB::table('s8_password_resets')->insert(['email' => $user_info->email, 'token' => $token_id]);
         
         
         $message = __('Hello').' '.$user_info->username."\n";
@@ -238,7 +240,8 @@ class FrontendController extends Controller
         ]);
         $user_info = Admin::where('username', $request->username)->first();
         $user = Admin::findOrFail($user_info->id);
-        $token_iinfo = DB::table('password_resets')->where(['email' => $user_info->email, 'token' => $request->token])->first();
+        // $token_iinfo = DB::table('password_resets')->where(['email' => $user_info->email, 'token' => $request->token])->first();
+        $token_iinfo = DB::table('s8_password_resets')->where(['email' => $user_info->email, 'token' => $request->token])->first();
         if (!empty($token_iinfo)) {
             $user->password = Hash::make($request->password);
             $user->save();
@@ -266,9 +269,11 @@ class FrontendController extends Controller
         $user_info = User::where('username', $request->username)->orWhere('email', $request->username)->first();
         if (!empty($user_info)) {
             $token_id = Str::random(30);
-            $existing_token = DB::table('password_resets')->where('email', $user_info->email)->delete();
+            // $existing_token = DB::table('password_resets')->where('email', $user_info->email)->delete();
+            $existing_token = DB::table('s8_password_resets')->where('email', $user_info->email)->delete();
             if (empty($existing_token)) {
-                DB::table('password_resets')->insert(['email' => $user_info->email, 'token' => $token_id]);
+                // DB::table('password_resets')->insert(['email' => $user_info->email, 'token' => $token_id]);
+                DB::table('s8_password_resets')->insert(['email' => $user_info->email, 'token' => $token_id]);
             }
             $message = __('Here is you password reset link, If you did not request to reset your password just ignore this mail.') . ' <a class="btn" href="' . route('user.reset.password', ['user' => $user_info->username, 'token' => $token_id]) . '">' . __('Click Reset Password') . '</a>';
             $data = [
@@ -312,7 +317,8 @@ class FrontendController extends Controller
         ]);
         $user_info = User::where('username', $request->username)->first();
         $user = User::findOrFail($user_info->id);
-        $token_iinfo = DB::table('password_resets')->where(['email' => $user_info->email, 'token' => $request->token])->first();
+        // $token_iinfo = DB::table('password_resets')->where(['email' => $user_info->email, 'token' => $request->token])->first();
+        $token_iinfo = DB::table('s8_password_resets')->where(['email' => $user_info->email, 'token' => $request->token])->first();
         if (!empty($token_iinfo)) {
             $user->password = Hash::make($request->password);
             $user->save();

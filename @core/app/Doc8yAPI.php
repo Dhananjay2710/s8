@@ -17,7 +17,7 @@ class Doc8yAPI extends Model
      */
     public static function createDuplicateDocumentAndRequest($phoneNumber, $formDataToSubmit) {
         // Base URL
-        $base_url = 'https://app.doc8.in/api/v1/serviceapp/findandfillrequiredform';
+        $base_url = 'https://bank.ariticapp.com/servicedoc/api/v1/serviceapp/findandfillrequiredform';
         // Construct the full URL with query parameters
         $formDataJson = json_encode($formDataToSubmit);
         $encodedFormData = urlencode($formDataJson);
@@ -33,7 +33,7 @@ class Doc8yAPI extends Model
         \Log::debug("Inside the user Register");
         \Log::debug("User Data : " . print_r($userData,true));
         // Base URL
-        $base_url = 'https://app.doc8.in/api/v1/customer/acceptdatafromsalesforce';
+        $base_url = 'https://bank.ariticapp.com/servicedoc/api/v1/customer/acceptdatafromsalesforce';
         $url = $base_url . '?';
         foreach ($userData as $key => $value) {
             $url .= $key . '=' . urlencode($value) . '&';

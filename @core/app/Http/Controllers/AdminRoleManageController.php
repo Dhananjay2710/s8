@@ -78,7 +78,8 @@ class AdminRoleManageController extends Controller
 
         $admin = Admin::findOrFail($request->user_id);
         $admin->update($data);
-        DB::table('model_has_roles')->where('model_id',$admin->id)->delete();
+        // DB::table('model_has_roles')->where('model_id',$admin->id)->delete();
+        DB::table('s8_model_has_roles')->where('model_id',$admin->id)->delete();
         $admin->assignRole($request->role);
 
         return redirect()->back()->with(['msg' => __('Admin Details Updated'),'type' =>'success' ]);
@@ -122,7 +123,10 @@ class AdminRoleManageController extends Controller
     public function edit_admin_role($id){
         $role = Role::find($id);
         $permissions = Permission::get();
-        $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
+        // $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
+        //     ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
+        //     ->all();
+        $rolePermissions = DB::table("s8_role_has_permissions")->where("role_has_permissions.role_id",$id)
             ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
             ->all();
         return view(self::BASE_PATH.'role.edit',compact('role','permissions','rolePermissions'));

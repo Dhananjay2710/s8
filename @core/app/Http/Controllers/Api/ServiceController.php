@@ -367,10 +367,15 @@ class ServiceController extends Controller
                 ->where('category_id', $category_id)
                 ->where('subcategory_id', $subcategory_id);
 
+            // $all_services = $all_services->whereHas('reviews', function ($q) use ($rating) {
+            //     $q->groupBy('reviews.id')
+            //         ->havingRaw('AVG(reviews.rating) >= ?', [$rating])
+            //         ->havingRaw('AVG(reviews.rating) < ?', [$rating + 1]);
+            // });
             $all_services = $all_services->whereHas('reviews', function ($q) use ($rating) {
                 $q->groupBy('reviews.id')
-                    ->havingRaw('AVG(reviews.rating) >= ?', [$rating])
-                    ->havingRaw('AVG(reviews.rating) < ?', [$rating + 1]);
+                    ->havingRaw('AVG(s8_reviews.rating) >= ?', [$rating])
+                    ->havingRaw('AVG(s8_reviews.rating) < ?', [$rating + 1]);
             });
             
             if(!empty(request()->get('state_id'))){
@@ -416,10 +421,15 @@ class ServiceController extends Controller
         }
         if(!empty(request()->get('rating'))){
             $rating = (int) request()->get('rating');
+            // $service_quyery->whereHas('reviews', function ($q) use ($rating) {
+            //     $q->groupBy('reviews.id')
+            //         ->havingRaw('AVG(reviews.rating) >= ?', [$rating])
+            //         ->havingRaw('AVG(reviews.rating) < ?', [$rating + 1]);
+            // });
             $service_quyery->whereHas('reviews', function ($q) use ($rating) {
                 $q->groupBy('reviews.id')
-                    ->havingRaw('AVG(reviews.rating) >= ?', [$rating])
-                    ->havingRaw('AVG(reviews.rating) < ?', [$rating + 1]);
+                    ->havingRaw('AVG(s8_reviews.rating) >= ?', [$rating])
+                    ->havingRaw('AVG(s8_reviews.rating) < ?', [$rating + 1]);
             });
         }
 

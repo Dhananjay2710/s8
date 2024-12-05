@@ -4,7 +4,7 @@
         "use strict"
         $(document).ready(function(){
             $('#search_by_city').select2({
-                placeholder: `<?php echo e(__('search city')); ?>`,
+                // placeholder: `<?php echo e(__('search city')); ?>`,
                 ajax: {
                     type: 'get',
                     url: "<?php echo e(route('user.country.city.ajax.search')); ?>",

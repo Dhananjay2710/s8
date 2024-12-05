@@ -93,7 +93,7 @@ class Service extends Model
     public function avgFeedback() {
 
         return $this->hasMany(Review::class, 'service_id', 'id')
-                        ->selectRaw('service_id,AVG(reviews.rating) AS average_rating');
+                        ->selectRaw('service_id,AVG(s8_reviews.rating) AS average_rating');
     }
 
     public function metaData(){

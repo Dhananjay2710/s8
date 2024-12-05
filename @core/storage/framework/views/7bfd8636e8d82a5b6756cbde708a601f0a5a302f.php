@@ -63,7 +63,7 @@
 
 
         $('#service_city_id').select2({
-          placeholder: `<?php echo e(__('search city')); ?>`,
+          // placeholder: `<?php echo e(__('search city')); ?>`,
           ajax: {
             type: 'get',
             url: "<?php echo e(route('user.country.city.ajax.search')); ?>",

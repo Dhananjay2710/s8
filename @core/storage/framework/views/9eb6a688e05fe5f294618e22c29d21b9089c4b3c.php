@@ -63,6 +63,8 @@
 </style>
     <link rel="stylesheet" href="<?php echo e(asset('assets/common/css/themify-icons.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('assets/frontend/css/font-awesome.min.css')); ?>">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
     <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
@@ -395,6 +397,24 @@
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?></span>
+                                        <?php elseif($order->payment_gateway == 'annual_maintenance_charge'): ?>
+                                            <span class="text-info"><strong><?php echo e(__('Payment Type: ')); ?></strong><?php echo e(__('AMC')); ?></span>
+                                            <br>
+                                            <span><?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cancel-order','data' => ['url' => route('seller.order.cancel.cod.payment.pending',$order->id)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('cancel-order'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('seller.order.cancel.cod.payment.pending',$order->id))]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?></span>
                                         <?php endif; ?>
                                     <?php endif; ?>
                                     <?php if($order->payment_status == 'complete'): ?>
@@ -429,11 +449,13 @@
                                         <?php if($order->payment_status != 'pending'): ?>
                                             <?php if($order->order_complete_request == 0): ?>
                                                 <a href="#0" class="edit_status_modal"
-                                                   data-bs-toggle="modal"
-                                                   data-bs-target="#editStatusModal"
-                                                   data-id="<?php echo e($order->id); ?>"
-                                                   data-status="<?php echo e($order->status); ?>">
-                                                <span class="dash-icon color-1 text-success"><?php echo e(__('Create Complete Request')); ?></span>
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editStatusModal"
+                                                    data-id="<?php echo e($order->id); ?>"
+                                                    data-status="<?php echo e($order->status); ?>"
+                                                    data-file-link="<?php echo e($order->service_provider_file_link); ?>"
+                                                    data-file-signing-status="<?php echo e($order->service_provider_signing_status); ?>">
+                                                <span class="dash-icon color-1 text-success"><?php echo e(__('Complete Request')); ?></span>
                                             </a>
                                             <?php else: ?>
                                                 <div class="dashboard_table__main__priority mt-3">
@@ -450,11 +472,13 @@
 
                                     <?php if($order->order_complete_request == 3): ?>
                                         <a href="#0" class="edit_status_modal"
-                                           data-bs-toggle="modal"
-                                           data-bs-target="#editStatusModal"
-                                           data-id="<?php echo e($order->id); ?>"
-                                           data-status="<?php echo e($order->status); ?>">
-                                                <span class="dash-icon color-1 text-success"> <?php echo e(__('Create Complete Request')); ?></span>
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editStatusModal"
+                                            data-id="<?php echo e($order->id); ?>"
+                                            data-status="<?php echo e($order->status); ?>"
+                                            data-file-link="<?php echo e($order->service_provider_file_link); ?>"
+                                            data-file-signing-status="<?php echo e($order->service_provider_signing_status); ?>">
+                                                <span class="dash-icon color-1 text-success"> <?php echo e(__('Complete Request')); ?></span>
                                             </a> <br>
                                         <?php if(optional($order->completedeclinehistory)->count() >=1): ?>
                                             <span class="btn btn-warning mt-1"><a href="<?php echo e(route('seller.order.request.decline.history',$order->id)); ?>"> <?php echo e(__('View History')); ?> </a></span>
@@ -492,6 +516,8 @@
                                                        data-buyer_id="<?php echo e($order->buyer_id); ?>"
                                                        data-service_id="<?php echo e($order->service_id); ?>"
                                                        data-order_id="<?php echo e($order->id); ?>"
+                                                       data-order_customer_file_link="<?php echo e($order->customer_file_link); ?>"
+                                                       data-order_customer_file_status="<?php echo e($order->customer_signing_status); ?>"
                                                     ><i class="las la-star text-success"></i> <?php echo e(__('Review')); ?> </a>
                                                 </div>
                                             <?php endif; ?>
@@ -588,6 +614,8 @@
                                                        data-buyer_id="<?php echo e($order->buyer_id); ?>"
                                                        data-service_id="<?php echo e($order->service_id); ?>"
                                                        data-order_id="<?php echo e($order->id); ?>"
+                                                       data-order_customer_file_link="<?php echo e($order->customer_file_link); ?>"
+                                                       data-order_customer_file_status="<?php echo e($order->customer_signing_status); ?>"
                                                        class="review_add_modal"
                                                       ><i class="las la-star text-success"></i> <?php echo e(__('Review')); ?> </a>
                                             </li>
@@ -712,10 +740,8 @@
                             <select name="status" id="status" class="form-control">
                                 <option value=""><?php echo e(__('Select Status')); ?></option>
                                 <option value="2"><?php echo e(__('Completed')); ?></option>
-                                
                             </select>
                             <p id="completed-text" class="text-info mt-2" style="display: none;"><?php echo e(__('Completed: Service Request is completed and closed.')); ?></p>
-                            
                         </div>
 
                         <div class="form-group m-3">
@@ -733,6 +759,34 @@
                             </div>
                         </div>
 
+                        <div class="form-group m-3">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="media-upload-btn-wrapper">
+                                        <div class="img-wrap"></div>
+                                        <p id="fileLink"></p>
+                                        <button id="signDocumentBtn" type="button" class="btn btn-info" data-file-link="">
+                                            <?php echo e(__('Sign Document')); ?>
+
+                                        </button>
+                                        <small><?php echo e(__('Sign the document')); ?></small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="media-upload-btn-wrapper" style="padding-top: 5px">
+                                        <div id="timerDisplay">Time left: 3:00</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="media-upload-btn-wrapper">
+                                        <div id="iframeContainer" style="margin-top: 20px;">
+                                            <p>Signing Status</p>
+                                            <p id="fileStatus"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo e(__('Close')); ?></button>
@@ -771,6 +825,34 @@
                                     <div class="single-input">
                                         <label for="ticketTitle" class="label_title"><?php echo e(__('Comments')); ?></label>
                                         <textarea id="message" name="message" cols="20" rows="4"  class="form--control radius-10 textarea-input" placeholder="<?php echo e(__('Post Comments')); ?>"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group m-3">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="media-upload-btn-wrapper">
+                                            <div class="img-wrap"></div>
+                                            <p id="fileLinkOfCustomer"></p>
+                                            <button id="signDocumentBtnOfCustomer" type="button" class="btn btn-info" data-order_customer_file_link="">
+                                                <?php echo e(__('Sign Document')); ?>
+
+                                            </button>
+                                            <small><?php echo e(__('Sign the document')); ?></small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="media-upload-btn-wrapper" style="padding-top: 5px">
+                                            <div id="timerDisplayOfCustomer">Time left: 3:00</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="media-upload-btn-wrapper">
+                                            <div id="iframeContainerOfCustomer" style="margin-top: 20px;">
+                                                <p><?php echo e(__('Signing Status')); ?></p>
+                                                <p id="fileStatusOfCustomer"></p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1040,7 +1122,6 @@
                     e.preventDefault();
                     let order_id = $(this).data('id');
                     let modalContainer = $('#extraServiceRequest');
-
                     modalContainer.find('input[name="order_id"]').val(order_id);
                 });
 
@@ -1109,6 +1190,215 @@
                     $('#incompetent-text').hide();
                 }
             });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // For editStatusModal model
+            const editStatusModal = document.getElementById('editStatusModal');
+            editStatusModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const orderId = button.getAttribute('data-id');
+                const modal = this;
+                modal.querySelector('#order_id').value = orderId;
+                // Make an XHR call to get the updated file signing status
+                fetchUpdatedData(orderId);
+            });
+
+            const signDocumentBtn = document.getElementById('signDocumentBtn');
+            signDocumentBtn.addEventListener('click', function () {
+                const fileLink = this.getAttribute('data-file-link');
+                if (fileLink) {
+                    const width = 1000;
+                    const height = 800;
+                    const left = (screen.width / 2) - (width / 2);
+                    const top = (screen.height / 2) - (height / 2);
+                    const signWindow = window.open(fileLink, 'SignDocumentWindow', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
+
+                    // Set the timer duration (in seconds)
+                    let timerDuration = 180;
+                    const timerDisplay = document.getElementById('timerDisplay');
+
+                    // Update the timer every second
+                    const countdownTimer = setInterval(function () {
+                        if (timerDuration > 0) {
+                            timerDuration--;
+                            const minutes = Math.floor(timerDuration / 60);
+                            const seconds = timerDuration % 60;
+                            timerDisplay.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        } else {
+                            clearInterval(countdownTimer);
+                        }
+                    }, 1000);
+
+                    // Close the window after 3 minutes (180000 milliseconds)
+                    const autoCloseTimer = setTimeout(function () {
+                        signWindow.close();
+                    }, 180000);
+
+                    // Check if the window is closed manually
+                    const checkWindowClosed = setInterval(function () {
+                        if (signWindow.closed) {
+                            clearInterval(checkWindowClosed);
+                            clearInterval(countdownTimer);
+                            clearTimeout(autoCloseTimer);
+                            timerDisplay.textContent = "Signing window has closed.";
+                            const orderId = document.querySelector('#order_id').value;
+                            fetchUpdatedData(orderId);
+                        }
+                    }, 500);
+                } else {
+                    alert('No file link provided.');
+                }
+            });
+
+
+            // For reviewModal model
+            const reviewModal = document.getElementById('reviewModal');
+            reviewModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget; 
+                const orderId = button.getAttribute('data-order_id');
+                const modal = this;
+                modal.querySelector('#order_id').value = orderId;
+                // Make an XHR call to get the updated file signing status
+                fetchUpdatedData(orderId);
+            });
+
+            const signDocumentBtnOfCustomer = document.getElementById('signDocumentBtnOfCustomer');
+            signDocumentBtnOfCustomer.addEventListener('click', function () {
+                const customerFileLink = this.getAttribute('data-order_customer_file_link');
+                if (customerFileLink) {
+                    const width = 1000;
+                    const height = 800;
+                    const left = (screen.width / 2) - (width / 2);
+                    const top = (screen.height / 2) - (height / 2);
+                    const signWindowOfCustomer = window.open(customerFileLink, 'SignDocumentWindowOfCustomer', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
+
+                    // Set the timer duration (in seconds)
+                    let timerDuration = 180;
+                    const timerDisplayOfCustomer = document.getElementById('timerDisplayOfCustomer');
+
+                    // Update the timer every second
+                    const countdownTimer = setInterval(function () {
+                        if (timerDuration > 0) {
+                            timerDuration--;
+                            const minutes = Math.floor(timerDuration / 60);
+                            const seconds = timerDuration % 60;
+                            timerDisplayOfCustomer.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        } else {
+                            clearInterval(countdownTimer);
+                        }
+                    }, 1000);
+
+                    // Close the window after 3 minutes (180000 milliseconds)
+                    const autoCloseTimer = setTimeout(function () {
+                        signWindow.close();
+                    }, 180000);
+
+                    const checkWindowClosed = setInterval(function () {
+                        if (signWindowOfCustomer.closed) {
+                            clearInterval(checkWindowClosed);
+                            clearInterval(countdownTimer);
+                            clearTimeout(autoCloseTimer);
+                            timerDisplayOfCustomer.textContent = "Signing window has closed.";
+                            const orderId = document.querySelector('#order_id').value;
+                            fetchUpdatedDataOfCustomer(orderId);
+                        }
+                    }, 1000);
+                } else {
+                    alert('No file link provided.');
+                }
+            });
+
+            // fetch updated data using xhr call
+            function fetchUpdatedData(orderId) {
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', `/providers/serviceprovider/ordersdetailsupdateapi/${orderId}`, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log("XHR Success");
+                        // Parse the JSON response
+                        const response = JSON.parse(xhr.responseText);
+                        const fileLink = response.service_provider_file_link;
+                        const fileSigningStatus = response.service_provider_signing_status;
+                        // Update the modal's fileStatusOfCustomer element
+                        updateDOM(fileSigningStatus, fileLink)
+                    } else if (xhr.readyState === 4) {
+                        console.error('Failed to fetch updated data.');
+                    }
+                };
+                xhr.send();
+            }
+
+            // fetch updated data using xhr call
+            function fetchUpdatedDataOfCustomer(orderId) {
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', `/providers/serviceprovider/ordersdetailsupdateapi/${orderId}`, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log("XHR Success");
+                        // Parse the JSON response
+                        const response = JSON.parse(xhr.responseText);
+                        const fileLink = response.customer_file_link;
+                        const fileSigningStatus = response.customer_signing_status;
+                        // Update the modal's fileStatusOfCustomer element
+                        updateDOMOfCustomer(fileSigningStatus, fileLink)
+                    } else if (xhr.readyState === 4) {
+                        console.error('Failed to fetch updated data.');
+                    }
+                };
+                xhr.send();
+            }
+            // update DOM
+            function updateDOM(status, link) {
+                signDocumentBtn.setAttribute('data-file-link', link);
+                const fileStatusElement = document.querySelector('#fileStatus');
+                fileStatusElement.textContent = status;
+                setFileStatusColor(status);
+                if (link && status !== 'Signed') {
+                    signDocumentBtn.disabled = false;
+                } else {
+                    signDocumentBtn.disabled = true;
+                    timerDisplay.textContent = '';
+                }
+            }
+
+            // update DOM
+            function updateDOMOfCustomer(status, link) {
+                signDocumentBtn.setAttribute('data-order_customer_file_link', link);
+                const fileStatusElement = document.querySelector('#fileStatusOfCustomer');
+                fileStatusElement.textContent = status;
+                setFileStatusColorOfCustomer(status);
+                if (link && status !== 'Signed') {
+                    signDocumentBtn.disabled = false;
+                } else {
+                    signDocumentBtn.disabled = true;
+                    timerDisplayOfCustomer.textContent = '';
+                }
+            }
+
+            // set file status color
+            function setFileStatusColor(status) {
+                const fileStatusElement = document.querySelector('#fileStatus');
+                if (status === 'Pending') {
+                    fileStatusElement.style.color = 'red';
+                } else if (status === 'Signed') {
+                    fileStatusElement.style.color = 'green';
+                } else {
+                    fileStatusElement.style.color = 'black';
+                }
+            }
+
+            // set file status color
+            function setFileStatusColorOfCustomer(status) {
+                const fileStatusElement = document.querySelector('#fileStatusOfCustomer');
+                if (status === 'Pending') {
+                    fileStatusElement.style.color = 'red';
+                } else if (status === 'Signed') {
+                    fileStatusElement.style.color = 'green';
+                } else {
+                    fileStatusElement.style.color = 'black';
+                }
+            }
         });
     </script>
 <?php $__env->stopSection(); ?>

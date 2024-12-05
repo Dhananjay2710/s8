@@ -206,7 +206,7 @@
                                 <thead>
                                 <tr>
                                     <th> <?php echo e(__('ID')); ?></th>
-                                    <th> <?php echo e(__('Payment Gateway')); ?> </th>
+                                    <th> <?php echo e(__('Payment Method')); ?> </th>
                                     <th> <?php echo e(__('Request Date')); ?> </th>
                                     <th> <?php echo e(__('Request Amount')); ?> </th>
                                     <th> <?php echo e(__('Request Status')); ?> </th>
@@ -281,9 +281,9 @@
                             <input type="number" class="form-control" name="amount" id="amount" placeholder="<?php echo e(__('amount')); ?>">
                         </div>
                         <div class="form-group mt-2">
-                            <label for="payment_gateway" class="label_title"><?php echo e(__('Payment Gateway')); ?></label>
+                            <label for="payment_gateway" class="label_title"><?php echo e(__('Payment Method')); ?></label>
                             <select name="payment_gateway" id="payment_gateway" class="form-control nice-select">
-                                <option value=""><?php echo e(__('Select Payment gateway')); ?></option>
+                                <option value=""><?php echo e(__('Select Payment Method')); ?></option>
                                 <?php
                                     $all_gateways = ['paypal','manual_payment','mollie','paytm','stripe','razorpay','flutterwave','paystack','marcadopago','instamojo','cashfree','payfast','midtrans'];
                                 ?>

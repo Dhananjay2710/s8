@@ -12,7 +12,7 @@
                         <h4 class="header-title">{{__('New User')}}</h4>
                         @include('backend/partials/message')
                         @include('backend/partials/error')
-                        <form action="{{route('admin.frontend.new.user')}}" method="post" enctype="multipart/form-data">
+                        <form action="{{route('admin.all.frontend.store-new-user')}}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="name">{{__('Name')}}</label>
@@ -56,13 +56,19 @@
                                 <label for="email">{{__('Designation')}}</label>
                                 <input type="text" class="form-control"  id="designation" name="designation" placeholder="{{__('Designation')}}">
                             </div>
-
                             <div class="form-group">
                                 <label for="email">{{__('Description')}}</label>
                                 <textarea class="form-control" cols="5" name="description" id="description"></textarea>
                             </div>
-                            
-                            
+                            <div class="form-group">
+                                <label for="userType">{{'User Type'}}</label>
+                                <select name="userType" class="form-control">
+                                    <option value="">{{__('Select User Type')}}</option>
+                                    @foreach($userTypes as $userType)
+                                    <option value="{{$userType}}">{{$userType}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label for="password">{{__('Password')}}</label>
                                 <input type="password" class="form-control"  id="password" name="password" placeholder="{{__('Password')}}">

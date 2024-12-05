@@ -1,6 +1,6 @@
 
 <?php $__env->startSection('site-title'); ?>
-    <?php echo e(__('Seller Dashboard')); ?>
+    <?php echo e(__('Service Provider Dashboard')); ?>
 
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>

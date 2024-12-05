@@ -160,6 +160,14 @@
                                             href="{{ route('admin.all.frontend.user') }}">{{ __('All Users') }}</a></li>
                                 @endcan
                                 @can('user-list')
+                                    <li class="{{ active_menu('admin-home/frontend/user-type') }}"><a
+                                            href="{{ route('admin.all.frontend.usertype') }}">{{ __('User Type') }}</a></li>
+                                @endcan
+                                @can('user-list')
+                                    <li class="{{ active_menu('admin-home/frontend/add-new-user') }}"><a
+                                            href="{{ route('admin.all.frontend.add-new-user') }}">{{ __('Add New User') }}</a></li>
+                                @endcan
+                                @can('user-list')
                                     <li class="{{ active_menu('admin-home/frontend/deactive-users') }}">
                                         <a href="{{ route('admin.all.frontend.deactive.user') }}">{{ __('Deactive Users') }}</a>
                                     </li>

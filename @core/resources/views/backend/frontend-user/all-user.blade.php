@@ -198,6 +198,15 @@
                             </div>
                             <small class="form-text text-muted">{{__('allowed image format: jpg,jpeg,png')}}</small>
                         </div>
+                        <div class="form-group">
+                            <label for="service_provider_type">{{'User Type'}}</label>
+                            <select name="service_provider_type" class="form-control">
+                                <option value="">{{__('Select User Type')}}</option>
+                                @foreach($userTypes as $userType)
+                                <option value="{{$userType->name}}">{{$userType->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
                     </div>
                     <div class="modal-footer">

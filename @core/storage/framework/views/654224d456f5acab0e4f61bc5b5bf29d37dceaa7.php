@@ -82,111 +82,6 @@
                     </div>   
                     <div class="card">
                         <div class="card-body">
-                            <div class="border-bottom mb-3">
-                                <h5><?php echo e(__('Service Provider Account Details')); ?></h5>
-                            </div>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th><strong><?php echo e(__('Item')); ?> </strong></th>
-                                        <th><strong><?php echo e(__('Deatils As Per Bank Account')); ?> </strong></th>
-                                        <th><strong><?php echo e(__('Status')); ?> </strong></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><strong>Account Number</strong></td>
-                                        <td><?php echo e($seller_verification_data['account_number'] == "" ? "NA" : $seller_verification_data['account_number']); ?></td>
-                                        <td>
-                                            <?php if($seller_verification_data['is_account_verified']!=""): ?>
-                                                <?php if($seller_verification_data['is_account_verified']==1): ?>
-                                                    <span class="text-success"><strong style="background: green; padding: 6px; color: white;"><?php echo e(__('Verified')); ?></strong></span>
-                                                    
-                                                <?php else: ?>
-                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;"><?php echo e(__('Not Verified')); ?></strong></span>
-                                                    
-                                                <?php endif; ?>
-                                            <?php else: ?>
-                                                <span class="text-info"><strong><?php echo e(__('NA')); ?></strong></span>
-                                            <?php endif; ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>IFSC Number</strong></td>
-                                        <td><?php echo e($seller_verification_data['ifsc_number'] == "" ? "NA" : $seller_verification_data['ifsc_number']); ?></td>
-                                        <td>
-                                            <?php if($seller_verification_data['is_account_verified']!=""): ?>
-                                                <?php if($seller_verification_data['is_account_verified']==1): ?>
-                                                    <span class="text-success"><strong style="background: green; padding: 6px; color: white;" ><?php echo e(__('Matched')); ?></strong></span>
-                                                    
-                                                <?php else: ?>
-                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;"><?php echo e(__('Not Matched')); ?></strong></span>
-                                                    
-                                                <?php endif; ?>
-                                            <?php else: ?>
-                                                <span class="text-info"><strong><?php echo e(__('NA')); ?></strong></span>
-                                            <?php endif; ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Mobile Number</strong></td>
-                                        <td><?php echo e($seller_verification_data['mobile_number'] == "" ? "NA" : $seller_verification_data['mobile_number']); ?></td>
-                                        <td>
-                                            <?php if($seller_verification_data['is_account_verified']!=""): ?>
-                                                <?php if($seller_verification_data['is_account_verified']==1): ?>
-                                                    <span class="text-success"><strong style="background: green; padding: 6px; color: white;"><?php echo e(__('Matched')); ?></strong></span>
-                                                    
-                                                <?php else: ?>
-                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;"><?php echo e(__('Not Matched')); ?></strong></span>
-                                                    
-                                                <?php endif; ?>
-                                            <?php else: ?>
-                                                <span class="text-info"><strong><?php echo e(__('NA')); ?></strong></span>
-                                            <?php endif; ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Name</strong></td>
-                                        <td><?php echo e($seller_verification_data['name_as_per_bank_account_number'] == "" ? "NA" : $seller_verification_data['name_as_per_bank_account_number']); ?></td>
-                                        <td>
-                                            <?php if($seller_verification_data['is_account_verified']!=""): ?>
-                                                <?php if($seller_verification_data['is_account_verified']==1): ?>
-                                                    <span class="text-info"><strong style="background: green; padding: 6px; color: white;"><?php echo e(__('Matched')); ?></strong></span>
-                                                <?php else: ?>
-                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;"><?php echo e(__('Not Matched')); ?></strong></span>
-                                                <?php endif; ?>
-                                            <?php else: ?>
-                                                <span class="text-info"><strong><?php echo e(__('NA')); ?></strong></span>
-                                            <?php endif; ?>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>   
-                </div>
-                <div class="col-lg-7 mt-5">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="border-bottom mb-3">
-                                <h5><?php echo e(__('Service Provider National ID')); ?></h5>
-                            </div>
-                            <div class="single-checbox">
-                                <div class="checkbox-inlines">
-                                    <?php echo render_image_markup_by_attachment_id(optional($seller_details->sellerVerify)->national_id,'','large'); ?>
-
-                                </div>
-                            </div>   
-                            <br>
-                            <div class="border-bottom mt-5 mb-3">
-                                <h5><?php echo e(__('Service Provider Address')); ?></h5>
-                            </div>
-                            <div class="single-checbox">
-                                <div class="checkbox-inlines">
-                                    <?php echo render_image_markup_by_attachment_id(optional($seller_details->sellerVerify)->address,'','large'); ?>
-
-                                </div>
-                            </div>
                             <div class="border-bottom mt-5 mb-3">
                                 <h5><?php echo e(__('Service Provider Aadhaar Deatils')); ?></h5>
                             </div>
@@ -299,6 +194,113 @@
                                                 <?php else: ?>
                                                     <span class="text-danger"><strong style="background: red; padding: 6px; color: white;"><?php echo e(__('Not Matched')); ?></strong></span>
                                                     
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <span class="text-info"><strong><?php echo e(__('NA')); ?></strong></span>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>   
+                </div>
+                <div class="col-lg-7 mt-5">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="border-bottom mb-3">
+                                <h5><?php echo e(__('Service Provider National ID')); ?></h5>
+                            </div>
+                            <div class="single-checbox">
+                                <div class="checkbox-inlines">
+                                    <?php echo render_image_markup_by_attachment_id(optional($seller_details->sellerVerify)->national_id,'','large'); ?>
+
+                                </div>
+                            </div>   
+                            <br>
+                            <div class="border-bottom mt-5 mb-3">
+                                <h5><?php echo e(__('Service Provider Address')); ?></h5>
+                            </div>
+                            <div class="single-checbox">
+                                <div class="checkbox-inlines">
+                                    <?php echo render_image_markup_by_attachment_id(optional($seller_details->sellerVerify)->address,'','large'); ?>
+
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="border-bottom mb-3">
+                                <h5><?php echo e(__('Service Provider Account Details')); ?></h5>
+                            </div>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th><strong><?php echo e(__('Item')); ?> </strong></th>
+                                        <th><strong><?php echo e(__('Deatils As Per Bank Account')); ?> </strong></th>
+                                        <th><strong><?php echo e(__('Status')); ?> </strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Account Number</strong></td>
+                                        <td><?php echo e($seller_verification_data['account_number'] == "" ? "NA" : $seller_verification_data['account_number']); ?></td>
+                                        <td>
+                                            <?php if($seller_verification_data['is_account_verified']!=""): ?>
+                                                <?php if($seller_verification_data['is_account_verified']==1): ?>
+                                                    <span class="text-success"><strong style="background: green; padding: 6px; color: white;"><?php echo e(__('Verified')); ?></strong></span>
+                                                    
+                                                <?php else: ?>
+                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;"><?php echo e(__('Not Verified')); ?></strong></span>
+                                                    
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <span class="text-info"><strong><?php echo e(__('NA')); ?></strong></span>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>IFSC Number</strong></td>
+                                        <td><?php echo e($seller_verification_data['ifsc_number'] == "" ? "NA" : $seller_verification_data['ifsc_number']); ?></td>
+                                        <td>
+                                            <?php if($seller_verification_data['is_account_verified']!=""): ?>
+                                                <?php if($seller_verification_data['is_account_verified']==1): ?>
+                                                    <span class="text-success"><strong style="background: green; padding: 6px; color: white;" ><?php echo e(__('Matched')); ?></strong></span>
+                                                    
+                                                <?php else: ?>
+                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;"><?php echo e(__('Not Matched')); ?></strong></span>
+                                                    
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <span class="text-info"><strong><?php echo e(__('NA')); ?></strong></span>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Mobile Number</strong></td>
+                                        <td><?php echo e($seller_verification_data['mobile_number'] == "" ? "NA" : $seller_verification_data['mobile_number']); ?></td>
+                                        <td>
+                                            <?php if($seller_verification_data['is_account_verified']!=""): ?>
+                                                <?php if($seller_verification_data['is_account_verified']==1): ?>
+                                                    <span class="text-success"><strong style="background: green; padding: 6px; color: white;"><?php echo e(__('Matched')); ?></strong></span>
+                                                    
+                                                <?php else: ?>
+                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;"><?php echo e(__('Not Matched')); ?></strong></span>
+                                                    
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <span class="text-info"><strong><?php echo e(__('NA')); ?></strong></span>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Name</strong></td>
+                                        <td><?php echo e($seller_verification_data['name_as_per_bank_account_number'] == "" ? "NA" : $seller_verification_data['name_as_per_bank_account_number']); ?></td>
+                                        <td>
+                                            <?php if($seller_verification_data['is_account_verified']!=""): ?>
+                                                <?php if($seller_verification_data['is_account_verified']==1): ?>
+                                                    <span class="text-info"><strong style="background: green; padding: 6px; color: white;"><?php echo e(__('Matched')); ?></strong></span>
+                                                <?php else: ?>
+                                                    <span class="text-danger"><strong style="background: red; padding: 6px; color: white;"><?php echo e(__('Not Matched')); ?></strong></span>
                                                 <?php endif; ?>
                                             <?php else: ?>
                                                 <span class="text-info"><strong><?php echo e(__('NA')); ?></strong></span>

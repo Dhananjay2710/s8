@@ -18,7 +18,7 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('site-title'); ?>
-    <?php echo e(__('Payment Gateway Settings')); ?>
+    <?php echo e(__('Payment Method Settings')); ?>
 
 <?php $__env->stopSection(); ?>
 
@@ -29,7 +29,7 @@
                 <?php echo $__env->make('backend.partials.message', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="header-title"><?php echo e(__("Payment Gateway Settings")); ?></h4>
+                        <h4 class="header-title"><?php echo e(__("Payment Method Settings")); ?></h4>
                         <?php echo $__env->make('backend/partials/error', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                         <form action="<?php echo e(route('admin.general.payment.settings')); ?>" method="POST"
                               enctype="multipart/form-data">
@@ -80,7 +80,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="site_default_payment_gateway"><?php echo e(__('Default Payment Gateway')); ?></label>
+                                        <label for="site_default_payment_gateway"><?php echo e(__('Default Payment Method')); ?></label>
                                         <select name="site_default_payment_gateway" class="form-control" >
                                             <?php
                                                 $all_gateways = \App\Helpers\PaymentGatewayRenderHelper::listOfPaymentGateways();
@@ -1555,6 +1555,68 @@
                                                 </div>
                                             </div>
 
+                                            <div class="card">
+                                                <div class="card-header" id="annual_maintenance_charge_settings">
+                                                    <h5 class="mb-0">
+                                                        <button class="btn btn-link collapsed" type="button"
+                                                                data-toggle="collapse"
+                                                                data-target="#annual_maintenance_charge_settings_content"
+                                                                aria-expanded="false">
+                                                            <span class="page-title"> <?php echo e(__('Annual Maintenance Charge Settings')); ?></span>
+                                                        </button>
+                                                    </h5>
+                                                </div>
+                                                <div id="annual_maintenance_charge_settings_content" class="collapse"
+                                                     data-parent="#accordion-payment">
+                                                    <div class="card-body">
+                                                        <div class="form-group">
+                                                            <label for="cash_on_delivery_gateway"><strong><?php echo e(__('Enable Annual Maintenance Charge')); ?></strong></label>
+                                                            <label class="switch">
+                                                                <input type="checkbox" name="annual_maintenance_charge_gateway"
+                                                                       <?php if(!empty(get_static_option('annual_maintenance_charge_gateway'))): ?> checked
+                                                                       <?php endif; ?> id="annual_maintenance_charge_gateway">
+                                                                <span class="slider onff"></span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="site_logo"><strong><?php echo e(__('Annual Maintenance Charge Logo')); ?></strong></label>
+                                                            <div class="media-upload-btn-wrapper">
+                                                                <div class="img-wrap">
+                                                                    <?php
+                                                                        $paypal_img = get_attachment_image_by_id(get_static_option('cash_on_delivery_preview_logo'),null,true);
+                                                                        $paypal_image_btn_label = 'Upload Image';
+                                                                    ?>
+                                                                    <?php if(!empty($paypal_img)): ?>
+                                                                        <div class="attachment-preview">
+                                                                            <div class="thumbnail">
+                                                                                <div class="centered">
+                                                                                    <img class="avatar user-thumb"
+                                                                                         src="<?php echo e($paypal_img['img_url']); ?>"
+                                                                                         alt="">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <?php  $paypal_image_btn_label = 'Change Image'; ?>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                                <input type="hidden" id="annual_maintenance_charge_preview_logo"
+                                                                       name="annual_maintenance_charge_preview_logo"
+                                                                       value="<?php echo e(get_static_option('annual_maintenance_charge_logo')); ?>">
+                                                                <button type="button"
+                                                                        class="btn btn-info media_upload_form_btn"
+                                                                        data-btntitle="Select Image"
+                                                                        data-modaltitle="Upload Image"
+                                                                        data-toggle="modal"
+                                                                        data-target="#media_upload_modal">
+                                                                    <?php echo e(__($paypal_image_btn_label)); ?>
+
+                                                                </button>
+                                                            </div>
+                                                            <small class="form-text text-muted"><?php echo e(__('allowed image format: jpg,jpeg,png. Recommended image size 160x50')); ?></small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             
                                             <?php echo (new \App\Helpers\ModuleMetaData())->renderAllPaymentGatewaySettingsBlade(); ?>
 

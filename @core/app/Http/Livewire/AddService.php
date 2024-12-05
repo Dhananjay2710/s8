@@ -11,6 +11,7 @@ use App\Service;
 use App\Serviceadditional;
 use App\Servicebenifit;
 use App\Serviceinclude;
+use App\Serviceaddresses;
 use App\Tax;
 use App\User;
 use Carbon\Carbon;
@@ -57,17 +58,17 @@ class AddService extends Component
 
         }else{
             return[
-             'category' => 'required',
-            'subcategory' => 'required',
-            'services.title' => 'required|max:191|unique:services',
-            'services.description' => 'required|min:150',
-            'services.slug' => 'required',
+                'category' => 'required',
+                'subcategory' => 'required',
+                'services.title' => 'required|max:191|unique:services',
+                'services.description' => 'required|min:150',
+                'services.slug' => 'required',
             ];
         }
     }
 
     // include service
-    public $include_service_title, $include_service_price,$includes_services = [], $i_include = 1;
+    public $include_service_title, $include_service_price, $includes_services = [], $i_include = 1;
     public function addIncludeServices($i_include)
     {
         $i_include = $i_include + 1;
@@ -80,7 +81,26 @@ class AddService extends Component
         unset($this->includes_services[$i_include]);
     }
 
- //include service
+    // Postcode Service
+    public $include_service_postcode, $address_service = [], $a_include = 1;
+    public function addAddressServices($a_include)
+    {
+        \Log::debug("addAddressServices Start \n a_include value : " . $a_include);
+        
+        $a_include = $a_include + 1;
+        \Log::debug("Updated value of a_include : " . $a_include);
+        $this->a_include = $a_include;
+        $this->address_service[] = $a_include;
+        $this->current_tab = 'service-attribute-tab';
+        \Log::debug("addAddressServices End");
+    }
+
+    public function removeAddressServices($a_include)
+    {
+        unset($this->address_service[$a_include]);
+    }
+
+    // Additional service
     public $additional_service_title, $additional_service_price, $additional_service_image, $additional_service_inputs = [], $i_additional = 1;
     public function addAdditionalService($i_additional)
     {
@@ -144,7 +164,7 @@ class AddService extends Component
 
     public function serviceStore()
     {
-
+        \Log::debug("Service Store Start");
         $commissionGlobal = AdminCommission::first();
         if(moduleExists('Subscription') && $commissionGlobal->system_type == 'subscription' && empty(auth('web')->user()->subscribedSeller)){
             session()->flash('message', __('you must have to subscribe any of our package in service request to start selling your services.'));
@@ -165,6 +185,7 @@ class AddService extends Component
             // type example(monthly, yearly, liveTime) Step:4 seller total service check to subscription service count
 
             //commission type check
+            \Log::debug("commission type check");
             $commission = AdminCommission::first();
             if($commission->system_type == 'subscription'){              
                 if(subscriptionModuleExistsAndEnable('Subscription')){
@@ -206,8 +227,9 @@ class AddService extends Component
                 }
             }
 
+           \Log::debug("Before validate");
            $this->validate();
-
+           \Log::debug("After validate");
 
             $seller_country = User::select('id', 'country_id')->where('country_id', Auth::guard('web')->user()->country_id)->first();
             $country_tax = Tax::select('tax')->where('country_id', $seller_country->country_id)->first();
@@ -368,6 +390,23 @@ class AddService extends Component
         }
         OnlineServiceFaq::insert($online_service_faqs);
 
+        // Addresses Add
+        if (!empty($this->include_service_postcode)) {
+            foreach ($this->include_service_postcode as $key => $value) {
+                \Log::debug("Key : " . $key);
+                \Log::debug("Value : " . $value);
+                if (!empty($this->include_service_postcode[$key])) {
+                    $service_addresses[] = [
+                        'service_id' => $service->id,
+                        'seller_id' => Auth::guard('web')->user()->id,
+                        'service_city_id' => Auth::guard('web')->user()->service_city,
+                        'service_area_id' => Auth::guard('web')->user()->service_area,
+                        'service_post_code' => $this->include_service_postcode[$key] ?? 0,
+                    ];
+                }
+            }
+        }
+        Serviceaddresses::insert($service_addresses);
 
         // reset service form and message show
         $this->serviceResetForm();

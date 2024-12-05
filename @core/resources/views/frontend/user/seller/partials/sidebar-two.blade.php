@@ -12,11 +12,15 @@
             <ul class="dashboard__bottom__list dashboard-list">
 
                 <li class="dashboard__bottom__list__item @if(request()->is('seller/dashboard*')) active @elseif(request()->is('serviceprovider/dashboard*')) active @endif">
-                    <a href="{{ route('seller.dashboard') }}"><i class="las la-chart-bar"></i> {{ __('Dashboard') }}</a>
+                    <a href="{{ route('seller.dashboard') }}"><i class="las la-tachometer-alt"></i> {{ __('Dashboard') }}</a>
                 </li>
 
                 <li class="dashboard__bottom__list__item @if(request()->is('seller/profile*')) active @elseif(request()->is('serviceprovider/profile*')) active @endif">
                     <a href="{{ route('seller.profile')}}"><i class="las la-user-alt"></i> {{ __('Profile') }}</a>
+                </li>
+
+                <li class="dashboard__bottom__list__item @if(request()->is('seller/company*')) active @elseif(request()->is('serviceprovider/company*')) active @endif">
+                    <a href="{{ route('seller.company')}}"><i class="las la-building"></i> {{ __('Company') }}</a>
                 </li>
 
                 @if(moduleExists('LiveChat'))

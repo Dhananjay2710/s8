@@ -46,9 +46,12 @@ use Modules\Wallet\Entities\Wallet;
 use Modules\Wallet\Entities\WalletHistory;
 use Modules\LiveChat\Entities\LiveChatMessage;
 use function GuzzleHttp\Promise\all;
+use App\UserType;
+use Str;
 
 class FrontendUserManageController extends Controller
 {
+    const BASE_PATH ='backend.frontend-user.';
     public function __construct()
     {
         $this->middleware('auth:admin');
@@ -72,7 +75,7 @@ class FrontendUserManageController extends Controller
                     return $row->id;
                 })
                 ->addColumn('name',function ($row){
-                        $user_type = $row->user_type==0 ? __("Service Provider") : __("Customer");
+                        $user_type = $row->user_type==0 ? __("Service Provider - " . $row->service_provider_type ?? "NA") : __("Customer");
                         return $row->name." "."<".$row->username.">"."(".$user_type.")";
                 })
                 ->addColumn('user_status',function ($row) {
@@ -157,7 +160,110 @@ class FrontendUserManageController extends Controller
         $countries = Country::all();
         $cities = ServiceCity::all();
         $areas = ServiceArea::all();
-        return view('backend.frontend-user.all-user',compact('countries', 'cities', 'areas'));
+        $userTypes = UserType::all();
+        return view('backend.frontend-user.all-user',compact('countries', 'cities', 'areas', 'userTypes'));
+    }
+
+    public function all_user_type(){
+        $usertypes = UserType::all();
+        return view(self::BASE_PATH.'usertype.index',compact('usertypes'));
+    }
+
+    public function new_user_type(){
+        $permissions = "";
+        return view(self::BASE_PATH.'usertype.create',compact('permissions'));
+    }
+    public function store_new_user_type(Request $request){
+        $this->validate($request,[
+            'name' => 'required|string|max:191'
+        ]);
+        $role = UserType::create(['name' => $request->name]);
+        return back()->with(FlashMsg::settings_update('New User Type Created'));
+    }
+
+    public function edit_user_type($id){
+        $userType = UserType::find($id);
+        return view(self::BASE_PATH.'usertype.edit',compact('userType'));
+    }
+
+    public function update_user_type(Request $request){
+        $this->validate($request,[
+            'name' => 'required|string|max:191',
+        ]);
+        $userType = UserType::find($request->id);
+        $userType->name = $request->input('name');
+        $userType->save();
+
+        return back()->with(FlashMsg::settings_update('User Type Updated'));
+    }
+
+    public function delete_user_type($id){
+        UserType::findOrfail($id)->delete();
+        return back()->with(FlashMsg::settings_delete('User Type Deleted'));
+    }
+
+    public function add_new_user(){
+        $userTypes = UserType::pluck('name','name')->all();
+        return view(self::BASE_PATH.'add-new-user',compact('userTypes'));
+    }
+
+    public function store_new_user(Request $request)
+    {
+        $this->validate($request,[
+            'name' => 'required|string|max:191',
+            'username' => 'required|string|max:191|unique:admins',
+            'email' => 'required|email|max:191',
+            'password' => 'required|min:8|confirmed',
+            'description' => 'nullable|string',
+            'designation' => 'nullable|string',
+            'userType' => 'nullable|string',
+        ]);
+        $email_verify_tokn = Str::random(8);
+        $passowrd = $request->password."@".rand(0000, 9999);
+        $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'username' => $request->username,
+                'phone' => $request->phone,
+                'password' => Hash::make($passowrd),
+                'user_type' => 0,
+                'terms_conditions' => 1,
+                'email_verify_token'=> $email_verify_tokn,
+                'description' => $request->description,
+                'designation' => $request->designation,
+                'service_provider_type' => $request->userType,
+        ]);
+       
+        if($user){
+            try {
+                $message = get_static_option('customer_register_message');
+                $subject = get_static_option('customer_register_message_subject');
+                $message = str_replace(["@name", "@type", "@username", "@password"],[$user->name, "customer", $user->name, $passowrd],$message);
+                Mail::to($user->email)->send(new BasicMail([
+                    'subject' => get_static_option('customer_register_message_subject'),
+                    'message' => $message
+                ]));
+
+                $message = get_static_option('user_email_verify_message');
+                $message = str_replace(["@name", "@email_verify_tokn"],[$user->name, $email_verify_tokn],$message);
+                Mail::to($user->email)->send(new BasicMail([
+                    'subject' => get_static_option('user_email_verify_subject'),
+                    'message' => $message
+                ]));
+    
+                $message = get_static_option('user_register_message');
+                $message = str_replace(["@name", "@type","@username","@email"],[$user->name, "customer", $user->name, $user->email], $message);
+                Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
+                    'subject' => get_static_option('user_register_subject') ?? __('New User Registration'),
+                    'message' => $message
+                ]));
+            } catch (\Exception $e) {
+    
+            }
+        }
+
+        toastr_success(__('New User Added Success---'));
+        return redirect()->back()->with(['msg' => __('New User Added'),'type' =>'success' ]);
     }
 
     public function sellerAll()
@@ -475,6 +581,7 @@ class FrontendUserManageController extends Controller
                 'service_area' => $request->edit_area,
                 'address' => $request->edit_address,
                 'image' => $request->edit_image ?? $old_image->image,
+                'service_provider_type' => $request->service_provider_type,
             ]);
         return redirect()->back()->with(FlashMsg::item_new(__('User info update success')));
     }

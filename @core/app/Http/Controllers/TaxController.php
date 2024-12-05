@@ -18,6 +18,9 @@ class TaxController extends Controller
             ]);
             Tax::create([
                 'tax' => $request->tax,
+                'tds' => $request->tds,
+                'gstlimit' => $request->gstlimit,
+                'tdslimit' => $request->tdslimit,
                 'country_id' => $request->country_id,
 
             ]);
@@ -32,11 +35,17 @@ class TaxController extends Controller
     {
         $request->validate([
             'tax' => 'required|numeric',
+            'tds' => 'required|numeric',
+            'gstlimit' => 'required|numeric',
+            'tdslimit' => 'required|numeric',
             'country_id' => 'required|unique:taxes,country_id,'.$request->up_id,
         ]);
 
         Tax::where('id',$request->up_id)->update([
             'tax' => $request->tax,
+            'tds' => $request->tds,
+            'gstlimit' => $request->gstlimit,
+            'tdslimit' => $request->tdslimit,
             'country_id' => $request->country_id,
         ]);
         return redirect()->back()->with(FlashMsg::item_new(__('Tax Updated Success')));

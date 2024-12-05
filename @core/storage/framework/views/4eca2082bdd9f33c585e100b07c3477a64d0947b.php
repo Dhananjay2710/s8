@@ -17,6 +17,8 @@
     </style>
     <link rel="stylesheet" href="<?php echo e(asset('assets/common/css/themify-icons.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('assets/frontend/css/font-awesome.min.css')); ?>">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
     <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
@@ -299,6 +301,24 @@
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?></span>
+                                        <?php elseif($order->payment_gateway == 'annual_maintenance_charge'): ?>
+                                            <span class="text-info"><strong><?php echo e(__('Payment Type: ')); ?></strong><?php echo e(__('AMC')); ?></span>
+                                            <br>
+                                            <span><?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cancel-order','data' => ['url' => route('buyer.order.cancel.cod.payment.pending',$order->id)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('cancel-order'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('buyer.order.cancel.cod.payment.pending',$order->id))]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?></span>
                                         <?php endif; ?>
                                     <?php endif; ?>
                                     <?php if($order->payment_status == 'complete'): ?>
@@ -517,8 +537,37 @@
                                         <label for="ticketTitle" class="label_title"><?php echo e(__('Comments')); ?></label>
                                         <textarea id="message" name="message" cols="20" rows="4"  class="form--control radius-10 textarea-input" placeholder="<?php echo e(__('Post Comments')); ?>"></textarea>
                                     </div>
+                                    <div class="form-group m-3">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="media-upload-btn-wrapper">
+                                                    <div class="img-wrap"></div>
+                                                    <p id="fileLinkOfCustomer"></p>
+                                                    <button id="signDocumentBtnOfCustomer" type="button" class="btn btn-info" data-order_customer_file_link="">
+                                                        <?php echo e(__('Sign Document')); ?>
+
+                                                    </button>
+                                                    <small><?php echo e(__('Sign the document')); ?></small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="media-upload-btn-wrapper" style="padding-top: 5px">
+                                                    <div id="timerDisplay">Time left: 3:00</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="media-upload-btn-wrapper">
+                                                    <div id="iframeContainerOfCustomer" style="margin-top: 20px;">
+                                                        <p><?php echo e(__('Signing Status')); ?></p>
+                                                        <p id="fileStatusOfCustomer"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><?php echo e(__('Cancel')); ?></button>
                                 <button type="submit" class="btn btn-primary"><?php echo e(__('Send Review')); ?></button>
@@ -618,6 +667,8 @@
                 var CompleteOrderId = "<?php echo e(\Illuminate\Support\Facades\Session::get('CompleteOrderId')); ?>";
                 var seller_id = "<?php echo e(\Illuminate\Support\Facades\Session::get('seller_id')); ?>";
                 var service_id = "<?php echo e(\Illuminate\Support\Facades\Session::get('service_id')); ?>";
+                var customer_file_link = "<?php echo e(\Illuminate\Support\Facades\Session::get('customer_file_link')); ?>";
+                var customer_signing_status = "<?php echo e(\Illuminate\Support\Facades\Session::get('customer_signing_status')); ?>";
                 if(openReviewModal === 'yes'){
                     $('.review_add_modal[data-order_id="'+CompleteOrderId+'"]').trigger("click");
                     // $('.review_add_modal[data-order_id="'+CompleteOrderId+'"]').dispatchEvent(new MouseEvent("click"))
@@ -627,9 +678,98 @@
                     $('#reviewModal input[name="seller_id"]').val(seller_id);
                     $('#reviewModal input[name="service_id"]').val(service_id);
                     $('#reviewModal input[name="order_id"]').val(CompleteOrderId);
+                    $('#fileStatusOfCustomer').text(customer_signing_status);
+                    fetchUpdatedData();
                     myModal.show();
                 }
 
+                // for reviewModal model after click on yes
+                document.getElementById('signDocumentBtnOfCustomer').addEventListener('click', function() {
+                    if (customer_file_link) {
+                        const width = 1000;
+                        const height = 800;
+                        const left = (screen.width / 2) - (width / 2);
+                        const top = (screen.height / 2) - (height / 2);
+                        var signWindow = window.open(customer_file_link, 'signDocumentForCustomer', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
+                        // Set the timer duration (in seconds)
+                        let timerDuration = 180;
+                        const timerDisplay = document.getElementById('timerDisplay');
+
+                        // Update the timer every second
+                        const countdownTimer = setInterval(function () {
+                            if (timerDuration > 0) {
+                                timerDuration--;
+                                const minutes = Math.floor(timerDuration / 60);
+                                const seconds = timerDuration % 60;
+                                timerDisplay.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                            } else {
+                                clearInterval(countdownTimer);
+                            }
+                        }, 1000);
+
+                        // Close the window after 3 minutes (180000 milliseconds)
+                        const autoCloseTimer = setTimeout(function () {
+                            signWindow.close();
+                        }, 180000);
+
+                        // Check if the window is closed manually
+                        const checkWindowClosed = setInterval(function () {
+                            if (signWindow.closed) {
+                                clearInterval(checkWindowClosed);
+                                clearInterval(countdownTimer);
+                                clearTimeout(autoCloseTimer);
+                                timerDisplay.textContent = "Signing window has closed.";
+                                fetchUpdatedData();
+                            }
+                        }, 500);
+                    } else {
+                        alert('No document link is available.');
+                    }
+                });
+
+                // fetch updated data using xhr call
+                function fetchUpdatedData() {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', `/s8/serviceprovider/ordersdetailsupdateapi/${CompleteOrderId}`, true);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 200) {
+                                console.log("XHR Success");
+                                const response = JSON.parse(xhr.responseText);
+                                const updatedCustomerFileSigningStatus = response.customer_signing_status;
+                                console.log("Updated Status", updatedCustomerFileSigningStatus);
+                                const customerFileLink = response.customer_file_link;
+                                updateDOM(updatedCustomerFileSigningStatus, customerFileLink);
+                            } else {
+                                console.error('Failed to fetch updated data. Status:', xhr.status);
+                            }
+                        }
+                    };
+                    xhr.send();
+                }
+
+                // update DOM
+                function updateDOM(status, link) {
+                    const fileStatusElement = document.querySelector('#fileStatusOfCustomer');
+                    fileStatusElement.textContent = status;
+                    setFileStatusColor(status);
+                    const signDocumentBtnOfCustomer = document.querySelector('#signDocumentBtnOfCustomer');
+                    signDocumentBtnOfCustomer.setAttribute('data-order_customer_file_link', link);
+                    signDocumentBtnOfCustomer.disabled = !link || status === 'Signed';
+                    timerDisplay.textContent = '';
+                }
+
+                // set file status color
+                function setFileStatusColor(status) {
+                    const fileStatusElement = document.querySelector('#fileStatusOfCustomer');
+                    if (status === 'Pending') {
+                        fileStatusElement.style.color = 'red';
+                    } else if (status === 'Signed') {
+                        fileStatusElement.style.color = 'green';
+                    } else {
+                        fileStatusElement.style.color = 'black'; 
+                    }
+                }
 
                 // date range
                 $('.flatpickr_input').flatpickr({

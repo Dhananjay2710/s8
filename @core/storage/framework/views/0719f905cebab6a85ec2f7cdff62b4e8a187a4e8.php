@@ -283,6 +283,15 @@
                             </div>
                             <small class="form-text text-muted"><?php echo e(__('allowed image format: jpg,jpeg,png')); ?></small>
                         </div>
+                        <div class="form-group">
+                            <label for="service_provider_type"><?php echo e('User Type'); ?></label>
+                            <select name="service_provider_type" class="form-control">
+                                <option value=""><?php echo e(__('Select User Type')); ?></option>
+                                <?php $__currentLoopData = $userTypes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $userType): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($userType->name); ?>"><?php echo e($userType->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </select>
+                        </div>
 
                     </div>
                     <div class="modal-footer">

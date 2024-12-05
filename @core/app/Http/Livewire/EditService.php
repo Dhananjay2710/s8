@@ -13,6 +13,7 @@ use App\Service;
 use App\Serviceadditional;
 use App\Servicebenifit;
 use App\Serviceinclude;
+use App\Serviceaddresses;
 use App\Subcategory;
 use App\Tax;
 use App\User;
@@ -68,6 +69,7 @@ class EditService extends Component
 
                 // service attributes
                 'include_service_title' => 'max:191',
+                'service_post_code' => '',
                 'include_service_price' => '',
                 'additional_service_title' => 'max:191',
                 'additional_service_price' => '',
@@ -91,6 +93,7 @@ class EditService extends Component
                 'additional_service_inputs.*' => 'nullable',
                 'service_benefit_inputs.*' => 'nullable',
                 'online_service_faq.*' => 'nullable',
+                'post_code_inputs.*' => 'nullable',
             ];
 
         }else{
@@ -113,6 +116,7 @@ class EditService extends Component
 
                 // service attributes
                 'include_service_title' => 'max:191',
+                'service_post_code' => '',
                 'include_service_price' => 'nullable',
                 'additional_service_title' => 'nullable',
                 'additional_service_price' => 'nullable',
@@ -136,6 +140,7 @@ class EditService extends Component
                 'additional_service_inputs.*' => 'nullable',
                 'service_benefit_inputs.*' => 'nullable',
                 'online_service_faq.*' => 'nullable',
+                'post_code_inputs.*' => 'nullable',
 
             ];
         }
@@ -154,6 +159,23 @@ class EditService extends Component
         // todo:: count this method array is getter then one then remove item from array
         if(count($this->include_service_inputs) <= 1) return ;
         unset($this->include_service_inputs[$i_include]);
+    }
+    //=============== Postcode Service =============== 
+    public $service_post_code, $post_code_inputs = [], $a_include = 1;
+    public function addAddressServices($a_include)
+    {
+        \Log::debug("addAddressServices Start \n a_include value : " . $a_include);
+        $a_include = $a_include + 1;
+        \Log::debug("Updated value of a_include : " . $a_include);
+        $this->a_include = $a_include;
+        $this->post_code_inputs[] = $a_include;
+        \Log::debug("addAddressServices End");
+    }
+ 
+    public function removeAddressServices($a_include)
+    {
+        if(count($this->post_code_inputs) <= 1) return ;
+        unset($this->post_code_inputs[$a_include]);
     }
     //=============== Service Additional ===============
     public $additional_service_inputs = [], $i_additional = 1, $additional_service_price, $additional_service_image, $additional_service_title, $benifits, $faqs_title, $faqs_description;
@@ -219,6 +241,7 @@ class EditService extends Component
         $this->additional_service_inputs = ServiceAdditional::where('service_id', $id)->get()->toArray();
         $this->service_benefit_inputs = ServiceBenifit::where('service_id', $id)->get()->toArray();
         $this->online_service_faq = OnlineServiceFaq::where('service_id', $id)->get()->toArray();
+        $this->post_code_inputs = Serviceaddresses::where('service_id', $id)->get()->toArray();
 
         // todo:: check $this->include_service_inputs this property if empty then call below method
         if(empty($this->include_service_inputs)){
@@ -238,8 +261,10 @@ class EditService extends Component
         if(empty($this->online_service_faq)){
             $this->addFaq(1);
         }
-
-
+        // post code
+        if(empty($this->post_code_inputs)){
+            $this->addAddressServices(1);
+        }
     }
 
     public function render()
@@ -312,6 +337,7 @@ class EditService extends Component
         $all_additional_service = [];
         $all_benifits_service = [];
         $all_faq_service = [];
+        $service_post_codes = [];
         $service_total_price = 0;
 
         Service::where('id', $id)->update([
@@ -376,6 +402,7 @@ class EditService extends Component
             Serviceadditional::where('service_id', $id)->delete();
             Servicebenifit::where('service_id', $id)->delete();
             OnlineServiceFaq::where('service_id', $id)->delete();
+            Serviceaddresses::where('service_id', $id)->delete();
         }
 
 
@@ -418,9 +445,11 @@ class EditService extends Component
 
             // include service add
             $only_prices = [];
+            \Log::debug("Data of include service" . print_r($this->include_service_inputs,true));
             if (count($this->include_service_inputs) > 0){
                 foreach ($this->include_service_inputs as $key => $value) {
                     if (!empty($value['include_service_title'][$key])) {
+                        \Log::debug("Inside if : " . $value['include_service_title']);
                         $only_prices[] = $value['include_service_price'] ?? 0;
                         $all_include_service[] = [
                             'service_id' => $id,
@@ -442,6 +471,26 @@ class EditService extends Component
                     'revision' => 0,
                     'delivery_days' => 0,
                 ]);
+
+
+            // Addresses Add
+            \Log::debug("Data of service address" . print_r($this->post_code_inputs,true));
+            if (count($this->post_code_inputs) > 0){
+                foreach ($this->post_code_inputs as $key => $value) {
+                    \Log::debug("Key value : " . $key . " Value : " . $value['service_post_code']);
+                    if (!empty($value['service_post_code'])) {
+                        \Log::debug("Inside if Key value : " . $key . " Value : " . $value['service_post_code']);
+                        $service_post_codes[] = [
+                            'service_id' => $id,
+                            'seller_id' => Auth::guard('web')->user()->id,
+                            'service_city_id' => Auth::guard('web')->user()->service_city,
+                            'service_area_id' => Auth::guard('web')->user()->service_area,
+                            'service_post_code' => $value['service_post_code'] ?? 0,
+                        ];
+                    }
+                }
+            }
+            Serviceaddresses::insert($service_post_codes);
         }
 
 

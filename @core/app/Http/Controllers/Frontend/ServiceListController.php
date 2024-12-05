@@ -26,6 +26,7 @@ use App\OrderInclude;
 use App\Schedule;
 use App\ServiceCity;
 use App\ServiceArea;
+use App\Serviceaddresses;
 use DB;
 use Auth;
 use App\Mail\OrderMail;
@@ -350,12 +351,9 @@ class ServiceListController extends Controller
         }
 
         if (Auth::guard('web')->id() === NULL){
-            $userData = DB::select("SELECT * FROM users WHERE email = ?", [$request->email]);
+            $userData = User::where('email', $request->email)->first();
             if ($userData != null){
-                foreach ($userData as $user) {
-                    $customerId = $user->id;
-                }
-                
+                    $customerId = $userData->id;
             } else {
                 $email_verify_tokn = Str::random(8);
                 $passowrd = $request->name."@".rand(0000, 9999);
@@ -407,14 +405,14 @@ class ServiceListController extends Controller
                 $firstName = $nameParts[0];
                 $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
 
-                $cityData = DB::table("service_cities")->where("id", $request->choose_service_city)->first();
+                $cityData = ServiceCity::where("id", $request->choose_service_city)->first();
                 if ($cityData != null){
                     $serviceCityName = $cityData->service_city;
                 } else {
                     $serviceCityName = "NA";
                 }
 
-                $countryData = DB::table("countries")->where("id", $request->choose_service_country)->first();
+                $countryData = Country::where("id", $request->choose_service_country)->first();
                 if ($countryData != null){
                     $countryName = $countryData->country;
                 } else {
@@ -849,28 +847,42 @@ class ServiceListController extends Controller
                 $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
                 $DecodeData = json_decode($resultOfFormSubmiation,true);
                 \Log::debug("Result of Form Creation : " . print_r($DecodeData,true));
-                $fileId = $DecodeData['fileid'];
-                $signingLink = $DecodeData['signinglinks'];
-                \Log::debug("File ID : " . $fileId . "\nSigning Link : " . $signingLink);
+                if ($DecodeData['status'] == "error"){
+                    $resultData = [
+                        "status" => "success",
+                        "title" => "API Success",
+                        "message" => "New Service Request id : " . $last_order_id ." successfully created",
+                        "servicerequestid" => $last_order_id,
+                        "serviceprovidername" => $seller->name,
+                        "serviceproviderid" => $seller->id,
+                        "serviceprovideremail" => $seller->email,
+                    ];
+                    \Log::debug("Result : " . print_r($status,true));
+                    exit(json_encode($resultData));
+                } else {
+                    $fileId = $DecodeData['fileid'];
+                    $signingLink = $DecodeData['signinglinks'];
+                    \Log::debug("File ID : " . $fileId . "\nSigning Link : " . $signingLink);
 
-                Order::where('id',$last_order_id)->update([
-                    'file_id' => $fileId,
-                    'service_provider_file_link' => $signingLink[0],
-                    'customer_file_link' => $signingLink[1],
-                    'admin_file_link' => $signingLink[2],
-                ]);
+                    Order::where('id',$last_order_id)->update([
+                        'file_id' => $fileId,
+                        'service_provider_file_link' => $signingLink[0],
+                        'customer_file_link' => $signingLink[1],
+                        'admin_file_link' => $signingLink[2],
+                    ]);
 
-                $resultData = [
-                    "status" => "success",
-                    "title" => "API Success",
-                    "message" => "New Service Request id : " . $last_order_id ." successfully created",
-                    "servicerequestid" => $last_order_id,
-                    "serviceprovidername" => $seller->name,
-                    "serviceproviderid" => $seller->id,
-                    "serviceprovideremail" => $seller->email,
-                ];
-                \Log::debug("Result : " . print_r($status,true));
-                exit(json_encode($resultData));
+                    $resultData = [
+                        "status" => "success",
+                        "title" => "API Success",
+                        "message" => "New Service Request id : " . $last_order_id ." successfully created",
+                        "servicerequestid" => $last_order_id,
+                        "serviceprovidername" => $seller->name,
+                        "serviceproviderid" => $seller->id,
+                        "serviceprovideremail" => $seller->email,
+                    ];
+                    \Log::debug("Result : " . print_r($status,true));
+                    exit(json_encode($resultData));
+                }
             }
         }
 
@@ -907,38 +919,51 @@ class ServiceListController extends Controller
             $decodeData = json_decode($resultOfFormSubmiation,true);
             \Log::debug("Result of Form Creation : " . print_r($decodeData,true));
             
-            if ($decodeData['status'] == 'error'){
-                Order::where('id', $last_order_id)->delete();
-                $status = [
-                    "status" => "error",
-                    "title" => "API Failed",
-                    "message" => "Creation of document get failed",
+            // if ($decodeData['status'] == 'error'){
+            //     Order::where('id', $last_order_id)->delete();
+            //     $status = [
+            //         "status" => "error",
+            //         "title" => "API Failed",
+            //         "message" => "Creation of document get failed",
+            //     ];
+            //     exit(json_encode($status));
+            // }
+            if ($decodeData['status'] == "error"){
+                $resultData = [
+                    "status" => "success",
+                    "title" => "API Success",
+                    "message" => "New Service Request id : " . $last_order_id ." successfully created. But Form aganist it not created in doc8.",
+                    "servicerequestid" => $last_order_id,
+                    "serviceprovidername" => $seller->name,
+                    "serviceproviderid" => $seller->id,
+                    "serviceprovideremail" => $seller->email,
                 ];
+                \Log::debug("Result : " . print_r($resultData,true));
+                exit(json_encode($resultData));
+            } else {
+                $fileId = $decodeData['file_id'];
+                $signingLink = $decodeData['signinglinks'];
+                \Log::debug("File ID : " . $fileId . "\nSigning Link : " . print_r($signingLink,true));
+
+                Order::where('id',$last_order_id)->update([
+                    'file_id' => $fileId,
+                    'service_provider_file_link' => $signingLink[0],
+                    'customer_file_link' => $signingLink[1],
+                    'admin_file_link' => $signingLink[2],
+                ]);
+
+                $status = [
+                    "status" => "success",
+                    "title" => "API Success",
+                    "message" => "New service request id : " . $last_order_id ." successfully created",
+                    "servicerequestid" => $last_order_id,
+                    "serviceprovidername" => $seller->name,
+                    "serviceproviderid" => $seller->id,
+                    "serviceprovideremail" => $seller->email,
+                ];
+                \Log::debug("Result : " . print_r($status,true));
                 exit(json_encode($status));
             }
-
-            $fileId = $decodeData['file_id'];
-            $signingLink = $decodeData['signinglinks'];
-            \Log::debug("File ID : " . $fileId . "\nSigning Link : " . print_r($signingLink,true));
-
-            Order::where('id',$last_order_id)->update([
-                'file_id' => $fileId,
-                'service_provider_file_link' => $signingLink[0],
-                'customer_file_link' => $signingLink[1],
-                'admin_file_link' => $signingLink[2],
-            ]);
-
-            $status = [
-                "status" => "success",
-                "title" => "API Success",
-                "message" => "New service request id : " . $last_order_id ." successfully created",
-                "servicerequestid" => $last_order_id,
-                "serviceprovidername" => $seller->name,
-                "serviceproviderid" => $seller->id,
-                "serviceprovideremail" => $seller->email,
-            ];
-            \Log::debug("Result : " . print_r($status,true));
-            exit(json_encode($status));
         }
         if($request->selected_payment_gateway === 'manual_payment') {
             $order_details = Order::find($last_order_id);
@@ -992,28 +1017,42 @@ class ServiceListController extends Controller
             $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
             $DecodeData = json_decode($resultOfFormSubmiation,true);
             \Log::debug("Result of Form Creation : " . print_r($DecodeData,true));
-            $fileId = $DecodeData['fileid'];
-            $signingLink = $DecodeData['signinglinks'];
-            \Log::debug("File ID : " . $fileId . "\nSigning Link : " . $signingLink);
+            if ($DecodeData['status'] == "error"){
+                $resultData = [
+                    "status" => "success",
+                    "title" => "API Success",
+                    "message" => "New Service Request id : " . $last_order_id ." successfully created",
+                    "servicerequestid" => $last_order_id,
+                    "serviceprovidername" => $seller->name,
+                    "serviceproviderid" => $seller->id,
+                    "serviceprovideremail" => $seller->email,
+                ];
+                \Log::debug("Result : " . print_r($status,true));
+                exit(json_encode($resultData));
+            } else {
+                $fileId = $DecodeData['fileid'];
+                $signingLink = $DecodeData['signinglinks'];
+                \Log::debug("File ID : " . $fileId . "\nSigning Link : " . $signingLink);
 
-            Order::where('id',$last_order_id)->update([
-                'file_id' => $fileId,
-                'service_provider_file_link' => $signingLink[0],
-                'customer_file_link' => $signingLink[1],
-                'admin_file_link' => $signingLink[2],
-            ]);
+                Order::where('id',$last_order_id)->update([
+                    'file_id' => $fileId,
+                    'service_provider_file_link' => $signingLink[0],
+                    'customer_file_link' => $signingLink[1],
+                    'admin_file_link' => $signingLink[2],
+                ]);
 
-            $status = [
-                "status" => "success",
-                "title" => "API Success",
-                "message" => "New service request id : " . $last_order_id ." successfully created",
-                "servicerequestid" => $last_order_id,
-                "serviceprovidername" => $seller->name,
-                "serviceproviderid" => $seller->id,
-                "serviceprovideremail" => $seller->email,
-            ];
-            \Log::debug("Result : " . print_r($status,true));
-            exit(json_encode($status));
+                $status = [
+                    "status" => "success",
+                    "title" => "API Success",
+                    "message" => "New service request id : " . $last_order_id ." successfully created",
+                    "servicerequestid" => $last_order_id,
+                    "serviceprovidername" => $seller->name,
+                    "serviceproviderid" => $seller->id,
+                    "serviceprovideremail" => $seller->email,
+                ];
+                \Log::debug("Result : " . print_r($status,true));
+                exit(json_encode($status));
+            }
         } else {
             if ($request->selected_payment_gateway === 'paypal') {
                 try{
@@ -1707,12 +1746,9 @@ class ServiceListController extends Controller
         }
 
         if (Auth::guard('web')->id() === NULL){
-            $userData = DB::select("SELECT * FROM users WHERE email = ?", [$request->email]);
+            $userData = User::where('email', $request->email)->first();
             if ($userData != null){
-                foreach ($userData as $user) {
-                    $customerId = $user->id;
-                }
-                
+                    $customerId = $userData->id;
             } else {
                 $email_verify_tokn = Str::random(8);
                 $passowrd = $request->name."@".rand(0000, 9999);
@@ -2959,10 +2995,21 @@ class ServiceListController extends Controller
     {
         header('Content-type: application/json');
         \Log::debug("Search using category started");
-        if ($request->category_id != "" && $request->service_city_id != "" && $request->service_area_id){
-            $categoryID = $serviceCityId = $serviceAreaId = 0;
+        $categoryID = $serviceCityId = $serviceAreaId = 0;
+        $serviceProviderId = $request->service_provider_id ?? 0;
+        $postCode = $request->post_code;
+        $order_note = "";
+        $name = $request->name;
+        $email = $request->email;
+        $phone = $request->phone;
+        if ($request->category_id != "" || $serviceProviderId !="" || $request->post_code != ""){
+            
             if (is_string($request->category_id)) {
-                $categoryData = DB::table("categories")->where("slug", $request->category_id)->first();
+                $parts = explode(':', $request->category_id);
+                $slugPart = trim($parts[0]);
+                \Log::debug("slug Part : " . $slugPart);
+                $categoryData = Category::where("slug", $slugPart)->first();
+
                 if ($categoryData != null) {
                     $categoryID = $categoryData->id;
                 } else {
@@ -2973,7 +3020,7 @@ class ServiceListController extends Controller
             }
 
             if (is_string($request->service_city_id)) {
-                $cityData = DB::table("service_cities")->where("service_city", $request->service_city_id)->first();
+                $cityData = ServiceCity::where("service_city", $request->service_city_id)->first();
                 if ($cityData != null){
                     $serviceCityId = $cityData->id;
                 } else {
@@ -2984,7 +3031,7 @@ class ServiceListController extends Controller
             }
 
             if (is_string($request->service_area_id)) {
-                $serviceAreaData = DB::table("service_areas")->where("service_city_id", $serviceCityId)->where("service_area", $request->service_area_id)->first();
+                $serviceAreaData = ServiceArea::where("service_city_id", $serviceCityId)->where("service_area", $request->service_area_id)->first();
                 if ($serviceAreaData != null) {
                     $serviceAreaId = $serviceAreaData->id;
                 } else {
@@ -2996,19 +3043,26 @@ class ServiceListController extends Controller
 
             \Log::debug("Category Id : " . $categoryID . "\nService City Id : " . $serviceCityId . "\nService Area Id : " . $serviceAreaId);
 
-            if ($categoryID != 0 && $serviceCityId != 0 && $serviceAreaId != 0){
+            if ($categoryID != 0){
+                \Log::debug("Service Provider Id : " . $serviceProviderId);
                 $services = Service::where('category_id', $categoryID)
                     ->where('status', 1)
                     ->where('is_service_on', 1)
+                    ->when(!empty($serviceProviderId), function($q) use ($serviceProviderId) {
+                        $q->where('seller_id', $serviceProviderId);
+                    })
                     ->when(subscriptionModuleExistsAndEnable('Subscription'),function($q){
                         $q->whereHas('seller_subscription');
                     })
-                    ->where('service_city_id', $serviceCityId)
-                    ->where('service_area_id', $serviceAreaId)
-                    ->get()
-                    ->first();
-
-                if ($services == null) {
+                    ->when(!empty($serviceCityId), function($q) use ($serviceCityId) {
+                        $q->where('service_city_id', $serviceCityId);
+                    })
+                    ->when(!empty($serviceAreaId), function($q) use ($serviceAreaId) {
+                        $q->where('service_area_id', $serviceAreaId);
+                    })
+                    ->orderBy('price', 'ASC')
+                    ->get();
+                if ($services->isEmpty()) {
                     $responseResult = [
                         "status" => "error",
                         "title" => "API Failed",
@@ -3017,21 +3071,56 @@ class ServiceListController extends Controller
                     \Log::debug("No services found for current location \n Search using category ended with error");
                     exit(json_encode($responseResult));
                 }
-                \Log::debug("Seller Id : " . $services->seller_id . "\n Services Id : " . $services->id);
-                $serviceIncludesData = DB::table("serviceincludes")->where("service_id", $services->id)->where("seller_id", $services->seller_id)->get()->first();
+
+                // \Log::debug("Services : " . print_r($services,true));
+                $sortedServices = [];
+                $arrayLength = count($services);
+                \Log::debug("Before for loop : " . $arrayLength );
+                foreach($services as $service){
+                    \Log::debug("service id: " . $service->id);
+                    \Log::debug("seller id: " . $service->seller_id);
+                    
+                    $serviceIncludesData = Serviceaddresses::where("service_id", $service->id)
+                    ->where("seller_id", $service->seller_id)
+                    ->when(!empty($postCode), function($q) use ($postCode) {
+                        $q->where('service_post_code', $postCode);
+                    })
+                    // ->where("service_post_code", $postCode)
+                    ->get();
+                    if ($serviceIncludesData->isNotEmpty()) {
+                        \Log::debug("Inside if");
+                        $sortedServices[] = $service;
+                    } else {
+                        \Log::debug("Service Includes Data is empty.");
+                    }
+                }
+                $arrayLengthAfter = count($sortedServices);
+                \Log::debug("Afte for loop : " . $arrayLengthAfter );
+
+                $counter = 0;
+                $selectedUser = null;
+                $usersList = array_keys($sortedServices);
+                $userCount = count($usersList);
+                $randomIndex = rand(0, $userCount - 1);
+                $selectedUser = $usersList[$randomIndex];
+                \Log::debug("Randomly selected user : " . print_r($selectedUser,true) . "\n");
+                $nextUser = self::getNextUser($counter, $usersList, $selectedUser);
+                $userData = $sortedServices[$nextUser];
+               \Log::debug("Processing user: $nextUser\n");
+                \Log::debug("Seller Id : " . $userData->seller_id . "\n Services Id : " . $userData->id);
+                $serviceIncludesData = Serviceinclude::where("service_id", $userData->id)->where("seller_id", $userData->seller_id)->get()->first();
                 \Log::debug("Service Includes id from database : " . $serviceIncludesData->id . "\n Service include quantity : " .  $serviceIncludesData->include_service_quantity);
                 
-                $daysDataCollection = DB::table("days")->where("seller_id", $services->seller_id)->get();
+                $daysDataCollection = Day::where("seller_id", $userData->seller_id)->get();
                 $schedulesData = null;
 
                 if($daysDataCollection != null){
                     foreach ($daysDataCollection as $daysData) {
-                        \Log::debug(print_r($daysData,true));
+                        // \Log::debug(print_r($daysData,true));
                         \Log::debug("Days id from database : " . $daysData->id . "\n Days day : " .  $daysData->day);
                     
-                        $schedulesData = DB::table("schedules")
-                                            ->where("day_id", $daysData->id)
-                                            ->where("seller_id", $services->seller_id)
+                        $schedulesData = Schedule::where("day_id", $daysData->id)
+                                            ->where("seller_id", $userData->seller_id)
                                             ->where("status", 0)
                                             ->first();
                         if ($schedulesData) {
@@ -3048,14 +3137,9 @@ class ServiceListController extends Controller
                             "message" => "No schedule time found for any day contact administrator."
                         ];
                     } else {
-                        $responseResult = [
-                            "status" => "success",
-                            "title" => "API Success",
-                            "services" => $services,
-                            "serviceIncludesId" => $serviceIncludesData->id,
-                            "serviceIncludesQuantity" => $serviceIncludesData->include_service_quantity,
-                            "schedules" => $schedulesData->schedule
-                        ];
+                        \Log::debug("service : " . $userData->id);
+                        $createServiceRequestResult = self::createServiceRequest($userData->id, $userData->seller_id, 0, $userData->online_service_package_fee, $userData->choose_service_city, $userData->choose_service_area, $userData->choose_service_country, $serviceIncludesData->id, $serviceIncludesData->include_service_quantity, $schedulesData->schedule, $order_note, $name, $email, $phone );
+                        $responseResult = json_decode($createServiceRequestResult);
                         \Log::debug("Search using category ended with success");
                     }
                 } else {
@@ -3083,6 +3167,724 @@ class ServiceListController extends Controller
             \Log::debug("Some inputs are empty \n Search using category ended with error");
         }
         exit(json_encode($responseResult));
+    }
+
+    public function getNextUser(&$counter, $usersList, $selectedUser) {
+        // If a specific user is selected and exists in the list, continue with that user
+        if ($selectedUser !== null && in_array($selectedUser, $usersList)) {
+            return $selectedUser;
+        }
+        
+        // If no specific user selected, use round-robin to select the next user
+        $currentUser = $usersList[$counter];
+        
+        // Update the counter for the next round-robin user
+        $counter = ($counter + 1) % count($usersList);
+        
+        return $currentUser;
+    }
+
+ 
+    public function createServiceRequest($serviceId, $sellerId, $isServiceOnline, $online_service_package_fee_final, $choose_service_city_final, $choose_service_area_final, $choose_service_country_final, $serviceIncludesDataId, $final_include_service_quantity, $schedule_final, $order_note_final, $finalaName, $finalEmail, $finalPhone) {
+        header('Content-type: application/json');
+        $todayDate = date('d-m-Y');
+        $customerId = '';
+        \Log::debug("Inside create service request");
+        \Log::debug("Service is : " . $serviceId);
+        $selected_payment_gateway = "annual_maintenance_charge";
+        $seller_id = $sellerId;
+        $service_id = $serviceId; 
+        $is_service_online_ = 0;
+        $online_service_package_fee = 0; 
+        $name = $finalaName; 
+        $email = $finalEmail; 
+        $phone = $finalPhone; 
+        $post_code = "";
+        $address = ""; 
+        $choose_service_city = $choose_service_city_final;
+        $choose_service_area = $choose_service_area_final;
+        $choose_service_country = $choose_service_country_final;  
+        $date = $todayDate;
+        $order_note = $order_note_final;
+        $schedule = $schedule_final;
+        $services = [
+            [
+                "id" => $serviceIncludesDataId,
+                "quantity" => $final_include_service_quantity,
+            ]
+        ];
+        \Log::debug("Service Includes Data Id : ". $serviceIncludesDataId . "Final include service quantity : " . $final_include_service_quantity);
+        $servicesid= $serviceIncludesDataId;
+        \Log::debug("service ID : ". $servicesid);
+        $servicesquantity = $final_include_service_quantity ?? 1;
+        \Log::debug("final_include_service_quantity : " . $final_include_service_quantity);
+        $additionals = [""]; 
+
+        $commission = AdminCommission::first();
+        \Log::debug('User name : ' . $name . 
+                    "\nSeller id : " . $seller_id . 
+                    "\nSelected Payment Getway: " . $selected_payment_gateway .
+                    "\nService Request : " . $service_id);
+        if (empty($name) || empty($seller_id) || empty($selected_payment_gateway) || empty($service_id)){
+            $status = [
+                "status" => "error",
+                "title" => "API Failed",
+                "message" => "Please check some inputs are empty"
+            ];
+            \Log::debug("Result : " . print_r($status,true));
+            return json_encode($status);
+        }
+        if($selected_payment_gateway=='cash_on_delivery' || $selected_payment_gateway == 'manual_payment' || $selected_payment_gateway === 'annual_maintenance_charge'){
+            $payment_status='complete';
+        }else{
+            $payment_status='';
+        }
+
+        if (empty($seller_id)){
+            \Toastr::error(__('Service Provider Id missing, please try another another service provider services'));
+            $status = [
+                "status" => "error",
+                "title" => "API Failed",
+                "message" => "Please Provide Service Provider Id"
+            ];
+            \Log::debug("Result : " . print_r($status,true));
+            return json_encode($status);
+        }
+        if ($seller_id == Auth::guard('web')->id()){
+            \Toastr::error(__('You can not book your own service'));
+            $status = [
+                "status" => "error",
+                "title" => "API Failed",
+                "message" => "You can not book your own service"
+            ];
+            \Log::debug("Result : " . print_r($status,true));
+            return json_encode($status);
+        }
+
+        if (Auth::guard('web')->id() === NULL){
+            $userData = User::where('email', $email)->first();
+            if ($userData != null){
+                    $customerId = $userData->id;
+            } else {
+                $email_verify_tokn = Str::random(8);
+                $passowrd = $name."@".rand(0000, 9999);
+                $user = User::create([
+                    'name' => $name,
+                    'email' => $email,
+                    'username' => $name,
+                    'phone' => $phone,
+                    'password' => Hash::make($passowrd),
+                    'service_city' => $choose_service_city,
+                    'service_area' => $choose_service_area,
+                    'country_id' => $choose_service_country,
+                    'user_type' => 1,
+                    'terms_conditions' => 1,
+                    'email_verify_token'=> $email_verify_tokn,
+                ]);
+                if($user){
+                    try {
+                        $message = get_static_option('customer_register_message');
+                        $subject = get_static_option('customer_register_message_subject');
+                        $message = str_replace(["@name", "@type", "@username", "@password"],[$user->name, "customer", $user->name, $passowrd],$message);
+                        Mail::to($user->email)->send(new BasicMail([
+                            'subject' => get_static_option('customer_register_message_subject'),
+                            'message' => $message
+                        ]));
+
+                        $message = get_static_option('user_email_verify_message');
+                        $message = str_replace(["@name", "@email_verify_tokn"],[$user->name, $email_verify_tokn],$message);
+                        Mail::to($user->email)->send(new BasicMail([
+                            'subject' => get_static_option('user_email_verify_subject'),
+                            'message' => $message
+                        ]));
+    
+                        $message = get_static_option('user_register_message');
+                        $message = str_replace(["@name", "@type","@username","@email"],[$user->name, "customer", $user->name, $user->email], $message);
+                        Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
+                            'subject' => get_static_option('user_register_subject') ?? __('New User Registration'),
+                            'message' => $message
+                        ]));
+                    } catch (\Exception $e) {
+    
+                    }
+                }
+                $customerId = $user->id;
+
+                // User Register inside Doc8
+                \Log::debug("User registration start inside Doc8");
+                $nameParts = explode(' ', $name);
+                $firstName = $nameParts[0];
+                $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
+
+                $cityData = ServiceCity::where("id", $choose_service_city)->first();
+                if ($cityData != null){
+                    $serviceCityName = $cityData->service_city;
+                } else {
+                    $serviceCityName = "NA";
+                }
+
+                $countryData = Country::where("id", $choose_service_country)->first();
+                if ($countryData != null){
+                    $countryName = $countryData->country;
+                } else {
+                    $countryName = "NA";
+                }
+
+                $userDataToSubmit = [
+                    "email" => $email,
+                    'firstname' => $firstName,
+                    'lastname' => $lastName ?? "",
+                    'useremail' => 'vandana@gmail.com',
+                    'phonenumber' => $phone,
+                    'address' => $address,
+                    'city' => $serviceCityName,
+                    'postalcode' => $post_code,
+                    'state' => "NA",
+                    'country' => $countryName,
+                    'pannumber' => 'NA',
+                    'aadhaarnumber' => 'NA',
+                    'signingparty' => 'SA',
+                    'company' => 'NA',
+                    'companygstin' => '',
+                    'companybusinesspannumber' => '',
+                    'companyudyamnumber' => '',
+                    'companyyoe' => '',
+                    'companyaddress' => '',
+                    'companycityname' => '',
+                    'companypostalcode' => '',
+                    'companystatename' => '',
+                    'companycountryname' => '',
+                    'producttype' => 'Service Form',
+                    'iswhatsappmessagesend' => 'false',
+                ];
+
+                $resultOfUserRegister = Doc8yAPI::userRegister($userDataToSubmit);
+                $decodedData = json_decode($resultOfUserRegister,true);
+                \Log::debug("Result of User Register : " . print_r($decodedData,true));
+            }
+        }
+
+        if (Auth::guard('web')->check() && Auth::guard('web')->user()->type === 0){
+            \Toastr::error(__('service provider are not allowed to place service order'));
+            $status = [
+                "status" => "error",
+                "title" => "API Failed",
+                "message" => "service provider are not allowed to place service order"
+            ];
+            \Log::debug("Result : " . print_r($status,true));
+            return json_encode($status);
+        }
+
+        if($selected_payment_gateway === 'manual_payment') {
+            $this->validate($request,[
+                'manual_payment_image' => 'required|mimes:jpg,jpeg,png,pdf'
+            ]);
+        }
+
+        $order_create='';
+        if($is_service_online_ != 1 && Auth::guard('web')->check() && Auth::guard('web')->user()->user_type == 1){
+            Order::create([
+                'service_id' => $service_id,
+                'seller_id' => $seller_id,
+                'buyer_id' => Auth::guard('web')->check() ? Auth::guard('web')->user()->id : $customerId,
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'post_code' => $post_code ?? 0000,
+                'address' => $address,
+                'city' => $choose_service_city,
+                'area' => $choose_service_area,
+                'country' => $choose_service_country,
+                'date' => \Carbon\Carbon::parse($date)->format('D F d Y'),
+                'schedule' => $shedule,
+                'package_fee' => 0,
+                'extra_service' => 0,
+                'sub_total' => 0,
+                'tax' => 0,
+                'total' => 0,
+                'commission_type' => $commission->commission_charge_type,
+                'commission_charge' => $commission->commission_charge,
+                'status' => 0,
+                'order_note' => $order_note,
+                'payment_gateway' => $selected_payment_gateway,
+                'payment_status' => $payment_status,
+                'file_id' => 0,
+                'service_provider_file_link' => '',
+                'customer_file_link' => '',
+                'admin_file_link' => '',       
+                'service_provider_signing_status' => 'Pending', 
+                'customer_signing_status' => 'Pending',         
+                'admin_signing_status' => 'Pending', 
+            ]);
+        }else{
+            if(Auth::guard('web')->check() && Auth::guard('web')->user()->user_type == 1 ){
+                $order_create = Order::create([
+                    'service_id' => $service_id,
+                    'seller_id' => $seller_id,
+                    'buyer_id' => Auth::guard('web')->check() ? Auth::guard('web')->user()->id : $customerId,
+                    'name' => $name,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'post_code' => $post_code ?? 0000,
+                    'address' => $address,
+                    'city' => $choose_service_city,
+                    'area' => $choose_service_area,
+                    'country' => $choose_service_country,
+                    'date' => '00.00.00',
+                    'schedule' => '00.00.00',
+                    'package_fee' => 0,
+                    'extra_service' => 0,
+                    'sub_total' => 0,
+                    'tax' => 0,
+                    'total' => 0,
+                    'commission_type' => $commission->commission_charge_type,
+                    'commission_charge' => $commission->commission_charge,
+                    'status' => 0,
+                    'is_order_online'=>$is_service_online_,
+                    'order_note' => $order_note,
+                    'payment_gateway' => $selected_payment_gateway,
+                    'payment_status' => $payment_status,
+                    'file_id' => 0,
+                    'service_provider_file_link' => '',
+                    'customer_file_link' => '',
+                    'admin_file_link' => '',       
+                    'service_provider_signing_status' => 'Pending', 
+                    'customer_signing_status' => 'Pending',         
+                    'admin_signing_status' => 'Pending',
+                ]);
+            }else{
+               if( get_static_option('order_create_settings') !== 'anyone'){
+                    toastr_error(__('You must login as a buyer to create an order.'));
+                    return redirect()->back();
+                }
+                Order::create([
+                    'service_id' => $service_id,
+                    'seller_id' => $seller_id,
+                    'buyer_id' => Auth::guard('web')->check() ? Auth::guard('web')->user()->id : $customerId,
+                    'name' => $name,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'post_code' => $post_code ?? 0000,
+                    'address' => $address ?? "" ,
+                    'city' => $choose_service_city,
+                    'area' => $choose_service_area,
+                    'country' => $choose_service_country,
+                    'date' => $is_service_online_ != 1 ? \Carbon\Carbon::parse($date)->format('D F d Y') : '00.00.00',
+                    'schedule' => $is_service_online_ != 1 ? $schedule : '00.00.00',
+                    'package_fee' => 0,
+                    'extra_service' => 0,
+                    'sub_total' => 0,
+                    'tax' => 0,
+                    'total' => 0,
+                    'commission_type' => $commission->commission_charge_type,
+                    'commission_charge' => $commission->commission_charge,
+                    'status' => 0,
+                    'order_note' => $order_note,
+                    'payment_gateway' => $selected_payment_gateway,
+                    'payment_status' => $payment_status,
+                    'file_id' => 0,
+                    'service_provider_file_link' => '',
+                    'customer_file_link' => '',
+                    'admin_file_link' => '',       
+                    'service_provider_signing_status' => 'Pending', 
+                    'customer_signing_status' => 'Pending',         
+                    'admin_signing_status' => 'Pending', 
+                ]);
+
+            }
+        }
+
+        $last_order_id = DB::getPdo()->lastInsertId();
+
+        if($order_create !=''){
+            SupportTicket::create([
+                'title' => 'New Order',
+                'subject' => 'Service Request Created By '.$name,
+                'status' => 'open',
+                'priority' => 'high',
+                'buyer_id' => Auth::guard('web')->user()->id,
+                'seller_id' => $seller_id,
+                'service_id' => $service_id,
+                'order_id' => $last_order_id ,
+            ]);
+        }
+
+        $service_sold_count = Service::select('sold_count')->where('id',$service_id)->first();
+        Service::where('id',$service_id)->update(['sold_count'=>$service_sold_count->sold_count+1]);
+
+        $servs = [];
+        $service_ids = [];
+        $package_fee = 0;
+
+        if (isset($services) && is_array($services)) {
+
+            foreach ($services as $key => $service) {
+                $service_ids[] = $service['id'];
+            }
+
+            $included_services = Serviceinclude::whereIn('id', $service_ids)->get();
+
+            if($is_service_online_ != 1) {
+                \Log::debug("Inside if");
+                foreach ($services as $key => $requested_service) {
+                    $service = $included_services->find($requested_service['id']);
+                    $servs[] = [
+                        'id' => $service->id,
+                        'title' => $service->include_service_title,
+                        'unit_price' => $service->include_service_price,
+                        'quantity' => $requested_service['quantity'],
+                    ];
+                    \Log::debug("Before OrderInclude package_fee : " . $package_fee );
+                    \Log::debug("Quantity : " . $requested_service['quantity'] );
+                    \Log::debug("Service Price : " . $service->include_service_price);
+
+                    $package_fee += $requested_service['quantity'] * $service->include_service_price;
+
+                    OrderInclude::create([
+                        'order_id' => $last_order_id,
+                        'title' => $service->include_service_title,
+                        'price' => $service->include_service_price,
+                        'quantity' => $requested_service['quantity'],
+                    ]);
+                    \Log::debug("After OrderInclude package_fee : " . $package_fee );
+                }
+            }else{
+                \Log::debug("Inside if");
+                foreach ($services as $key => $requested_service) {
+                    $service = $included_services->find($requested_service['id']);
+                    $servs[] = [
+                        'id' => $service->id,
+                        'title' => $service->include_service_title,
+                        'unit_price' => $service->include_service_price,
+                        'quantity' => $requested_service['quantity'],
+                    ];
+                    OrderInclude::create([
+                        'order_id' => $last_order_id,
+                        'title' => $service->include_service_title,
+                        'price' => 0,
+                        'quantity' => 0,
+                    ]);
+                }
+
+                $package_fee = $online_service_package_fee;
+            }
+        }
+
+
+        $addis = [];
+        $additional_ids = [];
+        $extra_service = 0;
+
+        if($additionals['0'] != NULL){
+            if (isset($additionals) && is_array($additionals)) {
+                foreach ($additionals as $key => $additional) {
+                    $additional_ids[] = $additional['id'];
+                }
+
+                $additional_services = Serviceadditional::whereIn('id', $additional_ids)->get();
+
+                foreach ($request->additionals as $key => $requested_additional) {
+                    $service = $additional_services->find($requested_additional['id']);
+                    $addis[] = [
+                        'id' => $service->id,
+                        'title' => $service->additional_service_title,
+                        'unit_price' => $service->additional_service_price,
+                        'quantity' => $requested_additional['quantity'],
+                    ];
+
+                    $extra_service += $requested_additional['quantity'] * $service->additional_service_price;
+
+                    OrderAdditional::create([
+                        'order_id' => $last_order_id,
+                        'title' => $service->additional_service_title,
+                        'price' => $service->additional_service_price,
+                        'quantity' => $requested_additional['quantity'],
+                    ]);
+                }
+            }
+        }
+
+
+        $sub_total = 0;
+        $total = 0;
+        $tax_amount =0;
+
+        $tax = Service::select('tax')->where('id', $service_id)->first();
+        $service_details_for_book = Service::select('id','service_city_id')->where('id',$service_id)->first();
+        $service_country =  optional(optional($service_details_for_book->serviceCity)->countryy)->id;
+        $country_tax =  Tax::select('id','tax')->where('country_id',$service_country)->first();
+        $sub_total = $package_fee + $extra_service;
+        \Log::debug("package_fee" . $package_fee);
+        \Log::debug("extra_service" . $extra_service);
+        \Log::debug("sub_total" . $sub_total);
+        if(!is_null($country_tax )){
+            $tax_amount = ($sub_total * $country_tax->tax) / 100;
+        }
+        $total = $sub_total + $tax_amount;
+        \Log::debug("total" . $total);
+        //calculate coupon amount
+        $coupon_code = '';
+        $coupon_type = '';
+        $coupon_amount = 0;
+
+        if(!empty($request->coupon_code)){
+            $coupon_code = ServiceCoupon::where('code',$request->coupon_code)->first();
+            $current_date = date('Y-m-d');
+            if(!empty($coupon_code)){
+                if($coupon_code->seller_id == $request->seller_id){
+                    if($coupon_code->code == $request->coupon_code && $coupon_code->expire_date > $current_date){
+                        if($coupon_code->discount_type == 'percentage'){
+                            $coupon_amount = ($total * $coupon_code->discount)/100;
+                            $total = $total-$coupon_amount;
+                            $coupon_code = $request->coupon_code;
+                            $coupon_type = 'percentage';
+                        }else{
+                            $coupon_amount = $coupon_code->discount;
+                            $total = $total-$coupon_amount;
+                            $coupon_code = $request->coupon_code;
+                            $coupon_type = 'amount';
+                        }
+                    }else{
+                        $coupon_code = '';
+                    }
+                }else{
+                    $coupon_code = '';
+                }
+            }
+        }
+        $commission_amount = 0;
+
+        //commission amount
+        if($commission->system_type == 'subscription'){
+            if(subscriptionModuleExistsAndEnable('Subscription')){
+                $commission_amount = 0;
+                \Modules\Subscription\Entities\SellerSubscription::where('id', $request->seller_id)->update([
+                    'connect' => DB::raw(sprintf("connect - %s",(int)strip_tags(get_static_option('set_number_of_connect')))),
+                ]);
+            }
+        }else{
+            if($commission->commission_charge_type=='percentage'){
+                $commission_amount = ($sub_total*$commission->commission_charge)/100;
+            }else{
+                $commission_amount = $commission->commission_charge;
+            }
+        }
+
+        Order::where('id', $last_order_id)->update([
+            'package_fee' => $package_fee,
+            'extra_service' => $extra_service,
+            'sub_total' => $sub_total,
+            'tax' => $tax_amount,
+            'total' => $total,
+            'coupon_code' => $coupon_code,
+            'coupon_type' => $coupon_type,
+            'coupon_amount' => $coupon_amount,
+            'commission_amount' => $commission_amount,
+        ]);
+
+        //Send order notification to seller
+        $seller = User::where('id',$seller_id)->first();
+        $buyer_id = Auth::guard('web')->check() ? Auth::guard('web')->user()->id : NULL;
+        $order_message = __('You have a new service request');
+
+        // admin notification add
+        AdminNotification::create(['order_id' => $last_order_id]);
+
+        // seller buyer notification
+        $seller->notify(new OrderNotification($last_order_id,$service_id, $seller_id, $buyer_id,$order_message));
+
+        // variable for all payment gateway
+        $global_currency = get_static_option('site_global_currency');
+        $usd_conversion_rate =  get_static_option('site_' . strtolower($global_currency) . '_to_usd_exchange_rate');
+        $inr_exchange_rate = getenv('INR_EXCHANGE_RATE');
+        $ngn_exchange_rate = getenv('NGN_EXCHANGE_RATE');
+        $zar_exchange_rate = getenv('ZAR_EXCHANGE_RATE');
+        $brl_exchange_rate = getenv('BRL_EXCHANGE_RATE');
+        $idr_exchange_rate = getenv('IDR_EXCHANGE_RATE');
+        $myr_exchange_rate = getenv('MYR_EXCHANGE_RATE');
+
+        if(Auth::guard('web')->check()){
+            $user_name = Auth::guard('web')->user()->name;
+            $user_email = Auth::guard('web')->user()->email;
+        }else{
+            $user_name = $name;
+            $user_email = $email;
+        }
+
+        $get_service_id_from_last_order = Order::select('service_id')->where('id',$last_order_id)->first();
+        $title = Str::limit(strip_tags(optional($get_service_id_from_last_order->service)->title),20);
+        $description = sprintf(__('Service Request id #%1$d Email: %2$s, Name: %3$s'),$last_order_id,$user_email,$user_name);
+
+        //todo: check payment gateway is wallet or not
+        if(moduleExists('Wallet')){
+            if ($selected_payment_gateway === 'wallet') {
+                $order_details = Order::find($last_order_id);
+                $random_order_id_1 = Str::random(30);
+                $random_order_id_2 = Str::random(30);
+                $new_order_id = $random_order_id_1.$last_order_id.$random_order_id_2;
+                $buyer_id = Auth::guard('web')->check() ? Auth::guard('web')->user()->id : NULL;
+                $wallet_balance = Wallet::where('buyer_id',$buyer_id)->first();
+
+                if(!empty($wallet_balance)){
+                    if($wallet_balance->balance >= $order_details->total){
+                        try {
+                            $message_for_buyer = get_static_option('new_order_buyer_message') ?? __('You have successfully placed an service request #');
+                            $message_for_seller_admin = get_static_option('new_order_admin_seller_message') ?? __('You have a new service request #');
+                            Mail::to($order_details->email)->send(new OrderMail(strip_tags($message_for_buyer).$order_details->id,$order_details));
+                            Mail::to($seller->email)->send(new OrderMail(strip_tags($message_for_seller_admin).$order_details->id,$order_details));
+                            Mail::to(get_static_option('site_global_email'))->send(new OrderMail(strip_tags($message_for_seller_admin).$order_details->id,$order_details));
+                        } catch (\Exception $e) {
+                            \Toastr::error($e->getMessage());
+                        }
+                        Order::where('id', $last_order_id)->update([
+                            'payment_status' => 'complete',
+                            'payment_gateway' => 'wallet',
+                        ]);
+                        Wallet::where('buyer_id',$buyer_id)->update([
+                            'balance' => $wallet_balance->balance-$order_details->total,
+                        ]);
+                    }else{
+                        $shortage_balance =  $order_details->total-$wallet_balance->balance;
+                        toastr_warning('Your wallet has '.float_amount_with_currency_symbol($shortage_balance).' shortage to service request this service. Please Credit your wallet first and try again.');
+                        return back();
+                    }
+
+                }
+
+                $formDataToSubmit = [
+                    "ServiceProviderName" => $seller->name,
+                    "ServiceProviderEmail" => $seller->email,
+                    "ServiceProviderPhone" => $seller->phone,
+                    "ServiceName" => $service->include_service_title ?? "NA",
+                    "ServiceAmount" => $total,
+                    "CutomerName" => $name,
+                    "CutomerEmail" => $email,
+                    "CutomerPhone" => $phone,
+                    "ServiceId" => $last_order_id,
+                    "Date" => $todayDate
+                ];
+
+                $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
+                $DecodeData = json_decode($resultOfFormSubmiation,true);
+                \Log::debug("Result of Form Creation : " . print_r($DecodeData,true));
+                if ($DecodeData['status'] == "error"){
+                    $resultData = [
+                        "status" => "success",
+                        "title" => "API Success",
+                        "message" => "New Service Request id : " . $last_order_id ." successfully created",
+                        "servicerequestid" => $last_order_id,
+                        "serviceprovidername" => $seller->name,
+                        "serviceproviderid" => $seller->id,
+                        "serviceprovideremail" => $seller->email,
+                    ];
+                    \Log::debug("Result : " . print_r($status,true));
+                    exit(json_encode($resultData));
+                } else {
+                    $fileId = $DecodeData['fileid'];
+                    $signingLink = $DecodeData['signinglinks'];
+                    \Log::debug("File ID : " . $fileId . "\nSigning Link : " . $signingLink);
+
+                    Order::where('id',$last_order_id)->update([
+                        'file_id' => $fileId,
+                        'service_provider_file_link' => $signingLink[0],
+                        'customer_file_link' => $signingLink[1],
+                        'admin_file_link' => $signingLink[2],
+                    ]);
+
+                    $resultData = [
+                        "status" => "success",
+                        "title" => "API Success",
+                        "message" => "New Service Request id : " . $last_order_id ." successfully created",
+                        "servicerequestid" => $last_order_id,
+                        "serviceprovidername" => $seller->name,
+                        "serviceproviderid" => $seller->id,
+                        "serviceprovideremail" => $seller->email,
+                    ];
+                    \Log::debug("Result : " . print_r($resultData,true));
+                    return json_encode($resultData);
+                }
+            }
+        }
+
+        if ($selected_payment_gateway === 'cash_on_delivery' || $selected_payment_gateway === 'annual_maintenance_charge') {
+            $order_details = Order::find($last_order_id);
+            $random_order_id_1 = Str::random(30);
+            $random_order_id_2 = Str::random(30);
+            $new_order_id = $random_order_id_1.$last_order_id.$random_order_id_2;
+
+            try {
+                $message_for_buyer = get_static_option('new_order_buyer_message') ?? __('You have successfully placed an service Rrequest #');
+                $message_for_seller_admin = get_static_option('new_order_admin_seller_message') ?? __('You have a new service request #');
+                Mail::to($order_details->email)->send(new OrderMail(strip_tags($message_for_buyer).$order_details->id,$order_details));
+                Mail::to($seller->email)->send(new OrderMail(strip_tags($message_for_seller_admin).$order_details->id,$order_details));
+                Mail::to(get_static_option('site_global_email'))->send(new OrderMail(strip_tags($message_for_seller_admin).$order_details->id,$order_details));
+            } catch (\Exception $e) {
+                \Toastr::error($e->getMessage());
+            }
+            
+            $formDataToSubmit = [
+                "ServiceProviderName" => $seller->name,
+                "ServiceProviderEmail" => $seller->email,
+                "ServiceProviderPhone" => $seller->phone,
+                "ServiceName" => $service->include_service_title ?? "NA",
+                "ServiceAmount" => $total,
+                "CutomerName" => $name,
+                "CutomerEmail" => $email,
+                "CutomerPhone" => $phone,
+                "ServiceId" => $last_order_id,
+                "Date" => $todayDate
+            ];
+            // $resultOfFormSubmiation = Doc8yAPI::sumbitData($seller->phone, $formDataToSubmit);
+            $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
+            $decodeData = json_decode($resultOfFormSubmiation,true);
+            \Log::debug("Result of Form Creation : " . print_r($decodeData,true));
+            
+            // if ($decodeData['status'] == 'error'){
+            //     Order::where('id', $last_order_id)->delete();
+            //     $status = [
+            //         "status" => "error",
+            //         "title" => "API Failed",
+            //         "message" => "Creation of document get failed",
+            //     ];
+            //     exit(json_encode($status));
+            // }
+            if ($decodeData['status'] == "error"){
+                $resultData = [
+                    "status" => "success",
+                    "title" => "API Success",
+                    "message" => "New Service Request id : " . $last_order_id ." successfully created. But Form aganist it not created in doc8.",
+                    "servicerequestid" => $last_order_id,
+                    "serviceprovidername" => $seller->name,
+                    "serviceproviderid" => $seller->id,
+                    "serviceprovideremail" => $seller->email,
+                ];
+                \Log::debug("Result : " . print_r($resultData,true));
+                return json_encode($resultData);
+            } else {
+                $fileId = $decodeData['file_id'];
+                $signingLink = $decodeData['signinglinks'];
+                \Log::debug("File ID : " . $fileId . "\nSigning Link : " . print_r($signingLink,true));
+
+                Order::where('id',$last_order_id)->update([
+                    'file_id' => $fileId,
+                    'service_provider_file_link' => $signingLink[0],
+                    'customer_file_link' => $signingLink[1],
+                    'admin_file_link' => $signingLink[2],
+                ]);
+
+                $resultData = [
+                    "status" => "success",
+                    "title" => "API Success",
+                    "message" => "New service request id : " . $last_order_id ." successfully created",
+                    "servicerequestid" => $last_order_id,
+                    "serviceprovidername" => $seller->name,
+                    "serviceproviderid" => $seller->id,
+                    "serviceprovideremail" => $seller->email,
+                ];
+                \Log::debug("Result : " . print_r($resultData,true));
+                return json_encode($resultData);
+            }
+        }
     }
 
     //search by sub category
@@ -3125,8 +3927,8 @@ class ServiceListController extends Controller
             })
             ->where('seller_id',$request->seller_id)
             ->whereHas('reviews', function ($q) use ($rating) {
-                $q->havingRaw('AVG(reviews.rating) >= ?', [$rating])
-                    ->havingRaw('AVG(reviews.rating) <= ?', [$rating + 1]);
+                $q->havingRaw('AVG(s8_reviews.rating) >= ?', [$rating])
+                    ->havingRaw('AVG(s8_reviews.rating) <= ?', [$rating + 1]);
             })->get();
 
 
@@ -3234,8 +4036,8 @@ class ServiceListController extends Controller
                 $q->whereHas('seller_subscription');
             })
             ->whereHas('reviews', function ($q) use ($rating) {
-                $q->havingRaw('AVG(reviews.rating) >= ?', [$rating])
-                    ->havingRaw('AVG(reviews.rating) <= ?', [$rating + 1]);
+                $q->havingRaw('AVG(s8_reviews.rating) >= ?', [$rating])
+                    ->havingRaw('AVG(s8_reviews.rating) <= ?', [$rating + 1]);
             })->get();
 
         return response()->json([
@@ -3300,8 +4102,8 @@ class ServiceListController extends Controller
             $rating = (int) request()->get('rating');
             $service_quyery->whereHas('reviews', function ($q) use ($rating) {
                 $q->groupBy('reviews.id')
-                    ->havingRaw('AVG(reviews.rating) >= ?', [$rating])
-                    ->havingRaw('AVG(reviews.rating) < ?', [$rating + 1]);
+                    ->havingRaw('AVG(s8_reviews.rating) >= ?', [$rating])
+                    ->havingRaw('AVG(s8_reviews.rating) < ?', [$rating + 1]);
             });
         }
 
@@ -3357,8 +4159,8 @@ class ServiceListController extends Controller
             $rating = (int) request()->get('rating');
             $service_quyery->whereHas('reviews', function ($q) use ($rating) {
                 $q->groupBy('reviews.id')
-                    ->havingRaw('AVG(reviews.rating) >= ?', [$rating])
-                    ->havingRaw('AVG(reviews.rating) < ?', [$rating + 1]);
+                    ->havingRaw('AVG(s8_reviews.rating) >= ?', [$rating])
+                    ->havingRaw('AVG(s8_reviews.rating) < ?', [$rating + 1]);
             });
         }
 
@@ -3409,8 +4211,8 @@ class ServiceListController extends Controller
             $rating = (int) request()->get('rating');
             $service_quyery->whereHas('reviews', function ($q) use ($rating) {
                 $q->groupBy('reviews.id')
-                    ->havingRaw('AVG(reviews.rating) >= ?', [$rating])
-                    ->havingRaw('AVG(reviews.rating) < ?', [$rating + 1]);
+                    ->havingRaw('AVG(s8_reviews.rating) >= ?', [$rating])
+                    ->havingRaw('AVG(s8_reviews.rating) < ?', [$rating + 1]);
             });
         }
 

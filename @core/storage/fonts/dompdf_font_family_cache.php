@@ -89,12 +89,12 @@ return array (
     'bold' => $fontDir . '/open-sans-bold_f5836ebbb5d80c7cd133581c8d7f6236',
   ),
   'roboto' => array(
-    '300_italic' => $fontDir . '/roboto_300_italic_3d719d848a0b6b3f4f0918985ffd2db7',
-    '300' => $fontDir . '/roboto_300_32acfcb296f555e063ebba2be7db9e2f',
-    'normal' => $fontDir . '/roboto_normal_7bc701b343c10631f60048716b96e4f7',
-    '500' => $fontDir . '/roboto_500_5774d6fb05eba3d096525f821dbe4137',
-    'bold' => $fontDir . '/roboto_bold_8db5cb5d0586c1e891426d13097b1d04',
-    '900' => $fontDir . '/roboto_900_7bf41cacaff90e7097ddd49fb9296601',
+    '300_italic' => $fontDir . '/roboto_300_italic_d317fa2237b7962a3fd66adfa8987f1e',
+    '300' => $fontDir . '/roboto_300_cc4e76f50b66ce9ac2b3d8a19b5f276d',
+    'normal' => $fontDir . '/roboto_normal_e794639d941c5ae548beb5b53f96d8e5',
+    '500' => $fontDir . '/roboto_500_64eaa50e2bf35fe15f6cb55ada83a64e',
+    'bold' => $fontDir . '/roboto_bold_9420b318fa9b620e67bbd96e8ff529e0',
+    '900' => $fontDir . '/roboto_900_23e21dd11a29036fdf461b3dbe1796a8',
   ),
 );
 }; ?>

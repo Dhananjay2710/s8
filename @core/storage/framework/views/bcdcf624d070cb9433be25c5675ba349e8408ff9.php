@@ -168,6 +168,14 @@
                                             href="<?php echo e(route('admin.all.frontend.user')); ?>"><?php echo e(__('All Users')); ?></a></li>
                                 <?php endif; ?>
                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('user-list')): ?>
+                                    <li class="<?php echo e(active_menu('admin-home/frontend/user-type')); ?>"><a
+                                            href="<?php echo e(route('admin.all.frontend.usertype')); ?>"><?php echo e(__('User Type')); ?></a></li>
+                                <?php endif; ?>
+                                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('user-list')): ?>
+                                    <li class="<?php echo e(active_menu('admin-home/frontend/add-new-user')); ?>"><a
+                                            href="<?php echo e(route('admin.all.frontend.add-new-user')); ?>"><?php echo e(__('Add New User')); ?></a></li>
+                                <?php endif; ?>
+                                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('user-list')): ?>
                                     <li class="<?php echo e(active_menu('admin-home/frontend/deactive-users')); ?>">
                                         <a href="<?php echo e(route('admin.all.frontend.deactive.user')); ?>"><?php echo e(__('Deactive Users')); ?></a>
                                     </li>
@@ -763,7 +771,7 @@
 
                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('general-settings-payment-gateway')): ?>
                                     <li class="<?php echo e(active_menu('admin-home/general-settings/payment-gateway-settings')); ?>"><a
-                                            href="<?php echo e(route('admin.general.global.payment.settings')); ?>"><?php echo e(__('Payment Gateway Settings')); ?></a>
+                                            href="<?php echo e(route('admin.general.global.payment.settings')); ?>"><?php echo e(__('Payment Method Settings')); ?></a>
                                     </li>
                                 <?php endif; ?>
 

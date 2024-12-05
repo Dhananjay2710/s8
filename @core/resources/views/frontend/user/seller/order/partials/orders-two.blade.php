@@ -707,7 +707,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="media-upload-btn-wrapper" style="padding-top: 5px">
-                                            <div id="timerDisplay">Time left: 3:00</div>
+                                            <div id="timerDisplayOfCustomer">Time left: 3:00</div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -1109,10 +1109,35 @@
                     const top = (screen.height / 2) - (height / 2);
                     const signWindowOfCustomer = window.open(customerFileLink, 'SignDocumentWindowOfCustomer', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
 
+                    // Set the timer duration (in seconds)
+                    let timerDuration = 180;
+                    const timerDisplayOfCustomer = document.getElementById('timerDisplayOfCustomer');
+
+                    // Update the timer every second
+                    const countdownTimer = setInterval(function () {
+                        if (timerDuration > 0) {
+                            timerDuration--;
+                            const minutes = Math.floor(timerDuration / 60);
+                            const seconds = timerDuration % 60;
+                            timerDisplayOfCustomer.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        } else {
+                            clearInterval(countdownTimer);
+                        }
+                    }, 1000);
+
+                    // Close the window after 3 minutes (180000 milliseconds)
+                    const autoCloseTimer = setTimeout(function () {
+                        signWindow.close();
+                    }, 180000);
+
                     const checkWindowClosed = setInterval(function () {
                         if (signWindowOfCustomer.closed) {
-                            clearInterval(checkWindowClosed);const orderId = document.querySelector('#order_id').value;
-                            fetchUpdatedData(orderId);
+                            clearInterval(checkWindowClosed);
+                            clearInterval(countdownTimer);
+                            clearTimeout(autoCloseTimer);
+                            timerDisplayOfCustomer.textContent = "Signing window has closed.";
+                            const orderId = document.querySelector('#order_id').value;
+                            fetchUpdatedDataOfCustomer(orderId);
                         }
                     }, 1000);
                 } else {
@@ -1123,7 +1148,7 @@
             // fetch updated data using xhr call
             function fetchUpdatedData(orderId) {
                 const xhr = new XMLHttpRequest();
-                xhr.open('GET', `/s8/serviceprovider/ordersdetailsupdateapi/${orderId}`, true);
+                xhr.open('GET', `/providers/serviceprovider/ordersdetailsupdateapi/${orderId}`, true);
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState === 4 && xhr.status === 200) {
                         console.log("XHR Success");
@@ -1140,6 +1165,25 @@
                 xhr.send();
             }
 
+            // fetch updated data using xhr call
+            function fetchUpdatedDataOfCustomer(orderId) {
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', `/providers/serviceprovider/ordersdetailsupdateapi/${orderId}`, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log("XHR Success");
+                        // Parse the JSON response
+                        const response = JSON.parse(xhr.responseText);
+                        const fileLink = response.customer_file_link;
+                        const fileSigningStatus = response.customer_signing_status;
+                        // Update the modal's fileStatusOfCustomer element
+                        updateDOMOfCustomer(fileSigningStatus, fileLink)
+                    } else if (xhr.readyState === 4) {
+                        console.error('Failed to fetch updated data.');
+                    }
+                };
+                xhr.send();
+            }
             // update DOM
             function updateDOM(status, link) {
                 signDocumentBtn.setAttribute('data-file-link', link);
@@ -1154,9 +1198,35 @@
                 }
             }
 
+            // update DOM
+            function updateDOMOfCustomer(status, link) {
+                signDocumentBtn.setAttribute('data-order_customer_file_link', link);
+                const fileStatusElement = document.querySelector('#fileStatusOfCustomer');
+                fileStatusElement.textContent = status;
+                setFileStatusColorOfCustomer(status);
+                if (link && status !== 'Signed') {
+                    signDocumentBtn.disabled = false;
+                } else {
+                    signDocumentBtn.disabled = true;
+                    timerDisplayOfCustomer.textContent = '';
+                }
+            }
+
             // set file status color
             function setFileStatusColor(status) {
                 const fileStatusElement = document.querySelector('#fileStatus');
+                if (status === 'Pending') {
+                    fileStatusElement.style.color = 'red';
+                } else if (status === 'Signed') {
+                    fileStatusElement.style.color = 'green';
+                } else {
+                    fileStatusElement.style.color = 'black';
+                }
+            }
+
+            // set file status color
+            function setFileStatusColorOfCustomer(status) {
+                const fileStatusElement = document.querySelector('#fileStatusOfCustomer');
                 if (status === 'Pending') {
                     fileStatusElement.style.color = 'red';
                 } else if (status === 'Signed') {

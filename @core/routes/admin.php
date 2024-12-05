@@ -512,6 +512,14 @@ Route::group(['prefix' => 'page-builder','middleware' => 'auth:admin','setlang']
 
     //Frontend User  management    
     Route::get('/frontend/all-user','FrontendUserManageController@all_user')->name('admin.all.frontend.user');
+    Route::get('/frontend/user-type','FrontendUserManageController@all_user_type')->name('admin.all.frontend.usertype');
+    Route::get('/frontend/user-type/new','FrontendUserManageController@new_user_type')->name('admin.frontend.new.usertype');
+    Route::post('/frontend/user-type/new','FrontendUserManageController@store_new_user_type');
+    Route::get('/frontend/user-type/edit/{id}','FrontendUserManageController@edit_user_type')->name('admin.frontend.usertype.edit');
+    Route::post('/frontend/user-type/update','FrontendUserManageController@update_user_type')->name('admin.frontend.usertype.update');
+    Route::post('/frontend/user-type/delete/{id}','FrontendUserManageController@delete_user_type')->name('admin.frontend.usertype.delete');
+    Route::get('/frontend/user/new','FrontendUserManageController@add_new_user')->name('admin.all.frontend.add-new-user');
+    Route::post('/frontend/user/store','FrontendUserManageController@store_new_user')->name('admin.all.frontend.store-new-user');
     Route::post('/frontend/change-user-status/{id}','FrontendUserManageController@userStatus')->name('admin.frontend.user.status');
     Route::post('/frontend/delete-user/{id}','FrontendUserManageController@userDelete')->name('admin.frontend.user.delete');
     Route::post('/frontend/all-user/bulk-action','FrontendUserManageController@bulk_action')->name('admin.all.frontend.user.bulk.action');

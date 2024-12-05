@@ -13,11 +13,15 @@
             <ul class="dashboard__bottom__list dashboard-list">
 
                 <li class="dashboard__bottom__list__item <?php if(request()->is('seller/dashboard*')): ?> active <?php elseif(request()->is('serviceprovider/dashboard*')): ?> active <?php endif; ?>">
-                    <a href="<?php echo e(route('seller.dashboard')); ?>"><i class="las la-chart-bar"></i> <?php echo e(__('Dashboard')); ?></a>
+                    <a href="<?php echo e(route('seller.dashboard')); ?>"><i class="las la-tachometer-alt"></i> <?php echo e(__('Dashboard')); ?></a>
                 </li>
 
                 <li class="dashboard__bottom__list__item <?php if(request()->is('seller/profile*')): ?> active <?php elseif(request()->is('serviceprovider/profile*')): ?> active <?php endif; ?>">
                     <a href="<?php echo e(route('seller.profile')); ?>"><i class="las la-user-alt"></i> <?php echo e(__('Profile')); ?></a>
+                </li>
+
+                <li class="dashboard__bottom__list__item <?php if(request()->is('seller/company*')): ?> active <?php elseif(request()->is('serviceprovider/company*')): ?> active <?php endif; ?>">
+                    <a href="<?php echo e(route('seller.company')); ?>"><i class="las la-building"></i> <?php echo e(__('Company')); ?></a>
                 </li>
 
                 <?php if(moduleExists('LiveChat')): ?>

@@ -64,125 +64,251 @@
 </div>
 <?php endif; ?>
 <div class="page-container">
-    <?php echo $__env->make('backend/partials/sidebar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+    <?php if(isset($isHideMenu)): ?>
+        <?php if(!$isHideMenu): ?>
+            <?php echo $__env->make('backend/partials/sidebar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+        <?php endif; ?>
+    <?php else: ?>
+        <?php echo $__env->make('backend/partials/sidebar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+    <?php endif; ?>
     <div class="main-content">
+        <?php if(isset($isHideMenu)): ?>
+            <?php if(!$isHideMenu): ?>
+                <div class="header-area">
+                    <div class="row align-items-center">
 
-        <div class="header-area">
-            <div class="row align-items-center">
+                        <div class="col-md-3 col-sm-3 clearfix">
+                            <div class="nav-btn pull-left">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="col-md-9 col-sm-9 clearfix">
+                            <ul class="notification-area pull-right">
+                            <?php
+                                $unread_count = 0;
 
-                <div class="col-md-3 col-sm-3 clearfix">
-                    <div class="nav-btn pull-left">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                                    $admin_unread_notifications = [];
+                                    try{
+                                        $unread_count = \App\AdminNotification::where('status', 0)->count();
+                                        $admin_unread_notifications = \App\AdminNotification::where('status', 0)->take(5)->get();
+                                    }catch(\Exception $e){  }
+                                    
+                                ?>
+                                <li class="dropdown">
+                                    <i class="ti-bell dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <span><?php echo e($unread_count); ?></span>
+                                    </i>
+                                    <div class="dropdown-menu bell-notify-box notify-box" x-placement="top-start">
+                                        <span class="notify-title"><?php echo e(__('Notifications')); ?>
+
+                                            <a href="<?php echo e(route('admin.notifications.all')); ?>"><?php echo e(__('view all')); ?></a>
+                                        </span>
+
+                                        <div class="slimScrollDiv">
+                                            <div class="nofity-list">
+                                                <!-- Order section start -->
+                                                <?php $__currentLoopData = $admin_unread_notifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php if(!empty($data->order_id)): ?>
+                                                    <a href="<?php echo e(route('admin.orders.details', $data->order_id)); ?>" class="notify-item">
+                                                        <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
+                                                        <div class="notify-text">
+                                                            <p><?php echo e(__('New service request')); ?> #<?php echo e($data->order_id ?? ''); ?></p>
+                                                            <span> <?php echo e(\Carbon\Carbon::parse($data->created_at)->diffForHumans()); ?> </span>
+                                                        </div>
+                                                    </a>
+                                                    <?php endif; ?>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                <!-- Order section end -->
+                                                <!-- Tickets section start -->
+                                                <?php $__currentLoopData = $admin_unread_notifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php if(!empty($data->ticket_id)): ?>
+                                                    <a href="<?php echo e(route('admin.ticket.details', $data->ticket_id)); ?>" class="notify-item">
+                                                        <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
+                                                        <div class="notify-text">
+                                                            <p><?php echo e(__('New service request ticket')); ?> #<?php echo e($data->ticket_id ?? ''); ?></p>
+                                                            <span> <?php echo e(\Carbon\Carbon::parse($data->created_at)->diffForHumans()); ?> </span>
+                                                        </div>
+                                                    </a>
+                                                    <?php endif; ?>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                <!-- Tickets section end -->
+                                                <!-- Job post section start -->
+                                                <?php $__currentLoopData = $admin_unread_notifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php if(!empty($data->job_post_id)): ?>
+                                                    <a href="<?php echo e(route('job.post.details', optional($data->buyerJob)->slug)); ?>" class="notify-item">
+                                                        <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
+                                                        <div class="notify-text">
+                                                            <p><?php echo e(__('New Job Created')); ?> #<?php echo e($data->job_post_id ?? ''); ?></p>
+                                                            <span> <?php echo e(\Carbon\Carbon::parse($data->created_at)->diffForHumans()); ?> </span>
+                                                        </div>
+                                                    </a>
+                                                    <?php endif; ?>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                <!-- Job Post section end -->
+                                            </div>
+                                            <div class="slimScrollBar"></div><div class="slimScrollRail">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li ><label class="switch yes">
+                                    <input id="darkmode" type="checkbox" data-mode=<?php echo e(get_static_option('site_admin_dark_mode')); ?> <?php if(get_static_option('site_admin_dark_mode') == 'on'): ?> checked <?php else: ?> <?php endif; ?>>
+                                    <span class="slider-color-mode onff"></span>
+                                </label></li>
+                                <li id="full-view"><i class="ti-fullscreen"></i></li>
+                                <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
+                                <li><a class="btn <?php if(get_static_option('site_admin_dark_mode') == 'off'): ?>btn-primary <?php else: ?> btn-dark  <?php endif; ?>" target="_blank" href="<?php echo e(url('/')); ?>"><i class="fas fa-external-link-alt mr-1"></i>   <?php echo e(__('View Site')); ?> </a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-9 col-sm-9 clearfix">
-                    <ul class="notification-area pull-right">
-                    <?php
-                        $unread_count = 0;
 
-                             $admin_unread_notifications = [];
-                             try{
-                                $unread_count = \App\AdminNotification::where('status', 0)->count();
-                                $admin_unread_notifications = \App\AdminNotification::where('status', 0)->take(5)->get();
-                             }catch(\Exception $e){  }
-                            
-                        ?>
-                        <li class="dropdown">
-                            <i class="ti-bell dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                <span><?php echo e($unread_count); ?></span>
-                            </i>
-                            <div class="dropdown-menu bell-notify-box notify-box" x-placement="top-start">
-                                <span class="notify-title"><?php echo e(__('Notifications')); ?>
+                <div class="page-title-area">
+                    <div class="row align-items-center">
+                        <div class="col-sm-6">
+                            <div class="breadcrumbs-area clearfix">
+                                <h4 class="page-title pull-left"><?php echo $__env->yieldContent('site-title'); ?></h4>
+                                <ul class="breadcrumbs pull-left">
+                                    <li><a href="<?php echo e(route('admin.home')); ?>"><?php echo e(__('Home')); ?></a></li>
+                                    <li><span><?php echo $__env->yieldContent('site-title'); ?></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 clearfix">
+                            <div class="user-profile pull-right">
+                                <?php echo render_image_markup_by_attachment_id(auth()->guard('admin')->user()->image,'avatar user-thumb'); ?>
 
-                                    <a href="<?php echo e(route('admin.notifications.all')); ?>"><?php echo e(__('view all')); ?></a>
-                                </span>
-
-                                <div class="slimScrollDiv">
-                                    <div class="nofity-list">
-                                        <!-- Order section start -->
-                                        <?php $__currentLoopData = $admin_unread_notifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <?php if(!empty($data->order_id)): ?>
-                                            <a href="<?php echo e(route('admin.orders.details', $data->order_id)); ?>" class="notify-item">
-                                                <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
-                                                <div class="notify-text">
-                                                    <p><?php echo e(__('New service request')); ?> #<?php echo e($data->order_id ?? ''); ?></p>
-                                                    <span> <?php echo e(\Carbon\Carbon::parse($data->created_at)->diffForHumans()); ?> </span>
-                                                </div>
-                                            </a>
-                                              <?php endif; ?>
-                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        <!-- Order section end -->
-                                        <!-- Tickets section start -->
-                                        <?php $__currentLoopData = $admin_unread_notifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <?php if(!empty($data->ticket_id)): ?>
-                                            <a href="<?php echo e(route('admin.ticket.details', $data->ticket_id)); ?>" class="notify-item">
-                                                <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
-                                                <div class="notify-text">
-                                                    <p><?php echo e(__('New service request ticket')); ?> #<?php echo e($data->ticket_id ?? ''); ?></p>
-                                                    <span> <?php echo e(\Carbon\Carbon::parse($data->created_at)->diffForHumans()); ?> </span>
-                                                </div>
-                                            </a>
-                                              <?php endif; ?>
-                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        <!-- Tickets section end -->
-                                        <!-- Job post section start -->
-                                        <?php $__currentLoopData = $admin_unread_notifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <?php if(!empty($data->job_post_id)): ?>
-                                            <a href="<?php echo e(route('job.post.details', optional($data->buyerJob)->slug)); ?>" class="notify-item">
-                                                <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
-                                                <div class="notify-text">
-                                                    <p><?php echo e(__('New Job Created')); ?> #<?php echo e($data->job_post_id ?? ''); ?></p>
-                                                    <span> <?php echo e(\Carbon\Carbon::parse($data->created_at)->diffForHumans()); ?> </span>
-                                                </div>
-                                            </a>
-                                              <?php endif; ?>
-                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        <!-- Job Post section end -->
-                                    </div>
-                                    <div class="slimScrollBar"></div><div class="slimScrollRail">
-                                    </div>
+                                <h4 class="user-name dropdown-toggle" data-toggle="dropdown"><?php echo e(Auth::user()->name); ?> <i class="fa fa-angle-down"></i></h4>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="<?php echo e(route('admin.profile.update')); ?>"><?php echo e(__('Edit Profile')); ?></a>
+                                    <a class="dropdown-item" href="<?php echo e(route('admin.password.change')); ?>"><?php echo e(__('Password Change')); ?></a>
+                                    <a class="dropdown-item" href="<?php echo e(route('admin.logout')); ?>"><?php echo e(__('Logout')); ?></a>
                                 </div>
                             </div>
-                        </li>
-                        <li ><label class="switch yes">
-                            <input id="darkmode" type="checkbox" data-mode=<?php echo e(get_static_option('site_admin_dark_mode')); ?> <?php if(get_static_option('site_admin_dark_mode') == 'on'): ?> checked <?php else: ?> <?php endif; ?>>
-                            <span class="slider-color-mode onff"></span>
-                        </label></li>
-                        <li id="full-view"><i class="ti-fullscreen"></i></li>
-                        <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
-                        <li><a class="btn <?php if(get_static_option('site_admin_dark_mode') == 'off'): ?>btn-primary <?php else: ?> btn-dark  <?php endif; ?>" target="_blank" href="<?php echo e(url('/')); ?>"><i class="fas fa-external-link-alt mr-1"></i>   <?php echo e(__('View Site')); ?> </a></li>
-                    </ul>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            <?php endif; ?>
+        <?php else: ?>
+            <div class="header-area">
+                <div class="row align-items-center">
 
-        <div class="page-title-area">
-            <div class="row align-items-center">
-                <div class="col-sm-6">
-                    <div class="breadcrumbs-area clearfix">
-                        <h4 class="page-title pull-left"><?php echo $__env->yieldContent('site-title'); ?></h4>
-                        <ul class="breadcrumbs pull-left">
-                            <li><a href="<?php echo e(route('admin.home')); ?>"><?php echo e(__('Home')); ?></a></li>
-                            <li><span><?php echo $__env->yieldContent('site-title'); ?></span></li>
+                    <div class="col-md-3 col-sm-3 clearfix">
+                        <div class="nav-btn pull-left">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-sm-9 clearfix">
+                        <ul class="notification-area pull-right">
+                        <?php
+                            $unread_count = 0;
+
+                                $admin_unread_notifications = [];
+                                try{
+                                    $unread_count = \App\AdminNotification::where('status', 0)->count();
+                                    $admin_unread_notifications = \App\AdminNotification::where('status', 0)->take(5)->get();
+                                }catch(\Exception $e){  }
+                                
+                            ?>
+                            <li class="dropdown">
+                                <i class="ti-bell dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    <span><?php echo e($unread_count); ?></span>
+                                </i>
+                                <div class="dropdown-menu bell-notify-box notify-box" x-placement="top-start">
+                                    <span class="notify-title"><?php echo e(__('Notifications')); ?>
+
+                                        <a href="<?php echo e(route('admin.notifications.all')); ?>"><?php echo e(__('view all')); ?></a>
+                                    </span>
+
+                                    <div class="slimScrollDiv">
+                                        <div class="nofity-list">
+                                            <!-- Order section start -->
+                                            <?php $__currentLoopData = $admin_unread_notifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <?php if(!empty($data->order_id)): ?>
+                                                <a href="<?php echo e(route('admin.orders.details', $data->order_id)); ?>" class="notify-item">
+                                                    <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
+                                                    <div class="notify-text">
+                                                        <p><?php echo e(__('New service request')); ?> #<?php echo e($data->order_id ?? ''); ?></p>
+                                                        <span> <?php echo e(\Carbon\Carbon::parse($data->created_at)->diffForHumans()); ?> </span>
+                                                    </div>
+                                                </a>
+                                                <?php endif; ?>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                            <!-- Order section end -->
+                                            <!-- Tickets section start -->
+                                            <?php $__currentLoopData = $admin_unread_notifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <?php if(!empty($data->ticket_id)): ?>
+                                                <a href="<?php echo e(route('admin.ticket.details', $data->ticket_id)); ?>" class="notify-item">
+                                                    <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
+                                                    <div class="notify-text">
+                                                        <p><?php echo e(__('New service request ticket')); ?> #<?php echo e($data->ticket_id ?? ''); ?></p>
+                                                        <span> <?php echo e(\Carbon\Carbon::parse($data->created_at)->diffForHumans()); ?> </span>
+                                                    </div>
+                                                </a>
+                                                <?php endif; ?>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                            <!-- Tickets section end -->
+                                            <!-- Job post section start -->
+                                            <?php $__currentLoopData = $admin_unread_notifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <?php if(!empty($data->job_post_id)): ?>
+                                                <a href="<?php echo e(route('job.post.details', optional($data->buyerJob)->slug)); ?>" class="notify-item">
+                                                    <div class="notify-thumb"><i class="ti-check-box btn-dark"></i></div>
+                                                    <div class="notify-text">
+                                                        <p><?php echo e(__('New Job Created')); ?> #<?php echo e($data->job_post_id ?? ''); ?></p>
+                                                        <span> <?php echo e(\Carbon\Carbon::parse($data->created_at)->diffForHumans()); ?> </span>
+                                                    </div>
+                                                </a>
+                                                <?php endif; ?>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                            <!-- Job Post section end -->
+                                        </div>
+                                        <div class="slimScrollBar"></div><div class="slimScrollRail">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li ><label class="switch yes">
+                                <input id="darkmode" type="checkbox" data-mode=<?php echo e(get_static_option('site_admin_dark_mode')); ?> <?php if(get_static_option('site_admin_dark_mode') == 'on'): ?> checked <?php else: ?> <?php endif; ?>>
+                                <span class="slider-color-mode onff"></span>
+                            </label></li>
+                            <li id="full-view"><i class="ti-fullscreen"></i></li>
+                            <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
+                            <li><a class="btn <?php if(get_static_option('site_admin_dark_mode') == 'off'): ?>btn-primary <?php else: ?> btn-dark  <?php endif; ?>" target="_blank" href="<?php echo e(url('/')); ?>"><i class="fas fa-external-link-alt mr-1"></i>   <?php echo e(__('View Site')); ?> </a></li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-sm-6 clearfix">
-                    <div class="user-profile pull-right">
-                        <?php echo render_image_markup_by_attachment_id(auth()->guard('admin')->user()->image,'avatar user-thumb'); ?>
+            </div>
 
-                        <h4 class="user-name dropdown-toggle" data-toggle="dropdown"><?php echo e(Auth::user()->name); ?> <i class="fa fa-angle-down"></i></h4>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="<?php echo e(route('admin.profile.update')); ?>"><?php echo e(__('Edit Profile')); ?></a>
-                            <a class="dropdown-item" href="<?php echo e(route('admin.password.change')); ?>"><?php echo e(__('Password Change')); ?></a>
-                            <a class="dropdown-item" href="<?php echo e(route('admin.logout')); ?>"><?php echo e(__('Logout')); ?></a>
+            <div class="page-title-area">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <div class="breadcrumbs-area clearfix">
+                            <h4 class="page-title pull-left"><?php echo $__env->yieldContent('site-title'); ?></h4>
+                            <ul class="breadcrumbs pull-left">
+                                <li><a href="<?php echo e(route('admin.home')); ?>"><?php echo e(__('Home')); ?></a></li>
+                                <li><span><?php echo $__env->yieldContent('site-title'); ?></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 clearfix">
+                        <div class="user-profile pull-right">
+                            <?php echo render_image_markup_by_attachment_id(auth()->guard('admin')->user()->image,'avatar user-thumb'); ?>
+
+                            <h4 class="user-name dropdown-toggle" data-toggle="dropdown"><?php echo e(Auth::user()->name); ?> <i class="fa fa-angle-down"></i></h4>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="<?php echo e(route('admin.profile.update')); ?>"><?php echo e(__('Edit Profile')); ?></a>
+                                <a class="dropdown-item" href="<?php echo e(route('admin.password.change')); ?>"><?php echo e(__('Password Change')); ?></a>
+                                <a class="dropdown-item" href="<?php echo e(route('admin.logout')); ?>"><?php echo e(__('Logout')); ?></a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        <?php endif; ?>
         <?php echo $__env->yieldContent('content'); ?>
     </div>
 

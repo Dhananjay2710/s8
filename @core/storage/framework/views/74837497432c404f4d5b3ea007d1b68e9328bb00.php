@@ -155,7 +155,7 @@
                                                     </label>
                                                 </div>
                                                 <div class="checkbox-inlines">
-                                                    <label><strong><?php echo e(__('Payment Gateway:')); ?> </strong><?php echo e(__(ucwords(str_replace("_", " ", $order_details->payment_gateway)))); ?>
+                                                    <label><strong><?php echo e(__('Payment Method:')); ?> </strong><?php echo e(__(ucwords(str_replace("_", " ", $order_details->payment_gateway)))); ?>
 
                                                     </label>
                                                 </div>

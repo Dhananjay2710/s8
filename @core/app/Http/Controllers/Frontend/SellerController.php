@@ -24,6 +24,7 @@ use Illuminate\Http\Request;
 use App\Serviceadditional;
 use App\Serviceinclude;
 use App\Servicebenifit;
+use App\Serviceaddresses;
 use App\Subcategory;
 use App\Category;
 use App\Country;
@@ -57,6 +58,7 @@ use App\Events\UpdateTicket;
 use App\SignzyAPI;
 use App\Helpers\StringMatchHelper;
 use App\Helpers\TokenGenrateHelper;
+use App\Company;
 
 class SellerController extends Controller
 {
@@ -441,7 +443,7 @@ class SellerController extends Controller
     {
 
 
-        if(!empty($request->service_id || $request->service_status || $request->service_title || $request->online_offline_status || $request->service_price || $request->service_date)){
+        if(!empty($request->service_id || $request->service_status || $request->service_title || $request->online_offline_status || $request->service_price || $request->service_post_code || $request->service_date)){
 
             $services_query = Service::with('reviews', 'pendingOrder', 'completeOrder', 'cancelOrder')->where('seller_id', Auth::user()->id);
 
@@ -480,6 +482,15 @@ class SellerController extends Controller
                 $services_query->whereIn('id', $service_id);
             }
 
+            // search by service amount
+            if (!empty($request->service_post_code)){
+                $service_post_code_id = Serviceaddresses::where('service_post_code', 'LIKE', "%{$request->service_post_code}%")->pluck('service_id')->toArray();
+                foreach ($service_post_code_id as $service_id) {
+                    $service_id = Service::select('id', 'title')->where('id',  $service_id)->pluck('id')->toArray();
+                    $services_query->whereIn('id', $service_id);
+                }
+            }
+
             // search by service title
             if (!empty($request->service_title)){
                 $service_id = Service::select('id', 'title')->where('title',  'LIKE', "%{$request->service_title}%")->pluck('id')->toArray();
@@ -500,6 +511,7 @@ class SellerController extends Controller
 
     public function addServices(Request $request)
     {
+        \Log::debug("Add server Start");
         $commissionGlobal = AdminCommission::first();
         if(moduleExists('Subscription') && $commissionGlobal->system_type == 'subscription' && empty(auth('web')->user()->subscribedSeller)){
             toastr_error(__('you must have to subscribe any of our package in order to start selling your services.'));
@@ -507,10 +519,11 @@ class SellerController extends Controller
         }
 
         if ($request->isMethod('post')) {
+            \Log::debug("Inside If for method post");
             //seller Verify check
             if (get_static_option('service_create_settings') == 'verified_seller'){
                 $seller = SellerVerify::select('seller_id','status')->where('seller_id',Auth::guard('web')->user()->id)->first();
-                $seller_verified_status = $seller?->status ?? 0;
+                $seller_verified_status = $seller->status ?? 0;
                 if($seller_verified_status != 1 ){
                     toastr_error(__('You are not verified. to add services you must have to verify your account first'));
                     return redirect()->back();
@@ -523,7 +536,9 @@ class SellerController extends Controller
             //commission type check
             $commission = AdminCommission::first();
                 if($commission->system_type == 'subscription'){
+                    \Log::debug("Inside If subscription");
                 if(subscriptionModuleExistsAndEnable('Subscription')){
+                    \Log::debug("Inside If Subscription");
                     $seller_subscription = \Modules\Subscription\Entities\SellerSubscription::where('seller_id', Auth::guard('web')->user()->id)->first();
                         // Seller Service count
                        $seller_service_count = Service::where('seller_id', Auth::guard('web')->user()->id)->count();
@@ -558,14 +573,14 @@ class SellerController extends Controller
                     }
                 }
             }
-
+            \Log::debug("Before validate");
             $request->validate([
                 'category' => 'required',
                 'title' => 'required|max:191|unique:services',
-                'description' => 'required|min:150',
+                'description' => 'required|min:10',
                 'slug' => 'required',
             ]);
-
+            \Log::debug("After validate");
             $seller_country = User::select('id', 'country_id')->where('country_id', Auth::guard('web')->user()->country_id)->first();
             $country_tax = Tax::select('tax')->where('country_id', $seller_country->country_id)->first();
 
@@ -606,8 +621,9 @@ class SellerController extends Controller
                 'twitter_meta_image' => $request->twitter_meta_image,
             ];
             $service->save();
+            \Log::debug("After Save");
             $last_service_id = DB::getPdo()->lastInsertId();
-
+            \Log::debug("last_service_id" . $last_service_id);
             try {
                 $message = get_static_option('service_approve_message');
                 $message = str_replace(["@service_id"], [$last_service_id], $message);
@@ -622,12 +638,14 @@ class SellerController extends Controller
             toastr_success(__('Service Added Success---'));
             return redirect('/seller/service-attributes');
 
+        } else{
+            \Log::debug("Inside else");
         }
 
 
         $categories = Category::where('status', 1)->get();
         $sub_categories = Subcategory::all();
-
+        \Log::debug("Add server End");
         if(get_static_option('dashboard_variant_seller') == '02'){
             return view('frontend.user.seller.services.partials.add-service-two', compact('categories', 'sub_categories'));
         }else{
@@ -1382,6 +1400,7 @@ class SellerController extends Controller
         Serviceadditional::where('service_id',$id)->delete();
         Servicebenifit::where('service_id',$id)->delete();
         OnlineServiceFaq::where('service_id',$id)->delete();
+        Serviceaddresses::where('service_id',$id)->delete();
         Service::find($id)->delete();
         toastr_error(__('Service Delete Success---'));
         return redirect()->back();
@@ -3469,4 +3488,238 @@ class SellerController extends Controller
             return response()->json($response);
         }
     }
+
+    // Get seller company
+    public function sellerCompany(Request $request) {
+        $company_Id = Auth::guard('web')->user()->company_id;
+        if(get_static_option('dashboard_variant_buyer') == '02' && $company_Id != null){
+            if ($request->member_id || $request->member_name) {
+                $companyData = Company::where('id', $company_Id)->first();
+                $userDataWithCompany = User::where('company_id', $company_Id)->where('name', $request->member_name)->where('service_provider_type', "ACP")->get();
+                $cities = ServiceCity::where('status',1)->get();
+                $areas = ServiceArea::where('status',1)->get();
+                $countries = Country::where('status',1)->get();
+            } elseif ($request->member_id || $request->member_email) {
+                $companyData = Company::where('id', $company_Id)->first();
+                $userDataWithCompany = User::where('company_id', $company_Id)->where('email', $request->member_email)->where('service_provider_type', "ACP")->get();
+                $cities = ServiceCity::where('status',1)->get();
+                $areas = ServiceArea::where('status',1)->get();
+                $countries = Country::where('status',1)->get();
+            } elseif ($request->member_id || $request->member_phone) {
+                $companyData = Company::where('id', $company_Id)->first();
+                $userDataWithCompany = User::where('company_id', $company_Id)->where('phone', $request->member_phone)->where('service_provider_type', "ACP")->get();
+                $cities = ServiceCity::where('status',1)->get();
+                $areas = ServiceArea::where('status',1)->get();
+                $countries = Country::where('status',1)->get();
+            } else {
+                $companyData = Company::where('id', $company_Id)->first();
+                $userDataWithCompany = User::where('company_id', $company_Id)->where('service_provider_type', "ACP")->get();
+                $cities = ServiceCity::where('status',1)->get();
+                $areas = ServiceArea::where('status',1)->get();
+                $countries = Country::where('status',1)->get();
+            }
+        } else {
+                $companyData = 0;
+                $userDataWithCompany = 0;
+                $cities = ServiceCity::where('status',1)->get();
+                $areas = ServiceArea::where('status',1)->get();
+                $countries = Country::where('status',1)->get();
+        }
+        
+        return view('frontend.user.seller.company.seller-company', compact('countries', 'areas' ,'cities','companyData', 'userDataWithCompany'));
+    }
+
+    // Add seller company
+    public function addCompany(Request $request) {
+        $request->validate([
+            'companyname' => 'required|max:191',
+            'companyemail' => 'required|max:191',
+            'companyphone' => 'required|max:191',
+            'companyaddress' => 'required',
+            'country_id_add' => 'required',
+            'service_city_add' => 'required',
+            'service_area_add' => 'required',
+            'companypostcode' => 'required',
+        ]);
+
+        $resultOfAddCompany = Company::create([
+            'name' => $request->companyname,
+            'email' => $request->companyemail,
+            'phone' => $request->companyphone,
+            'address' => $request->companyaddress,
+            'country_id' => $request->country_id_add,
+            'service_city' => $request->service_city_add,
+            'service_area' => $request->service_area_add,
+            'post_code' => $request->companypostcode,
+            'image' => '',
+            'profile_background' => '',
+            'gstin' => '',
+        ]);
+
+        $companyId = $resultOfAddCompany->id;
+        User::where('id', Auth::guard('web')->user()->id)->update(['company_id' => $companyId, 'service_provider_type' => "ACP"]);
+
+        toastr_success(__('Company Added Success---'));
+        return redirect()->back();
+    }
+
+    // Edit seller company details 
+    public function sellerCompanyEdit(Request $request) {
+        if ($request->isMethod('post')) {
+            $company_Id = Auth::guard('web')->user()->company_id;
+            $user = Auth::guard('web')->user()->id;
+            $request->validate([
+                'companyname' => 'required|max:191',
+                'companyemail' => 'required|max:191',
+                'companyphone' => 'required|max:191',
+                'service_area' => 'required|max:191',
+                'companypost_code' => 'required|max:191',
+                'companyaddress' => 'required|max:191',
+            ]);
+            $old_image = Company::select('image', 'profile_background')->where('id', $company_Id)->first();
+            Company::where('id', $company_Id)
+                ->update([
+                    'name' => $request->companyname,
+                    'email' => $request->companyemail,
+                    'phone' => $request->companyphone,
+                    'address' => $request->companyaddress,
+                    'service_area' => $request->service_area,
+                    'service_city' => $request->service_city,
+                    'country_id' => $request->country_id,
+                    'post_code' => $request->companypost_code,
+                    'image' => $request->companyimage ?? $old_image->image,
+                    'profile_background' => $request->company_profile_background ?? $old_image->profile_background,
+                    'gstin' => $request->gstin,
+                ]);
+            toastr_success(__('Company Data Updated Successfully---'));
+            return redirect()->back();
+        }
+
+        $countries = Country::where('status', 1)->get();
+        $user_country = Auth::guard('web')->user()->country_id;
+        $cities = ServiceCity::where('country_id', $user_country)->get();
+        $areas = ServiceArea::where('service_city_id', Auth::guard('web')->user()->service_city)->get();
+        return view('frontend.user.seller.profile.seller-profile-edit', compact('cities', 'areas', 'countries'));
+    }
+
+    // add seller member of company
+    public function addCompanyMember(Request $request) {
+        $request->validate([
+            'companyid' => 'required',
+            'memberfullname' => 'required|max:191',
+            'memberusername' => 'required|max:191',
+            'memberemail' => 'required|max:191',
+            'memberphone' => 'required',
+            'newpassword' => 'required',
+            'confirmpassword' => 'required',
+            'country_id_add_member' => 'required',
+            'service_city_add_member' => 'required',
+            'service_area_add_member' => 'required',
+        ]);
+
+        $email_verify_tokn = Str::random(8);
+        $passowrd = $request->newpassword."@".rand(0000, 9999);
+        $user = User::create([
+                'name' => $request->memberfullname,
+                'email' => $request->memberemail,
+                'username' => $request->memberusername,
+                'phone' => $request->memberphone,
+                'password' => Hash::make($passowrd),
+                'service_city' => $request->service_city_add_member,
+                'service_area' => $request->service_area_add_member,
+                'country_id' => $request->country_id_add_member,
+                'user_type' => 0,
+                'terms_conditions' => 1,
+                'email_verify_token'=> $email_verify_tokn,
+                'company_id' => $request->companyid,
+                'service_provider_type' => "ACP",
+        ]);
+        if($user){
+            try {
+                $message = get_static_option('customer_register_message');
+                $subject = get_static_option('customer_register_message_subject');
+                $message = str_replace(["@name", "@type", "@username", "@password"],[$user->name, "customer", $user->name, $passowrd],$message);
+                Mail::to($user->email)->send(new BasicMail([
+                    'subject' => get_static_option('customer_register_message_subject'),
+                    'message' => $message
+                ]));
+
+                $message = get_static_option('user_email_verify_message');
+                $message = str_replace(["@name", "@email_verify_tokn"],[$user->name, $email_verify_tokn],$message);
+                Mail::to($user->email)->send(new BasicMail([
+                    'subject' => get_static_option('user_email_verify_subject'),
+                    'message' => $message
+                ]));
+    
+                $message = get_static_option('user_register_message');
+                $message = str_replace(["@name", "@type","@username","@email"],[$user->name, "customer", $user->name, $user->email], $message);
+                Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
+                    'subject' => get_static_option('user_register_subject') ?? __('New User Registration'),
+                    'message' => $message
+                ]));
+            } catch (\Exception $e) {
+    
+            }
+        }
+
+        toastr_success(__('Team Member Added Success---'));
+        return redirect()->back();
+    }
+
+    // Change the status of seller compnay member
+    public function changeMemberStatus($id = null) {
+        $status = User::select('user_status')->where('id', $id)->first();
+        if ($status->user_status == 1) {
+            $status = 0;
+        } else {
+            $status = 1;
+        }
+        User::where('id', $id)->update([
+            'user_status' => $status,
+        ]);
+        toastr_success(__('Member status Update Success---'));
+        return redirect()->back();
+    }
+    
+    // Edit deatils of seller compnay member
+    public function sellerCompanyMemberEdit(Request $request) {
+        if ($request->isMethod('post')) {
+            $memberId = $request->up_member_id;
+            $request->validate([
+                'up_member_id' => 'required|max:191',
+                'up_name' => 'required|max:191',
+                'up_email' => 'required',
+            ]);
+
+            User::where('id', $memberId)
+                ->update([
+                    'name' => $request->up_name,
+                    'email' => $request->up_email,
+                    'phone' => $request->up_phone,
+                    'address' => $request->companyaddress,
+                    'service_area' => $request->service_area_update_member,
+                    'service_city' => $request->service_city_update_member,
+                    'country_id' => $request->country_id_update_member,
+                    'address' => $request->up_address,
+                    'post_code' => $request->up_post_code,
+                ]);
+            toastr_success(__('Member Data Updated Successfully---'));
+            return redirect()->back();
+        }
+
+        $countries = Country::where('status', 1)->get();
+        $user_country = Auth::guard('web')->user()->country_id;
+        $cities = ServiceCity::where('country_id', $user_country)->get();
+        $areas = ServiceArea::where('service_city_id', Auth::guard('web')->user()->service_city)->get();
+        return view('frontend.user.seller.profile.seller-profile-edit', compact('cities', 'areas', 'countries'));
+    }
+
+    // Delete member of seller compnay 
+    public function memberDelete($id = null) {
+        \Log::debug("Inside member delete \n User ID : " . $id);
+        User::find($id)->delete();
+        toastr_error(__('Member Delete Success---'));
+        return redirect()->back();
+    }
+
 }

@@ -292,10 +292,15 @@ class ServiceListOne extends PageBuilderBase
 
         if(!empty(request()->get('rating'))){
             $rating = (int) request()->get('rating');
+            // $service_quyery->whereHas('reviews', function ($q) use ($rating) {
+            //     $q->groupBy('reviews.id')
+            //     ->havingRaw('AVG(reviews.rating) >= ?', [$rating])
+            //     ->havingRaw('AVG(reviews.rating) < ?', [$rating + 1]);
+            // });
             $service_quyery->whereHas('reviews', function ($q) use ($rating) {
                 $q->groupBy('reviews.id')
-                ->havingRaw('AVG(reviews.rating) >= ?', [$rating])
-                ->havingRaw('AVG(reviews.rating) < ?', [$rating + 1]);
+                ->havingRaw('AVG(s8_reviews.rating) >= ?', [$rating])
+                ->havingRaw('AVG(s8_reviews.rating) < ?', [$rating + 1]);
             });
         }
         

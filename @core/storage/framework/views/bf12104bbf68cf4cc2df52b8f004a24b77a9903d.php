@@ -665,7 +665,7 @@
                 <!-- service Media Uploads end-->
 
                 <!-- service Set Availability start-->
-                <div   wire:ignore class="tab-pane fade <?php if($current_tab === "service-set-availability-tab"): ?> show active <?php endif; ?> step" id="service-set-availability" role="tabpanel" aria-labelledby="service-set-availability-tab">
+                <div wire:ignore.self class="tab-pane fade <?php if($current_tab === "service-set-availability-tab"): ?> show active <?php endif; ?> step" id="service-set-availability" role="tabpanel" aria-labelledby="service-set-availability-tab">
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="row g-4">
@@ -675,6 +675,44 @@
                                         <div class="dashboard-switch-single d-flex">
                                             <input class="custom-switch is_service_all_cities_id" id="is_service_all_cities" type="checkbox" <?php if($services['is_service_all_cities'] == 1): ?> checked value="1" <?php endif; ?> />
                                             <label class="switch-label mt-2" for="is_service_all_cities"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xxl-10 col-md-9 col-sm-8">
+                            <div class="row g-4">
+                                <div class="col-xl-12">
+                                    <div class="tab-content service-set-availability" id="service-set-availabilityContent">
+                                        <div wire:ignore.self class="tab-pane fade active show" id="address-service" role="tabpanel" aria-labelledby="address-service-tab">
+                                            <div class="single-settings">
+                                                <div>
+                                                    <div class="add-input append-additional-includes mt-4">
+                                                        <?php $__currentLoopData = $post_code_inputs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <div wire:ignore.self>
+                                                                <div class="single-dashboard-input what-include-element mt-4">
+                                                                    <div class="row align-items-center g-4">
+                                                                        <div class="col-lg-4 col-sm-6">
+                                                                            <div class="single-info-input">
+                                                                                <label class="label_title"><?php echo e(__('Post Code')); ?> <span class="text-danger">*</span> </label>
+                                                                                <input class="form--control" type="text" wire:model.defer="post_code_inputs.<?php echo e($key); ?>.service_post_code" placeholder="<?php echo e(__('Post Code')); ?>">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-2 col-sm-6">
+                                                                            <button class="<?php if($key == 0): ?> d-none <?php endif; ?> btn btn-danger remove-include mt-3"  wire:click.prevent="removeAddressServices(<?php echo e($key); ?>)"><i class="las la-times"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    </div>
+                                                    <div  wire:ignore class="btn-wrapper mt-3">
+                                                        <a href="javascript:void(0)" class="btn-see-more style-02 color-3 hide_service_and_show" wire:click.prevent="addAddressServices(<?php echo e($a_include); ?>)"> <?php echo e(__('Add More')); ?> </a>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

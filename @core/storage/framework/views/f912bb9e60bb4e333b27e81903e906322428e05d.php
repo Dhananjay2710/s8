@@ -167,7 +167,7 @@
                                                                         <div class="form-group">
                                                                             <label><?php echo e(__('PAN Number')); ?></label>
                                                                             <input class="form-control" type="text" id="pan_number" name="pan_number" placeholder="<?php echo e(__('Enter PAN Number')); ?>" 
-                                                                                value="<?php echo e($seller_verification_data['pan_number'] == "" ? "" : $seller_verification_data['pan_number']); ?>"
+                                                                                value="<?php echo e($seller_verification_data['pan_number'] ?? ""); ?>"
                                                                                 <?php echo e($seller_verification_data['is_pan_verified'] == 1 ? 'readonly' : ''); ?>
 
                                                                             >
@@ -191,7 +191,7 @@
                                                                         <div class="form-group">
                                                                             <label><?php echo e(__('Account Number')); ?></label>
                                                                             <input class="form-control" type="text" id="account_number" name="account_number" placeholder="<?php echo e(__('Enter Account Number')); ?>" 
-                                                                                value="<?php echo e($seller_verification_data['account_number'] == "" ? "" : $seller_verification_data['account_number']); ?>"
+                                                                                value="<?php echo e($seller_verification_data['account_number'] ?? ""); ?>"
                                                                                 <?php echo e($seller_verification_data['is_account_verified'] == 1 ? 'readonly' : ''); ?>
 
                                                                             >
@@ -201,7 +201,7 @@
                                                                         <div class="form-group">
                                                                             <label><?php echo e(__('IFSC Code')); ?></label>
                                                                             <input class="form-control" type="text" id="ifsc_number" name="ifsc_number" placeholder="<?php echo e(__('Enter IFSC Number')); ?>" 
-                                                                                value="<?php echo e($seller_verification_data['ifsc_number'] == "" ? "" : $seller_verification_data['ifsc_number']); ?>"
+                                                                                value="<?php echo e($seller_verification_data['ifsc_number'] ?? ""); ?>"
                                                                                 <?php echo e($seller_verification_data['is_account_verified'] == 1 ? 'readonly' : ''); ?>
 
                                                                             >
@@ -211,7 +211,7 @@
                                                                         <div class="form-group">
                                                                             <label><?php echo e(__('Mobile Number')); ?></label>
                                                                             <input class="form-control" type="text" id="mobile_number" name="mobile_number" placeholder="<?php echo e(__('Enter Mobile Number')); ?>" 
-                                                                                value="<?php echo e($seller_verification_data['mobile_number'] == "" ? "" : $seller_verification_data['mobile_number']); ?>"
+                                                                                value="<?php echo e($seller_verification_data['mobile_number'] ?? ""); ?>"
                                                                                 <?php echo e($seller_verification_data['is_account_verified'] == 1 ? 'readonly' : ''); ?>
 
                                                                             >
@@ -221,7 +221,7 @@
                                                                         <div class="form-group">
                                                                             <label><?php echo e(__('Name As Per Bank Account')); ?></label>
                                                                             <input class="form-control" type="text" id="name_as_per_bank_account_number" name="name_as_per_bank_account_number" placeholder="<?php echo e(__('Enter Name')); ?>" 
-                                                                                value="<?php echo e($seller_verification_data['name_as_per_bank_account_number'] == "" ? "" : $seller_verification_data['name_as_per_bank_account_number']); ?>"
+                                                                                value="<?php echo e($seller_verification_data['name_as_per_bank_account_number'] ?? ""); ?>"
                                                                                 <?php echo e($seller_verification_data['is_account_verified'] == 1 ? 'readonly' : ''); ?>
 
                                                                             >

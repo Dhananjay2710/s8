@@ -76,12 +76,12 @@
                 $(document).on('click','.swal_status_change',function(e){
                     e.preventDefault();
                     Swal.fire({
-                        title: '{{__("Are you sure to change status complete? Once you done you can not revert this !!")}}',
+                        title: '{{__("Are you sure you want to approve this service request? Once you Approve you can not revert this !!")}}',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, change it!'
+                        confirmButtonText: 'Yes, approve it!'
                     }).then((result) => {
                         if (result.isConfirmed) {
                             $(this).next().find('.swal_form_submit_btn').trigger('click');

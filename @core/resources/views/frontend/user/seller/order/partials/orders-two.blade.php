@@ -598,7 +598,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModal">{{ __('Create Service Request Complete Request') }}</h5>
+                        <h5 class="modal-title" id="editModal">{{ __('Create request to review Service Request') }}</h5>
                     </div>
                     <div class="modal-body">
 
@@ -617,7 +617,9 @@
                                 <input type="hidden" name="image">
                                 <button type="button" class="btn btn-info media_upload_form_btn"
                                         data-btntitle="{{__('Select Image')}}"
-                                        data-modaltitle="{{__('Upload Image')}}" data-bs-toggle="modal"
+                                        data-modaltitle="{{__('Upload Image')}}" 
+                                        data-bs-toggle="modal"
+                                        data-mulitple="true"
                                         data-bs-target="#media_upload_modal">
                                     {{__('Upload Image')}}
                                 </button>
@@ -930,7 +932,7 @@
                 $(document).on('click','.swal_status_change_order_accept',function(e){
                     e.preventDefault();
                     Swal.fire({
-                        title: '{{__("Are you sure to accept the order")}}',
+                        title: '{{__("Are you sure to accept the service request?")}}',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',

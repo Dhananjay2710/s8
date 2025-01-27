@@ -311,9 +311,10 @@ class ServiceListController extends Controller
         $customerId = '';
         $commission = AdminCommission::first();
         \Log::debug('User name : ' . $request->name . 
-                    "\nSeller id : " . $request->seller_id . 
-                    "\nSelected Payment Getway: " . $request->selected_payment_gateway .
-                    "\nService Request : " . $request->service_id);
+                    "\n Seller id : " . $request->seller_id . 
+                    "\n Selected Payment Getway: " . $request->selected_payment_gateway .
+                    "\n Service Request : " . $request->service_id);
+        $service8TicketId = $request->service_ticket_id;
         if (empty($request->name) || empty($request->seller_id) || empty($request->selected_payment_gateway) || empty($request->service_id)){
             $status = [
                 "status" => "error",
@@ -504,6 +505,7 @@ class ServiceListController extends Controller
                 'service_provider_signing_status' => 'Pending', 
                 'customer_signing_status' => 'Pending',         
                 'admin_signing_status' => 'Pending', 
+                'service_ticket_id' => $service8TicketId,
             ]);
         }else{
             if(Auth::guard('web')->check() && Auth::guard('web')->user()->user_type == 1 ){
@@ -540,6 +542,7 @@ class ServiceListController extends Controller
                     'service_provider_signing_status' => 'Pending', 
                     'customer_signing_status' => 'Pending',         
                     'admin_signing_status' => 'Pending',
+                    'service_ticket_id' => $service8TicketId,
                 ]);
             }else{
                if( get_static_option('order_create_settings') !== 'anyone'){
@@ -578,6 +581,7 @@ class ServiceListController extends Controller
                     'service_provider_signing_status' => 'Pending', 
                     'customer_signing_status' => 'Pending',         
                     'admin_signing_status' => 'Pending', 
+                    'service_ticket_id' => $service8TicketId,
                 ]);
 
             }
@@ -1840,6 +1844,7 @@ class ServiceListController extends Controller
                 'service_provider_signing_status' => 'Pending', 
                 'customer_signing_status' => 'Pending',         
                 'admin_signing_status' => 'Pending',
+                'service_ticket_id' => $service8TicketId,
             ]);
         }else{
             if(Auth::guard('web')->check() && Auth::guard('web')->user()->user_type == 1 ){
@@ -1876,6 +1881,7 @@ class ServiceListController extends Controller
                     'service_provider_signing_status' => 'Pending', 
                     'customer_signing_status' => 'Pending',         
                     'admin_signing_status' => 'Pending',
+                    'service_ticket_id' => $service8TicketId,
                 ]);
             }else{
                if( get_static_option('order_create_settings') !== 'anyone'){
@@ -1914,6 +1920,7 @@ class ServiceListController extends Controller
                     'service_provider_signing_status' => 'Pending', 
                     'customer_signing_status' => 'Pending',         
                     'admin_signing_status' => 'Pending',
+                    'service_ticket_id' => $service8TicketId,
                 ]);
 
             }
@@ -3002,6 +3009,8 @@ class ServiceListController extends Controller
         $name = $request->name;
         $email = $request->email;
         $phone = $request->phone;
+        $service_ticket_id = $request->service_ticket_id;
+        \Log::debug("Service 8 Ticket ID : " . $service_ticket_id);
         if ($request->category_id != "" || $serviceProviderId !="" || $request->post_code != ""){
             
             if (is_string($request->category_id)) {
@@ -3066,7 +3075,7 @@ class ServiceListController extends Controller
                     $responseResult = [
                         "status" => "error",
                         "title" => "API Failed",
-                        "message" => "No services found for current location"
+                        "message" => "No services found for current  based on service area and city. Please try again later",
                     ];
                     \Log::debug("No services found for current location \n Search using category ended with error");
                     exit(json_encode($responseResult));
@@ -3085,7 +3094,6 @@ class ServiceListController extends Controller
                     ->when(!empty($postCode), function($q) use ($postCode) {
                         $q->where('service_post_code', $postCode);
                     })
-                    // ->where("service_post_code", $postCode)
                     ->get();
                     if ($serviceIncludesData->isNotEmpty()) {
                         \Log::debug("Inside if");
@@ -3097,58 +3105,102 @@ class ServiceListController extends Controller
                 $arrayLengthAfter = count($sortedServices);
                 \Log::debug("Afte for loop : " . $arrayLengthAfter );
 
+                if ($arrayLengthAfter == 0){
+                    $services = Service::where('category_id', $categoryID)
+                    ->where('status', 1)
+                    ->where('is_service_on', 1)
+                    ->when(subscriptionModuleExistsAndEnable('Subscription'),function($q){
+                        $q->whereHas('seller_subscription');
+                    })
+                    ->when(!empty($serviceCityId), function($q) use ($serviceCityId) {
+                        $q->where('service_city_id', $serviceCityId);
+                    })
+                    ->when(!empty($serviceAreaId), function($q) use ($serviceAreaId) {
+                        $q->where('service_area_id', $serviceAreaId);
+                    })
+                    ->orderBy('price', 'ASC')
+                    ->get();
+                    foreach($services as $service){
+                        $serviceIncludesData = Serviceaddresses::where("service_id", $service->id)
+                        ->where("seller_id", $service->seller_id)
+                        ->when(!empty($postCode), function($q) use ($postCode) {
+                            $q->where('service_post_code', $postCode);
+                        })
+                        ->get();
+                        if ($serviceIncludesData->isNotEmpty()) {
+                            $sortedServices[] = $service;
+                        } else {
+                            \Log::debug("Service Includes Data is empty.");
+                        }
+                    }
+                }
                 $counter = 0;
                 $selectedUser = null;
                 $usersList = array_keys($sortedServices);
                 $userCount = count($usersList);
-                $randomIndex = rand(0, $userCount - 1);
-                $selectedUser = $usersList[$randomIndex];
-                \Log::debug("Randomly selected user : " . print_r($selectedUser,true) . "\n");
-                $nextUser = self::getNextUser($counter, $usersList, $selectedUser);
-                $userData = $sortedServices[$nextUser];
-               \Log::debug("Processing user: $nextUser\n");
-                \Log::debug("Seller Id : " . $userData->seller_id . "\n Services Id : " . $userData->id);
-                $serviceIncludesData = Serviceinclude::where("service_id", $userData->id)->where("seller_id", $userData->seller_id)->get()->first();
-                \Log::debug("Service Includes id from database : " . $serviceIncludesData->id . "\n Service include quantity : " .  $serviceIncludesData->include_service_quantity);
-                
-                $daysDataCollection = Day::where("seller_id", $userData->seller_id)->get();
-                $schedulesData = null;
+                // New code
+                $nextUsers = self::getNextUsers($counter, $usersList, $selectedUser);
 
-                if($daysDataCollection != null){
-                    foreach ($daysDataCollection as $daysData) {
-                        // \Log::debug(print_r($daysData,true));
-                        \Log::debug("Days id from database : " . $daysData->id . "\n Days day : " .  $daysData->day);
-                    
-                        $schedulesData = Schedule::where("day_id", $daysData->id)
-                                            ->where("seller_id", $userData->seller_id)
-                                            ->where("status", 0)
-                                            ->first();
-                        if ($schedulesData) {
-                            \Log::debug("Schedules id from database : " . $schedulesData->id . "\n schedulesData timing : " .  $schedulesData->schedule);
-                            break; // Exit the loop as soon as a valid schedulesData is found
-                        }
+                foreach ($nextUsers as $nextUser) {
+                    if (!isset($sortedServices[$nextUser])) {
+                        \Log::debug("User $nextUser not found in sortedServices.");
+                        continue;
                     }
 
-                    if (!$schedulesData) {
-                        \Log::debug("No schedule time found for any day.");
-                        $responseResult = [
+                    $userData = $sortedServices[$nextUser];
+                    \Log::debug("Processing user: $nextUser\n");
+                    \Log::debug("Seller Id : " . $userData->seller_id . "\n Services Id : " . $userData->id);
+
+                    $serviceIncludesData = Serviceinclude::where("service_id", $userData->id)->where("seller_id", $userData->seller_id)->get()->first();
+                    if ($serviceIncludesData) {
+                        \Log::debug("Service Includes id from database : " . $serviceIncludesData->id . "\n Service include quantity : " . $serviceIncludesData->include_service_quantity);
+                    } else {
+                        \Log::debug("No service includes data found for service_id: " . $userData->id);
+                        continue;
+                    }
+
+                    $daysDataCollection = Day::where("seller_id", $userData->seller_id)->get();
+                    $schedulesData = null;
+
+                    if ($daysDataCollection->isNotEmpty()) {
+                        foreach ($daysDataCollection as $daysData) {
+                            \Log::debug("Days id from database : " . $daysData->id . "\n Days day : " . $daysData->day);
+
+                            $schedulesData = Schedule::where("day_id", $daysData->id)
+                                                    ->where("seller_id", $userData->seller_id)
+                                                    ->where("status", 0)
+                                                    ->first();
+                            if ($schedulesData) {
+                                break;
+                            }
+                        }
+
+                        if (!$schedulesData) {
+                            \Log::debug("No schedule time found for any day.");
+                            $responseResult[] = [
+                                "status" => "error",
+                                "title" => "API Failed",
+                                "message" => "No schedule time found for any day contact administrator for user: $nextUser."
+                            ];
+                        } else {
+                            \Log::debug("service : " . $userData->id);
+                            $createServiceRequestResult = self::createServiceRequest(
+                                $userData->id, $userData->seller_id, 0, $userData->online_service_package_fee,
+                                $userData->choose_service_city, $userData->choose_service_area,
+                                $userData->choose_service_country, $serviceIncludesData->id,
+                                $serviceIncludesData->include_service_quantity, $schedulesData->schedule,
+                                $order_note, $name, $email, $phone, $service_ticket_id
+                            );
+                            $responseResult[] = json_decode($createServiceRequestResult, true);
+                        }
+                    } else {
+                        $responseResult[] = [
                             "status" => "error",
                             "title" => "API Failed",
-                            "message" => "No schedule time found for any day contact administrator."
+                            "message" => "No day created by service provider contact administrator for user: $nextUser."
                         ];
-                    } else {
-                        \Log::debug("service : " . $userData->id);
-                        $createServiceRequestResult = self::createServiceRequest($userData->id, $userData->seller_id, 0, $userData->online_service_package_fee, $userData->choose_service_city, $userData->choose_service_area, $userData->choose_service_country, $serviceIncludesData->id, $serviceIncludesData->include_service_quantity, $schedulesData->schedule, $order_note, $name, $email, $phone );
-                        $responseResult = json_decode($createServiceRequestResult);
-                        \Log::debug("Search using category ended with success");
+                        \Log::debug("No day created by service provider contact administrator for user: $nextUser. Search using category ended with error.");
                     }
-                } else {
-                    $responseResult = [
-                        "status" => "error",
-                        "title" => "API Failed",
-                        "message" => "No day crated by service provider contact administrator."
-                    ];
-                    \Log::debug("No day crated by service provider contact administrator. \n Search using category ended with error");
                 }
             } else {
                 $responseResult = [
@@ -3169,28 +3221,31 @@ class ServiceListController extends Controller
         exit(json_encode($responseResult));
     }
 
-    public function getNextUser(&$counter, $usersList, $selectedUser) {
-        // If a specific user is selected and exists in the list, continue with that user
-        if ($selectedUser !== null && in_array($selectedUser, $usersList)) {
-            return $selectedUser;
+    public function getNextUsers(&$counter, $usersList, $selectedUser) {
+        $userCount = count($usersList);
+        if ($userCount > 5) {
+            $userCount = 5;
+        } else {
+            $userCount = $userCount;
         }
-        
-        // If no specific user selected, use round-robin to select the next user
-        $currentUser = $usersList[$counter];
-        
-        // Update the counter for the next round-robin user
-        $counter = ($counter + 1) % count($usersList);
-        
-        return $currentUser;
+        if ($selectedUser !== null && in_array($selectedUser, $usersList)) {
+            return [$selectedUser];
+        }
+    
+        $selectedUsers = [];
+        for ($i = 0; $i < $userCount; $i++) {
+            $selectedUsers[] = $usersList[$counter];
+            $counter = ($counter + 1) % $userCount;
+        }
+    
+        return $selectedUsers;
     }
 
  
-    public function createServiceRequest($serviceId, $sellerId, $isServiceOnline, $online_service_package_fee_final, $choose_service_city_final, $choose_service_area_final, $choose_service_country_final, $serviceIncludesDataId, $final_include_service_quantity, $schedule_final, $order_note_final, $finalaName, $finalEmail, $finalPhone) {
+    public function createServiceRequest($serviceId, $sellerId, $isServiceOnline, $online_service_package_fee_final, $choose_service_city_final, $choose_service_area_final, $choose_service_country_final, $serviceIncludesDataId, $final_include_service_quantity, $schedule_final, $order_note_final, $finalaName, $finalEmail, $finalPhone, $service_ticket_id) {
         header('Content-type: application/json');
         $todayDate = date('d-m-Y');
         $customerId = '';
-        \Log::debug("Inside create service request");
-        \Log::debug("Service is : " . $serviceId);
         $selected_payment_gateway = "annual_maintenance_charge";
         $seller_id = $sellerId;
         $service_id = $serviceId; 
@@ -3207,6 +3262,7 @@ class ServiceListController extends Controller
         $date = $todayDate;
         $order_note = $order_note_final;
         $schedule = $schedule_final;
+        $service8TicketId = $service_ticket_id;
         $services = [
             [
                 "id" => $serviceIncludesDataId,
@@ -3222,9 +3278,9 @@ class ServiceListController extends Controller
 
         $commission = AdminCommission::first();
         \Log::debug('User name : ' . $name . 
-                    "\nSeller id : " . $seller_id . 
-                    "\nSelected Payment Getway: " . $selected_payment_gateway .
-                    "\nService Request : " . $service_id);
+                    "\n Seller id : " . $seller_id . 
+                    "\n Selected Payment Getway : " . $selected_payment_gateway .
+                    "\n Service Request : " . $service_id);
         if (empty($name) || empty($seller_id) || empty($selected_payment_gateway) || empty($service_id)){
             $status = [
                 "status" => "error",
@@ -3415,6 +3471,7 @@ class ServiceListController extends Controller
                 'service_provider_signing_status' => 'Pending', 
                 'customer_signing_status' => 'Pending',         
                 'admin_signing_status' => 'Pending', 
+                'service_ticket_id' => $service8TicketId,
             ]);
         }else{
             if(Auth::guard('web')->check() && Auth::guard('web')->user()->user_type == 1 ){
@@ -3451,6 +3508,7 @@ class ServiceListController extends Controller
                     'service_provider_signing_status' => 'Pending', 
                     'customer_signing_status' => 'Pending',         
                     'admin_signing_status' => 'Pending',
+                    'service_ticket_id' => $service8TicketId,
                 ]);
             }else{
                if( get_static_option('order_create_settings') !== 'anyone'){
@@ -3489,8 +3547,8 @@ class ServiceListController extends Controller
                     'service_provider_signing_status' => 'Pending', 
                     'customer_signing_status' => 'Pending',         
                     'admin_signing_status' => 'Pending', 
+                    'service_ticket_id' => $service8TicketId,
                 ]);
-
             }
         }
 

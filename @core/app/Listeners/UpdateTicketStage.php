@@ -10,6 +10,7 @@ use App\SupportTicket;
 use Illuminate\Support\Facades\Mail;
 use App\Events\UpdateTicket;
 use App\AriticApi;
+use App\Order;
 
 class UpdateTicketStage
 {
@@ -24,7 +25,14 @@ class UpdateTicketStage
         $service_request_info = $event->service_request;
         $sr_id = $service_request_info['sr_id'] ?? null;
         $stage_name = $service_request_info['stage_name'] ?? null;
-        $curlCallResponse = AriticApi::stageChange($sr_id, $stage_name);
+        $service_ticket_id = $service_request_info['service_ticket_id'] ?? null;
+        if ($stage_name == "Accepted by Service Provider") {
+            $orderData  = Order::where('service_ticket_id',$service_ticket_id)->where('id', '!=', $sr_id)->get();
+            foreach($orderData as $order){
+                Order::where('id',$order->id)->delete();
+            }
+        }
+        $curlCallResponse = AriticApi::stageChange($sr_id, $stage_name, $service_ticket_id);
         $decodedResponse = json_decode($curlCallResponse, true);
         if (json_last_error() === JSON_ERROR_NONE) {
             \Log::debug("Curl Call Response: " . print_r($decodedResponse, true));

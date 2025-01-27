@@ -180,12 +180,12 @@
                 $(document).on('click','.swal_status_change',function(e){
                 e.preventDefault();
                     Swal.fire({
-                    title: '<?php echo e(__("Are you sure to change status?")); ?>',
+                    title: '<?php echo e(__("Are you sure to Approve this service?")); ?>',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, change it!'
+                    confirmButtonText: 'Yes, Approved it!'
                     }).then((result) => {
                     if (result.isConfirmed) {
                         $(this).next().find('.swal_form_submit_btn').trigger('click');

@@ -1985,6 +1985,7 @@ class SellerController extends Controller
                     event(new UpdateTicket([
                         'sr_id' => $order_details->id,
                         'stage_name' => 'Completion Needs Approval',
+                        'service_ticket_id' => $order_details->service_ticket_id,
                     ]));
 
                     //Send email after change status
@@ -2031,6 +2032,7 @@ class SellerController extends Controller
             event(new UpdateTicket([
                 'sr_id' => $SR_ID,
                 'stage_name' => 'Waiting to Assign',
+                'service_ticket_id' => $order_info_decode[0]['service_ticket_id'],
             ]));
         }
         toastr_success(__('Service Request successfully cancelled.'));
@@ -2049,6 +2051,7 @@ class SellerController extends Controller
             event(new UpdateTicket([
                 'sr_id' => $SR_ID,
                 'stage_name' => 'Accepted by Service Provider',
+                'service_ticket_id' => $order_info_decode[0]['service_ticket_id'],
             ]));
         }
         toastr_success(__('Service Request successfully accepted.'));
@@ -2067,6 +2070,7 @@ class SellerController extends Controller
             event(new UpdateTicket([
                 'sr_id' => $SR_ID,
                 'stage_name' => 'Waiting to Assign',
+                'service_ticket_id' => $order_info_decode[0]['service_ticket_id'],
             ]));
         }
         toastr_success(__('Service Request successfully Incompetent.'));

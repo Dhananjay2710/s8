@@ -5,11 +5,11 @@
     <div class="dashboard__area <?php if((Auth::guard('web')->user()->user_type ?? 0) == 0): ?> seller_look <?php endif; ?>">
         <div class="container-fluid p-0">
             <div class="dashboard__contents__wrapper">
-                <div class="dashboard__icon">
+                <!-- <div class="dashboard__icon">
                     <div class="dashboard__icon__bars sidebar-icon">
                         <i class="fa-solid fa-bars"></i>
                     </div>
-                </div>
+                </div> -->
                  <?php echo $__env->yieldContent('content'); ?>
             </div>
         </div>

@@ -250,8 +250,9 @@
                     <div class="col-lg-7 mt-5">
                         <div class="card">
                             <div class="card-body">
-
-                                <h5>{{ __('Include Details:')}}</h5> <br>
+                                <div class="border-bottom mb-3 mt-4">
+                                    <h5>{{ __('Include Details')}}</h5> <br>
+                                </div>
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -382,6 +383,57 @@
                         </div>
                     </div>
                 @endif
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-lg-12 mt-12">
+                    <div class="card">
+                        <div class="card-body">
+                            @if(!empty($order_declines_history->count() >= 1))
+                                <div class="border-bottom mb-3 mt-4">
+                                    <h5>{{ __('Service Request Images') }}</h5>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            {{-- <th>{{ __('History ID') }}</th> --}}
+                                            {{-- <th>{{ __('Service Provider Details') }}</th> --}}
+                                            {{-- <th>{{ __('Status') }} ({{ __('Decline Reason') }})</th> --}}
+                                            <th>{{ __('Image Files') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($order_declines_history as $history)
+                                            <tr>
+                                                {{-- <td>{{ $history->id }}</td>
+                                                <td>
+                                                    <strong>{{ __('Name: ') }}</strong> {{ optional($history->seller)->name }}
+                                                    <br>
+                                                    <strong>{{ __('Email: ') }}</strong>{{ optional($history->seller)->email }}
+                                                    <br>
+                                                    <strong>{{ __('Phone: ') }}</strong>{{ optional($history->seller)->phone }}
+                                                    <br>
+                                                </td>
+                                                <td>
+                                                    <strong>{{ __('Decline Reason: ') }}</strong>{{ $history->decline_reason }}
+                                                    </td> 
+                                                <td>{!! render_image_markup_by_attachment_id($history->image,'','thumb') !!}</td> --}}
+                                                <td>
+                                                    @php
+                                                        $imageIds = explode('|', $history->image); // Split the string by '|'
+                                                    @endphp
+                                                    @foreach($imageIds as $imageId)
+                                                        {!! render_image_markup_by_attachment_id($imageId, '', 'thumb') !!}
+                                                    @endforeach
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>   
+                            @endif
+                        </div>
+                    </div>
+                </div>
             </div>
         @endif
     </div>

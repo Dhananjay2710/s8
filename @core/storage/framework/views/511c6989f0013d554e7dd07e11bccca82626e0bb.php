@@ -1,6 +1,15 @@
 <div class="dashboard__header single_border_bottom">
     <div class="row g-4 justify-content-between">
-        <div class="col-sm-6">
+        <div class="col-sm-1">
+            <div class="dashboard__header__left">
+                <div class="dashboard__icon">
+                    <div class="dashboard__icon__bars sidebar-icon">
+                        <i class="fa-solid fa-bars"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-5">
             <div class="dashboard__header__left">
                 <h4 class="dashboard__header__title"><?php echo e(\Illuminate\Support\Facades\Auth::guard('web')->user()->name); ?> </h4>
                 <p class="dashboard__header__para mt-2"><?php echo e(__('Manage your accounts activity from here')); ?></p>

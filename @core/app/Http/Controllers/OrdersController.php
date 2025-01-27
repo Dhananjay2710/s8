@@ -231,14 +231,17 @@ class OrdersController extends Controller
     //order complete request
     public function orderCompleteRequest(Request $request, $id=null)
     {
+        \Log::debug("Inside orderCompleteRequest start");
         if($request->isMethod('post')){
+            $orderDetails  = Order::where('id',$id)->first();
             Order::where('id',$id)->update(['order_complete_request'=>2,'status'=>2]);
             // update ticket stage to approved and closed
             event(new UpdateTicket([
                 'sr_id' => $id,
                 'stage_name' => 'Approved And Closed',
+                'service_ticket_id' => $orderDetails->service_ticket_id,
             ]));
-
+            \Log::debug("Inside orderCompleteRequest end");
             return redirect()->back()->with(FlashMsg::item_new('Service Request Status Change to Complete'));
         }
         $orders = Order::select('id','total','updated_at','seller_id','buyer_id')->with('seller','buyer')
@@ -253,7 +256,7 @@ class OrdersController extends Controller
         $order_details = Order::where('id',$id)->first();
         $order_includes = OrderInclude::where('order_id',$id)->get();
         $order_additionals = OrderAdditional::where('order_id',$id)->get();
-
+        $order_declines_history = OrderCompleteDecline::where('order_id',$id)->latest()->get();
         // admin notification
         $notification = AdminNotification::where('order_id', $id)->first();
         if (!empty($notification)){
@@ -263,7 +266,7 @@ class OrdersController extends Controller
         }
         $isHideMenu = false;
         \Log::debug("Order Deatils Start");
-        return view('backend.pages.orders.order-details',compact('order_details','order_includes','order_additionals','isHideMenu'));
+        return view('backend.pages.orders.order-details',compact('order_details','order_includes','order_additionals','isHideMenu','order_declines_history'));
     }
 
     public function serviceRequestDetails(Request $request, $id){

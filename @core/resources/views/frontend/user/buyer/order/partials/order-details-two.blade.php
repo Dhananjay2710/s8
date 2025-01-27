@@ -361,21 +361,21 @@
                                         <div class="single-flex-middle-inner">
                                             <div class="line-charts-wrapper oreder_details_rtl margin-top-40">
                                                 <div class="line-top-contents">
-                                                    <h5 class="earning-title">{{ __('Service Request Decline History') }}</h5>
+                                                    <h5 class="earning-title">{{ __('Service Request Images') }}</h5>
                                                 </div>
                                                 <table class="table table-bordered">
                                                     <thead>
                                                     <tr>
-                                                        <th>{{ __('History ID') }}</th>
+                                                        {{-- <th>{{ __('History ID') }}</th>
                                                         <th>{{ __('Service Provider Details') }}</th>
-                                                        <th>{{ __('Status') }} ({{ __('Decline Reason') }})</th>
-                                                        <th>{{ __('Image File') }}</th>
+                                                        <th>{{ __('Status') }} ({{ __('Decline Reason') }})</th> --}}
+                                                        <th>{{ __('Image Files') }}</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
                                                     @foreach($order_declines_history as $history)
                                                         <tr>
-                                                            <td>{{ $history->id }}</td>
+                                                            {{--<td>{{ $history->id }}</td>
                                                             <td>
                                                                 <strong>{{ __('Name: ') }}</strong> {{ optional($history->seller)->name }}
                                                                 <br>
@@ -387,7 +387,15 @@
                                                             <td>
                                                                 <strong>{{ __('Decline Reason: ') }}</strong>{{ $history->decline_reason }}
                                                             </td>
-                                                            <td>{!! render_image_markup_by_attachment_id($history->image,'','thumb') !!}</td>
+                                                            <td>{!! render_image_markup_by_attachment_id($history->image,'','thumb') !!}</td> --}}
+                                                            <td>
+                                                                @php
+                                                                    $imageIds = explode('|', $history->image); // Split the string by '|'
+                                                                @endphp
+                                                                @foreach($imageIds as $imageId)
+                                                                    {!! render_image_markup_by_attachment_id($imageId, '', 'thumb') !!}
+                                                                @endforeach
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                     </tbody>

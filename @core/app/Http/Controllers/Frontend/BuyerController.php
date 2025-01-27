@@ -210,6 +210,7 @@ class BuyerController extends Controller
         event(new UpdateTicket([
             'sr_id' => $id,
             'stage_name' => 'Approved And Closed',
+            'service_ticket_id' => $orderDetails->service_ticket_id,
         ]));
         \Session::flash('open_review_modal', 'yes');
         \Session::flash('CompleteOrderId', $id);

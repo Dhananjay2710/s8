@@ -309,12 +309,12 @@
         $(document).on('click','.swal_status_change',function(e){
             e.preventDefault();
                 Swal.fire({
-                title: '{{__("Are you sure to change status?")}}',
+                title: '{{__("Are you sure to verify service provider profile?")}}',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, change it!'
+                confirmButtonText: 'Yes, verify it!'
                 }).then((result) => {
                 if (result.isConfirmed) {
                     $(this).next().find('.swal_form_submit_btn').trigger('click');

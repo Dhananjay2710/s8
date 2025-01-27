@@ -268,8 +268,9 @@
                     <div class="col-lg-7 mt-5">
                         <div class="card">
                             <div class="card-body">
-
-                                <h5><?php echo e(__('Include Details:')); ?></h5> <br>
+                                <div class="border-bottom mb-3 mt-4">
+                                    <h5><?php echo e(__('Include Details')); ?></h5> <br>
+                                </div>
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -401,6 +402,46 @@
                         </div>
                     </div>
                 <?php endif; ?>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-lg-12 mt-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <?php if(!empty($order_declines_history->count() >= 1)): ?>
+                                <div class="border-bottom mb-3 mt-4">
+                                    <h5><?php echo e(__('Service Request Images')); ?></h5>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            
+                                            
+                                            
+                                            <th><?php echo e(__('Image Files')); ?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php $__currentLoopData = $order_declines_history; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $history): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <tr>
+                                                
+                                                <td>
+                                                    <?php
+                                                        $imageIds = explode('|', $history->image); // Split the string by '|'
+                                                    ?>
+                                                    <?php $__currentLoopData = $imageIds; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $imageId): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <?php echo render_image_markup_by_attachment_id($imageId, '', 'thumb'); ?>
+
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </tbody>
+                                </table>   
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
             </div>
         <?php endif; ?>
     </div>

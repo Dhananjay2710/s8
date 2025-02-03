@@ -96,7 +96,7 @@ class SellerServiceController extends Controller
             $request->validate([
                 'category_id' => 'required',
                 'title' => 'required|max:191|unique:services',
-                'description' => 'required|min:150',
+                'description' => 'required|min:20',
             ]);
             
             $seller_country = User::select(['id','country_id'])->where('country_id',Auth::guard('sanctum')->user()->country_id)->first();
@@ -166,7 +166,7 @@ class SellerServiceController extends Controller
             $request->validate([
                 'category_id' => 'required',
                 'title' => 'required|max:191|unique:services,id,'.$request->service_id,
-                'description' => 'required|min:150',
+                'description' => 'required|min:20',
             ]);
 
             $seller_country = User::select(['id','country_id'])->where('country_id',Auth::guard('sanctum')->user()->country_id)->first();

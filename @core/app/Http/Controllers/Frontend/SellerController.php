@@ -261,7 +261,7 @@ class SellerController extends Controller
         if ($request->isMethod('post')) {
             $request->validate([
                 'reason' => 'required',
-                'description' => 'required|max:150',
+                'description' => 'required|max:20',
             ]);
 
             //first seller order status check
@@ -292,7 +292,7 @@ class SellerController extends Controller
         if ($request->isMethod('post')) {
             $request->validate([
                 'reason' => 'required',
-                'description' => 'required|max:150',
+                'description' => 'required|max:20',
             ]);
             $auth_seller_id = Auth::guard('web')->user()->id;
             //first seller order status check
@@ -999,7 +999,7 @@ class SellerController extends Controller
             $request->validate([
                 'category' => 'required',
                 'title' => 'required|max:191|unique:services,id,'.$id,
-                'description' => 'required|min:150',
+                'description' => 'required|min:20',
             ]);
 
             $seller_country = User::select('id','country_id')->where('country_id',Auth::guard('web')->user()->country_id)->first();
@@ -1970,6 +1970,7 @@ class SellerController extends Controller
         if($payment_status->status !=2){
             if($payment_status->payment_status =='complete'){
                 $order_details = Order::select(['id','seller_id','buyer_id','service_id'])->where('id',$request->order_id)->first();
+                $seller = User::select(['id','email','name'])->where('id',$order_details->seller_id)->first();
                 if($request->status==2){
                     Order::where('id',$request->order_id)->update(['order_complete_request'=>1]);
                     toastr_success(__('Your request submitted. Customer will complete your request after review'));
@@ -1986,6 +1987,9 @@ class SellerController extends Controller
                         'sr_id' => $order_details->id,
                         'stage_name' => 'Completion Needs Approval',
                         'service_ticket_id' => $order_details->service_ticket_id,
+                        'service_provider_id' => $order_details->seller_id,
+                        'service_provider_email' => $seller->email,
+                        'service_provider_name' => $seller->name,
                     ]));
 
                     //Send email after change status
@@ -2027,12 +2031,16 @@ class SellerController extends Controller
         $order_info_decode = json_decode($orderData, true);
         $statusValue = $order_info_decode[0]['status'];
         $SR_ID = $order_info_decode[0]['id'];
+        $seller = User::select(['id','email','name'])->where('id',$order_info_decode[0]['seller_id'])->first();
         if ($statusValue == 4){
             // update ticket stage to Waiting to Assign 
             event(new UpdateTicket([
                 'sr_id' => $SR_ID,
                 'stage_name' => 'Waiting to Assign',
                 'service_ticket_id' => $order_info_decode[0]['service_ticket_id'],
+                'service_provider_id' => $order_info_decode[0]['seller_id'],
+                'service_provider_email' => $seller->email,
+                'service_provider_name' => $seller->name,
             ]));
         }
         toastr_success(__('Service Request successfully cancelled.'));
@@ -2046,12 +2054,16 @@ class SellerController extends Controller
         $order_info_decode = json_decode($orderData, true);
         $statusValue = $order_info_decode[0]['status'];
         $SR_ID = $order_info_decode[0]['id'];
+        $seller = User::select(['id','email','name'])->where('id',$order_info_decode[0]['seller_id'])->first();
         if ($statusValue == 1){
             // update ticket stage to accepted by service provider
             event(new UpdateTicket([
                 'sr_id' => $SR_ID,
                 'stage_name' => 'Accepted by Service Provider',
                 'service_ticket_id' => $order_info_decode[0]['service_ticket_id'],
+                'service_provider_id' => $order_info_decode[0]['seller_id'],
+                'service_provider_email' => $seller->email,
+                'service_provider_name' => $seller->name,
             ]));
         }
         toastr_success(__('Service Request successfully accepted.'));
@@ -2065,12 +2077,16 @@ class SellerController extends Controller
         $order_info_decode = json_decode($orderData, true);
         $statusValue = $order_info_decode[0]['status'];
         $SR_ID = $order_info_decode[0]['id'];
+        $seller = User::select(['id','email','name'])->where('id',$order_info_decode[0]['seller_id'])->first();
         if ($statusValue == 5){
             // update ticket stage to Waiting to Assign 
             event(new UpdateTicket([
                 'sr_id' => $SR_ID,
                 'stage_name' => 'Waiting to Assign',
                 'service_ticket_id' => $order_info_decode[0]['service_ticket_id'],
+                'service_provider_id' => $order_info_decode[0]['seller_id'],
+                'service_provider_email' => $seller->email,
+                'service_provider_name' => $seller->name,
             ]));
         }
         toastr_success(__('Service Request successfully Incompetent.'));

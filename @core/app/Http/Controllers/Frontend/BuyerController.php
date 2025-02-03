@@ -205,12 +205,16 @@ class BuyerController extends Controller
     {
         $orderDetails  = Order::where('id',$id)->first();
         $orderDetails->update(['order_complete_request'=>2,'status'=>2]);
+        $seller = User::select(['id','email','name'])->where('id',$orderDetails->seller_id)->first();
         toastr_success(__('Service complete requested successfully approved.'));
         // update ticket stage to approved and closed
         event(new UpdateTicket([
             'sr_id' => $id,
             'stage_name' => 'Approved And Closed',
             'service_ticket_id' => $orderDetails->service_ticket_id,
+            'service_provider_id' => $orderDetails->seller_id,
+            'service_provider_email' => $seller->email,
+            'service_provider_name' => $seller->name,
         ]));
         \Session::flash('open_review_modal', 'yes');
         \Session::flash('CompleteOrderId', $id);
@@ -473,7 +477,7 @@ class BuyerController extends Controller
         if ($request->isMethod('post')) {
             $request->validate([
                 'reason' => 'required',
-                'description' => 'required|max:150',
+                'description' => 'required|max:20',
             ]);
 
             //buyer order status check
@@ -512,7 +516,7 @@ class BuyerController extends Controller
         if ($request->isMethod('post')) {
             $request->validate([
                 'reason' => 'required',
-                'description' => 'required|max:150',
+                'description' => 'required|max:20',
             ]);
 
             $auth_buyer_id =  Auth::guard('web')->user()->id;

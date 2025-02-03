@@ -285,7 +285,7 @@
                         </div>
                         <div class="form-group">
                             <label for="service_provider_type"><?php echo e('User Type'); ?></label>
-                            <select name="service_provider_type" class="form-control">
+                            <select id="service_provider_type" name="service_provider_type" class="form-control">
                                 <option value=""><?php echo e(__('Select User Type')); ?></option>
                                 <?php $__currentLoopData = $userTypes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $userType): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <option value="<?php echo e($userType->name); ?>"><?php echo e($userType->name); ?></option>
@@ -388,6 +388,7 @@
                 let city = el.data('city');
                 let area = el.data('area');
                 let address = el.data('address');
+                let service_provider_type = el.data('service_provider_type');
 
                 let form = $('#user_info_modal_form');
                 form.find('#edit_email').val(email);
@@ -398,6 +399,7 @@
                 form.find('#edit_city').val(city);
                 form.find('#edit_area').val(area);
                 form.find('#edit_address').val(address);
+                form.find('#service_provider_type').val(service_provider_type);
 
                 var image = el.data('image');
                 var imageid = el.data('imageid');

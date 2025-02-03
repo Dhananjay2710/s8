@@ -537,7 +537,7 @@ class SellerController extends Controller
         
         $request->validate([
                 'reason' => 'required',
-                'description' => 'required|max:150',
+                'description' => 'required|max:20',
             ]);
             Accountdeactive::create([
                 'user_id' => Auth::guard('sanctum')->user()->id,

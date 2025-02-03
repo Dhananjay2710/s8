@@ -290,17 +290,17 @@
                         <table>
                             <thead>
                             <tr>
-                                <th><?php echo e(__('Service Request item')); ?></th>
+                                <th><?php echo e(__('Service Request Details')); ?></th>
 
                                 <?php if(request()->path() == 'seller/orders' || request()->path() == 'serviceprovider/orders'): ?>
                                     <th><?php echo e(__('Booking Date and Time')); ?></th>
                                 <?php endif; ?>
 
-                                <th><?php echo e(__('Service Request amount')); ?></th>
-                                <th><?php echo e(__('Service Request type')); ?></th>
-                                <th><?php echo e(__('Payment Details')); ?></th>
-                                <th><?php echo e(__('Service Request Complete Request')); ?></th>
-                                <th><?php echo e(__('Service Request status')); ?></th>
+                                <th><?php echo e(__('Customer Details / Problem Deatils')); ?></th>
+                                
+                                
+                                <th><?php echo e(__('Raised Reqest To Review')); ?></th>
+                                <th><?php echo e(__('Status/Action')); ?></th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -333,13 +333,76 @@
                                                 <?php if(request()->path() == 'seller/job-orders' || request()->path() == 'serviceprovider/job-orders'): ?>
                                                     <h5 class="dashboard_table__main__order__contents__title"> <?php if($order->order_from_job == 'yes'): ?> <?php echo e(Str::limit(optional($order->job)->title,60)); ?> <?php endif; ?> </h5>
                                                 <?php else: ?>
-                                                    <h5 class="dashboard_table__main__order__contents__title"><?php echo e(optional($order->service)->title); ?></h5>
+                                                    <h5 class="dashboard_table__main__order__contents__title"><strong>Name : </strong><?php echo e(optional($order->service)->title); ?></h5>
                                                 <?php endif; ?>
                                                 <span class="dashboard_table__main__order__contents__subtitle mt-2">
-                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__id"> <strong class="text-dark"><?php echo e(__('Service Request ID:')); ?></strong> <?php echo e($order->id); ?></a> ,
-                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark"><?php echo e(__('Customer Name:')); ?></strong><?php echo e(optional($order->buyer)->name); ?> </a>
+                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__id"> <strong class="text-dark"><?php echo e(__('ID : ')); ?></strong> <?php echo e($order->id); ?></a>
+                                                    <h6 class="price"><strong>Amount : </strong><?php echo e(float_amount_with_currency_symbol($order->total)); ?></h6>
+                                                    <?php if($order->is_order_online==1): ?>
+                                                        <span class="online"><strong>TypeType : </strong><?php echo e(__('Online')); ?></span>
+                                                    <?php else: ?>
+                                                        <span class="offline"><strong>Type : </strong><?php echo e(__('Offline')); ?></span>
+                                                    <?php endif; ?>
+                                                    <?php if($order->payment_status == 'pending'): ?>
+                                                        <div class="dashboard_table__main__priority"><strong><?php echo e(__('Payment Status: ')); ?></strong> <span class="priorityBtn pending"><?php echo e(__('Pending')); ?></span> </div>
+                                                        <?php if($order->payment_gateway == 'cash_on_delivery'): ?>
+                                                            <span class="text-info"><strong><?php echo e(__('Payment Type: ')); ?></strong> <br>  <?php echo e(__('Cash on Delivery')); ?></span> <br>
+                                                            <span><?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cancel-order','data' => ['url' => route('seller.order.cancel.cod.payment.pending',$order->id)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('cancel-order'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('seller.order.cancel.cod.payment.pending',$order->id))]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?></span>
+                                                        <?php elseif($order->payment_gateway == 'annual_maintenance_charge'): ?>
+                                                            <span class="text-info"><strong><?php echo e(__('Payment Type: ')); ?></strong><?php echo e(__('AMC')); ?></span>
+                                                            <br>
+                                                            <span><?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cancel-order','data' => ['url' => route('seller.order.cancel.cod.payment.pending',$order->id)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('cancel-order'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('seller.order.cancel.cod.payment.pending',$order->id))]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?></span>
+                                                        <?php endif; ?>
+                                                    <?php endif; ?>
+
+                                                    <?php if($order->payment_status == 'complete'): ?>
+                                                        <div class="dashboard_table__main__priority"><strong><?php echo e(__('Payment Status: ')); ?></strong> <span class="priorityBtn completed"><?php echo e(__('Payment_AMC')); ?></span> </div>
+                                                    <?php endif; ?>
+                                                    
+                                                    <?php if(empty($order->payment_status)): ?>
+                                                        <div class="dashboard_table__main__priority"><strong><?php echo e(__('Payment Status: ')); ?></strong>  <span class="priorityBtn pending"><?php echo e(__('Pending/NA')); ?></span> </div>
+                                                    <?php endif; ?>
+
+                                                    <!--for cash one delivery payment status change -->
+                                                    <?php if($order->payment_gateway === 'cash_on_delivery' && $order->payment_status === 'pending'): ?>
+                                                        <a href="javascript:void(0)"
+                                                        class="edit_payment_status_modal"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editPaymentStatusModal"
+                                                        data-id="<?php echo e($order->id); ?>">
+                                                            <span class="dash-icon color-1 mt-2"><?php echo e(__('Change Payment Status')); ?></span>
+                                                        </a>
+                                                    <?php endif; ?>
                                                 </span>
-                                                <span><strong><?php echo e(__('Service Request Date:')); ?></strong>  <?php echo e(Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y')); ?></span>
+                                                <span><strong><?php echo e(__('Date : ')); ?></strong>  <?php echo e(Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y')); ?></span>
                                             </div>
                                         </div>
                                     </div>
@@ -353,88 +416,26 @@
                                                 <?php echo e(__('No Date Created')); ?>
 
                                             <?php else: ?>
-                                                <?php echo e(Carbon\Carbon::parse( strtotime($order->date))->format('d/m/y')); ?>
+                                                <strong>Date : </strong><?php echo e(Carbon\Carbon::parse( strtotime($order->date))->format('d/m/y')); ?>
 
+                                                <br>
+                                                <strong>Time : </strong><span class="time"><?php echo e(__($order->schedule)); ?></span>
                                             <?php endif; ?>
                                         </span>
-                                        <span class="time"><?php echo e(__($order->schedule)); ?></span>
                                     </div>
                                 </td>
                                 <?php endif; ?>
 
                                 <td>
                                     <div class="dashboard_table__main__amount mx-4">
-                                        <h6 class="price"><?php echo e(float_amount_with_currency_symbol($order->total)); ?></h6>
+                                        <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark"><?php echo e(__('Name : ')); ?></strong><?php echo e(optional($order->buyer)->name); ?> </a>
+                                        <br>
+                                        <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark"><?php echo e(__('Problem : ')); ?></strong><?php echo e($order->problem_title ?? "NA"); ?> </a>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="dashboard_table__main__type">
-                                        <?php if($order->is_order_online==1): ?>
-                                            <span class="online"><?php echo e(__('Online')); ?></span>
-                                        <?php else: ?>
-                                            <span class="offline"><?php echo e(__('Offline')); ?></span>
-                                        <?php endif; ?>
-                                    </div>
-                                </td>
+                                
                                 <!-- payment status start -->
-                                <td data-label="Payment Status">
-                                    <?php if($order->payment_status == 'pending'): ?>
-                                        <div class="dashboard_table__main__priority"><strong><?php echo e(__('Payment Status: ')); ?></strong> <span class="priorityBtn pending"><?php echo e(__('Pending')); ?></span> </div>
-                                        <?php if($order->payment_gateway == 'cash_on_delivery'): ?>
-                                            <span class="text-info"><strong><?php echo e(__('Payment Type: ')); ?></strong> <br>  <?php echo e(__('Cash on Delivery')); ?></span> <br>
-                                            <span><?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cancel-order','data' => ['url' => route('seller.order.cancel.cod.payment.pending',$order->id)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('cancel-order'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('seller.order.cancel.cod.payment.pending',$order->id))]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?></span>
-                                        <?php elseif($order->payment_gateway == 'annual_maintenance_charge'): ?>
-                                            <span class="text-info"><strong><?php echo e(__('Payment Type: ')); ?></strong><?php echo e(__('AMC')); ?></span>
-                                            <br>
-                                            <span><?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cancel-order','data' => ['url' => route('seller.order.cancel.cod.payment.pending',$order->id)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('cancel-order'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('seller.order.cancel.cod.payment.pending',$order->id))]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?></span>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
-                                    <?php if($order->payment_status == 'complete'): ?>
-                                     <div class="dashboard_table__main__priority"><strong><?php echo e(__('Payment Status: ')); ?></strong> <span class="priorityBtn completed"><?php echo e(__('Payment_AMC')); ?></span> </div>
-                                    <?php endif; ?>
-                                    <?php if(empty($order->payment_status)): ?>
-                                         <div class="dashboard_table__main__priority"><strong><?php echo e(__('Payment Status: ')); ?></strong>  <span class="priorityBtn pending"><?php echo e(__('Pending')); ?></span> </div>
-                                    <?php endif; ?>
-
-                                    <!--for cash one delivery payment status change -->
-                                        <?php if($order->payment_gateway === 'cash_on_delivery' && $order->payment_status === 'pending'): ?>
-                                            <a href="javascript:void(0)"
-                                               class="edit_payment_status_modal"
-                                               data-bs-toggle="modal"
-                                               data-bs-target="#editPaymentStatusModal"
-                                               data-id="<?php echo e($order->id); ?>">
-                                                <span class="dash-icon color-1 mt-2"><?php echo e(__('Change Payment Status')); ?></span>
-                                            </a>
-                                        <?php endif; ?>
-                                </td>
+                                
                                 <!-- payment status end -->
 
                                 <!-- order complete request start-->
@@ -446,7 +447,7 @@
                                         <?php  $review_count = \App\Review::where('order_id',$order->id)->where('type', 1)->where('seller_id',$serviceProviderId)->get(); ?>
                                     <?php endif; ?>
                                     <?php if(in_array($order->order_complete_request,[0,1])): ?>
-                                        <?php if($order->payment_status != 'pending'): ?>
+                                        <?php if($order->payment_status == 'complete'): ?>
                                             <?php if($order->order_complete_request == 0): ?>
                                                 <a href="#0" class="edit_status_modal"
                                                     data-bs-toggle="modal"
@@ -455,48 +456,57 @@
                                                     data-status="<?php echo e($order->status); ?>"
                                                     data-file-link="<?php echo e($order->service_provider_file_link); ?>"
                                                     data-file-signing-status="<?php echo e($order->service_provider_signing_status); ?>">
-                                                <span class="dash-icon color-1 text-success"><?php echo e(__('Complete Request')); ?></span>
+                                                <span class="dash-icon color-1 text-success"><?php echo e(__('Raised Request')); ?></span>
                                             </a>
                                             <?php else: ?>
                                                 <div class="dashboard_table__main__priority mt-3">
                                                     <a href="javascript:void(0)" class="priorityBtn pending"><?php echo e(__('Request Pending')); ?></a>
                                                 </div>
                                             <?php endif; ?>
+                                        <?php elseif($order->payment_status == '' && $order->status == 4): ?>
+                                            <div class="dashboard_table__main__priority">
+                                                <a href="javascript:void(0)" class="priorityBtn cancel"><?php echo e(__('Request Cancelled')); ?></a>
+                                            </div>
+                                        <?php else: ?>
+                                            <div class="dashboard_table__main__priority mt-3">
+                                                <a href="javascript:void(0)" class="priorityBtn pending"><?php echo e(__('Request Pending')); ?></a>
+                                            </div>
                                         <?php endif; ?>
 
-                                    <?php elseif($order->order_complete_request == 2): ?>
-                                        <div class="dashboard_table__main__priority   <?php if(request()->path() == 'seller/orders' || request()->path() == 'serviceprovider/orders'): ?> mt-5 <?php else: ?> mt-4 <?php endif; ?> ">
-                                            <a href="javascript:void(0)" class="priorityBtn completed"><?php echo e(__('Completed')); ?></a>
-                                        </div>
-                                    <?php endif; ?>
+                                        <?php elseif($order->order_complete_request == 2): ?>
+                                            <div class="dashboard_table__main__priority   <?php if(request()->path() == 'seller/orders' || request()->path() == 'serviceprovider/orders'): ?> mt-5 <?php else: ?> mt-4 <?php endif; ?> ">
+                                                <a href="javascript:void(0)" class="priorityBtn completed"><?php echo e(__('Completed')); ?></a>
+                                            </div>
+                                        <?php endif; ?>
 
-                                    <?php if($order->order_complete_request == 3): ?>
-                                        <a href="#0" class="edit_status_modal"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#editStatusModal"
-                                            data-id="<?php echo e($order->id); ?>"
-                                            data-status="<?php echo e($order->status); ?>"
-                                            data-file-link="<?php echo e($order->service_provider_file_link); ?>"
-                                            data-file-signing-status="<?php echo e($order->service_provider_signing_status); ?>">
-                                                <span class="dash-icon color-1 text-success"> <?php echo e(__('Complete Request')); ?></span>
+                                        <?php if($order->order_complete_request == 3): ?>
+                                            <a href="#0" class="edit_status_modal"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editStatusModal"
+                                                data-id="<?php echo e($order->id); ?>"
+                                                data-status="<?php echo e($order->status); ?>"
+                                                data-file-link="<?php echo e($order->service_provider_file_link); ?>"
+                                                data-file-signing-status="<?php echo e($order->service_provider_signing_status); ?>">
+                                                <span class="dash-icon color-1 text-success"> <?php echo e(__('Raised Request')); ?></span>
                                             </a> <br>
                                         <?php if(optional($order->completedeclinehistory)->count() >=1): ?>
                                             <span class="btn btn-warning mt-1"><a href="<?php echo e(route('seller.order.request.decline.history',$order->id)); ?>"> <?php echo e(__('View History')); ?> </a></span>
                                         <?php endif; ?>
-
                                     <?php endif; ?>
                                 </span>
                                     <?php if(request()->path() == 'seller/orders' || request()->path() == 'serviceprovider/orders'): ?>
                                         <!-- order complete request start-->
                                         <?php if($order->status == 0 && $order->payment_status == 'pending'): ?>
                                             <span class="mx-1 pending"> <?php echo e(__('No Request Created')); ?></span>
+                                        <?php elseif($order->status == 4 && $order->payment_status == ''): ?>
+                                            
+                                        <?php else: ?>
+                                            <a href="#0"
+                                            data-bs-toggle="modal"
+                                            data-id="<?php echo e($order->id); ?>"
+                                            data-bs-target="#extraServiceRequest"
+                                            class="mt-2 btn btn-secondary extra_submit_request_btn"><?php echo e(__('Extra Services')); ?></a>
                                         <?php endif; ?>
-
-                                        <a href="#0"
-                                           data-bs-toggle="modal"
-                                           data-id="<?php echo e($order->id); ?>"
-                                           data-bs-target="#extraServiceRequest"
-                                           class="mt-2 btn btn-secondary extra_submit_request_btn"><?php echo e(__('Extra Services')); ?></a>
                                     <?php else: ?>
                                         <!-- order complete request start-->
                                         <?php if($order->status == 0 && $order->payment_status == 'pending'): ?>
@@ -595,7 +605,7 @@
                                    <?php endif; ?>
                                    <?php if($order->status == 2): ?><div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn completed"><?php echo e(__('Completed')); ?></a> </div> <?php endif; ?>
                                    <?php if($order->status == 3): ?><div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn delivered"><?php echo e(__('Delivered')); ?></a> </div> <?php endif; ?>
-                                   <?php if($order->status == 4): ?><div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn cancel"><?php echo e(__('Cancel')); ?></a> </div> <?php endif; ?>
+                                   <?php if($order->status == 4): ?><div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn cancel"><?php echo e(__('Cancelled')); ?></a> </div> <?php endif; ?>
                                    <?php if($order->status == 5): ?><div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn cancel"><?php echo e(__('Incompetent')); ?></a> </div> <?php endif; ?>
                                 </td>
                                 <!-- Order status end -->

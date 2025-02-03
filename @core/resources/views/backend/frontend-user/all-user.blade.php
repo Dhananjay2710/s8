@@ -200,10 +200,10 @@
                         </div>
                         <div class="form-group">
                             <label for="service_provider_type">{{'User Type'}}</label>
-                            <select name="service_provider_type" class="form-control">
-                                <option value="">{{__('Select User Type')}}</option>
+                            <select id="service_provider_type" name="service_provider_type" class="form-control">
+                                <option value="">{{ __('Select User Type') }}</option>
                                 @foreach($userTypes as $userType)
-                                <option value="{{$userType->name}}">{{$userType->name}}</option>
+                                <option value="{{ $userType->name }}">{{ $userType->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -275,6 +275,7 @@
                 let city = el.data('city');
                 let area = el.data('area');
                 let address = el.data('address');
+                let service_provider_type = el.data('service_provider_type');
 
                 let form = $('#user_info_modal_form');
                 form.find('#edit_email').val(email);
@@ -285,6 +286,7 @@
                 form.find('#edit_city').val(city);
                 form.find('#edit_area').val(area);
                 form.find('#edit_address').val(address);
+                form.find('#service_provider_type').val(service_provider_type);
 
                 var image = el.data('image');
                 var imageid = el.data('imageid');

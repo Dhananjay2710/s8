@@ -46,7 +46,7 @@ class AddService extends Component
                 'category' => 'required',
                 'subcategory' => 'required',
                 'services.title' => 'required|max:191|unique:services',
-                'services.description' => 'required|min:150',
+                'services.description' => 'required|min:20',
                 'services.slug' => 'required',
 
                 // online service
@@ -61,7 +61,7 @@ class AddService extends Component
                 'category' => 'required',
                 'subcategory' => 'required',
                 'services.title' => 'required|max:191|unique:services',
-                'services.description' => 'required|min:150',
+                'services.description' => 'required|min:20',
                 'services.slug' => 'required',
             ];
         }

@@ -123,6 +123,7 @@ class FrontendUserManageController extends Controller
                                    data-city="'.$row->service_city.'"
                                    data-area="'.$row->service_area.'"
                                    data-address="'.$row->address.'"
+                                   data-service_provider_type="'.$row->service_provider_type.'"
                                    data-imageid="'.$row->image.'"
                                    data-image="'.$img_url.'"
                                 >

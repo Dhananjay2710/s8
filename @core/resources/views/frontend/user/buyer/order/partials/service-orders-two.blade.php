@@ -152,17 +152,17 @@
                         <table>
                             <thead>
                             <tr>
-                                <th>{{ __('Service Request item') }}</th>
+                                <th>{{ __('Service Request Details') }}</th>
 
                                 @if(request()->path() == 'buyer/orders' || request()->path() == 'customer/orders')
                                     <th>{{ __('Booking Date and Time') }}</th>
                                 @endif
 
-                                <th>{{ __('Service Request amount') }}</th>
-                                <th>{{ __('Service Request type') }}</th>
-                                <th>{{ __('Payment Details') }}</th>
-                                <th>{{ __('Service Request Complete Request') }}</th>
-                                <th>{{ __('Service Request status') }}</th>
+                                <th>{{ __('Problem Deatils') }}</th>
+                                {{-- <th>{{ __('Service Request type') }}</th> --}}
+                                {{-- <th>{{ __('Payment Details') }}</th> --}}
+                                <th>{{ __('Service Reqest To Review') }}</th>
+                                <th>{{ __('Status/Action') }}</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -193,13 +193,38 @@
                                                 @if(request()->path() == 'buyer/job-orders' || request()->path() == 'customer/job-orders')
                                                     <h5 class="dashboard_table__main__order__contents__title"> @if($order->order_from_job == 'yes') {{ Str::limit(optional($order->job)->title,60) }} @endif </h5>
                                                 @else
-                                                    <h5 class="dashboard_table__main__order__contents__title">{{ optional($order->service)->title }}</h5>
+                                                    <h5 class="dashboard_table__main__order__contents__title"><strong class="text-dark">{{ __('Name : ') }}</strong>{{ optional($order->service)->title }}</h5>
                                                 @endif
                                                 <span class="dashboard_table__main__order__contents__subtitle mt-2">
-                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__id"> <strong class="text-dark">{{ __('Service Request ID:') }}</strong> {{ $order->id }}</a> ,
-                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark">{{ __('Service Provider Name:') }}</strong>{{ optional($order->seller)->name }} </a>
+                                                    <a href="javascript:void(0)" class="dashboard_table__main__order__contents__id"> <strong class="text-dark">{{ __('ID : ') }}</strong> {{ $order->id }}</a>
+                                                    <h6 class="price"><strong>Amount : </strong>{{ float_amount_with_currency_symbol($order->total) }}</h6>
+                                                    <div class="dashboard_table__main__type">
+                                                        @if($order->is_order_online==1)
+                                                            <span class="online"><strong>Type : </strong>{{ __('Online') }}</span>
+                                                        @else
+                                                            <span class="offline"><strong>Type : </strong>{{ __('Offline') }}</span>
+                                                        @endif
+                                                    </div>
+                                                    @if ($order->payment_status == 'pending')
+                                                        <div class="dashboard_table__main__priority"><strong>{{__('Payment Status : ')}}</strong> <span class="priorityBtn pending">{{ __('Pending') }}</span> </div>
+                                                        @if($order->payment_gateway == 'cash_on_delivery')
+                                                            <span class="text-info"><strong>{{__('Payment Type: ')}}</strong> <br>  {{ __('Cash on Delivery') }}</span> <br>
+                                                            <span><x-cancel-order :url="route('buyer.order.cancel.cod.payment.pending',$order->id)"/></span>
+                                                        @elseif ($order->payment_gateway == 'annual_maintenance_charge')
+                                                            <span class="text-info"><strong>{{__('Payment Type: ')}}</strong>{{ __('AMC') }}</span>
+                                                            <br>
+                                                            <span><x-cancel-order :url="route('buyer.order.cancel.cod.payment.pending',$order->id)"/></span>
+                                                        @endif
+                                                    @endif
+                                                    @if ($order->payment_status == 'complete')
+                                                        <div class="dashboard_table__main__priority"><strong>{{__('Payment Status : ')}}</strong> <span class="priorityBtn completed">{{ __('Payment_AMC') }}</span> </div>
+                                                    @endif
+                                                    @if(empty($order->payment_status))
+                                                        <div class="dashboard_table__main__priority"><strong>{{__('Payment Status : ')}}</strong>  <span class="priorityBtn pending">{{ __('Pending/NA') }}</span> </div>
+                                                    @endif
+                                                    {{-- <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark">{{ __('Service Provider Name:') }}</strong>{{ optional($order->seller)->name }} </a> --}}
                                                 </span>
-                                                <span><strong>{{ __('Service Request Date:') }}</strong>  {{ Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y') }}</span>
+                                                <span><strong>{{ __('Date : ') }}</strong>  {{ Carbon\Carbon::parse( strtotime($order->created_at))->format('d/m/y') }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -212,20 +237,24 @@
                                             @if($order->date === 'No Date Created')
                                                 {{ __('No Date Created') }}
                                             @else
-                                                {{ Carbon\Carbon::parse( strtotime($order->date))->format('d/m/y') }}
+                                                <strong>Date : </strong>{{ Carbon\Carbon::parse( strtotime($order->date))->format('d/m/y') }}
+                                                <br>
+                                                <strong>Time : </strong><span class="time">{{ __($order->schedule) }}</span>
                                             @endif
                                         </span>
-                                        <span class="time">{{ __($order->schedule) }}</span>
+                                        
                                     </div>
                                 </td>
                                 @endif
 
                                 <td>
                                     <div class="dashboard_table__main__amount mx-4">
-                                        <h6 class="price">{{ float_amount_with_currency_symbol($order->total) }}</h6>
+                                        <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark">{{ __('Problem : ') }}</strong>{{ $order->problem_title ?? "NA" }} </a>
+                                        <br>
+                                        <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark">{{ __('Aritic Ticket Id : ') }}</strong>{{ $order->service_ticket_id ?? "NA" }} </a>
                                     </div>
                                 </td>
-                                <td>
+                                {{-- <td>
                                     <div class="dashboard_table__main__type">
                                         @if($order->is_order_online==1)
                                             <span class="online">{{ __('Online') }}</span>
@@ -233,9 +262,9 @@
                                             <span class="offline">{{ __('Offline') }}</span>
                                         @endif
                                     </div>
-                                </td>
+                                </td> --}}
                                 <!-- payment status start -->
-                                <td data-label="Payment Status">
+                                {{-- <td data-label="Payment Status">
                                     @if ($order->payment_status == 'pending')
                                         <div class="dashboard_table__main__priority"><strong>{{__('Payment Status: ')}}</strong> <span class="priorityBtn pending">{{ __('Pending') }}</span> </div>
                                         @if($order->payment_gateway == 'cash_on_delivery')
@@ -253,7 +282,7 @@
                                     @if(empty($order->payment_status))
                                          <div class="dashboard_table__main__priority"><strong>{{__('Payment Status: ')}}</strong>  <span class="priorityBtn pending">{{ __('Pending') }}</span> </div>
                                     @endif
-                                </td>
+                                </td> --}}
                                 <!-- payment status end -->
 
                                 <!-- order complete request start-->
@@ -263,7 +292,7 @@
                                 @if ($order->order_complete_request == 1)
                                     <td>
                                       <div class="mx-3">
-                                          <span>{{ __('Complete Request') }}</span> <br>
+                                          <span>{{ __('Approve Request') }}</span> <br>
                                           <span><x-order-complete-request-approve :url="route('buyer.order.complete.request.approve',$order->id)"/></span>
                                           <span class="btn btn-warning btn-sm">
                                          <a href="#"
@@ -324,7 +353,7 @@
                                    @if ($order->status == 1)<div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn active">{{ __('Active') }}</a> </div> @endif
                                    @if ($order->status == 2)<div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn completed">{{ __('Completed') }}</a> </div> @endif
                                    @if ($order->status == 3)<div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn delivered">{{ __('Delivered') }}</a> </div> @endif
-                                   @if ($order->status == 4)<div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn cancel">{{ __('Cancel') }}</a> </div> @endif
+                                   @if ($order->status == 4)<div class="dashboard_table__main__priority"><a href="javascript:void(0)" class="priorityBtn cancel">{{ __('Cancelled') }}</a> </div> @endif
                                 </td>
                                 <!-- Order status end -->
                                 <td>
@@ -694,12 +723,12 @@
                 $(document).on('click','.swal_status_change',function(e){
                     e.preventDefault();
                     Swal.fire({
-                        title: '{{__("Are you sure to change status complete? Once you done you can not revert this !!")}}',
+                        title: '{{__("Are you sure you want to approve this service request? Once you Approve you can not revert this !!")}}',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: "{{__('Yes, complete it!')}}"
+                        confirmButtonText: "{{__('Yes, Approve it!')}}"
                     }).then((result) => {
                         if (result.isConfirmed) {
                             $(this).next().find('.swal_form_submit_btn').trigger('click');

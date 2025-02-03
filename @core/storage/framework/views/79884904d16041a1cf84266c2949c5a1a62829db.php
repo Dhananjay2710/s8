@@ -92,7 +92,7 @@
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="single-info-input" wire:ignore>
-                                                <label for="description" class="info-title"> <?php echo e(__('Service Description')); ?> <span class="text-danger">*</span> <small class="text-info"><?php echo e(__('minimum 150 characters')); ?> </small>  </label>
+                                                <label for="description" class="info-title"> <?php echo e(__('Service Description')); ?> <span class="text-danger">*</span> <small class="text-info"><?php echo e(__('minimum 20 characters')); ?> </small>  </label>
                                                 <textarea wire:model.defer="services.description" id="summernote" class="form--control textarea--form textarea-input" cols="20" rows="2" placeholder="<?php echo e(__('Type Description')); ?>"></textarea>
 
                                             </div>

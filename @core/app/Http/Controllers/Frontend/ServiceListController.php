@@ -315,6 +315,7 @@ class ServiceListController extends Controller
                     "\n Selected Payment Getway: " . $request->selected_payment_gateway .
                     "\n Service Request : " . $request->service_id);
         $service8TicketId = $request->service_ticket_id;
+        $problemTitle = $request->problem_title;
         if (empty($request->name) || empty($request->seller_id) || empty($request->selected_payment_gateway) || empty($request->service_id)){
             $status = [
                 "status" => "error",
@@ -506,6 +507,7 @@ class ServiceListController extends Controller
                 'customer_signing_status' => 'Pending',         
                 'admin_signing_status' => 'Pending', 
                 'service_ticket_id' => $service8TicketId,
+                'problem_title' => $problemTitle,
             ]);
         }else{
             if(Auth::guard('web')->check() && Auth::guard('web')->user()->user_type == 1 ){
@@ -543,6 +545,7 @@ class ServiceListController extends Controller
                     'customer_signing_status' => 'Pending',         
                     'admin_signing_status' => 'Pending',
                     'service_ticket_id' => $service8TicketId,
+                    'problem_title' => $problemTitle,
                 ]);
             }else{
                if( get_static_option('order_create_settings') !== 'anyone'){
@@ -582,6 +585,7 @@ class ServiceListController extends Controller
                     'customer_signing_status' => 'Pending',         
                     'admin_signing_status' => 'Pending', 
                     'service_ticket_id' => $service8TicketId,
+                    'problem_title' => $problemTitle,
                 ]);
 
             }
@@ -1845,6 +1849,7 @@ class ServiceListController extends Controller
                 'customer_signing_status' => 'Pending',         
                 'admin_signing_status' => 'Pending',
                 'service_ticket_id' => $service8TicketId,
+                'problem_title' => $problemTitle,
             ]);
         }else{
             if(Auth::guard('web')->check() && Auth::guard('web')->user()->user_type == 1 ){
@@ -1882,6 +1887,7 @@ class ServiceListController extends Controller
                     'customer_signing_status' => 'Pending',         
                     'admin_signing_status' => 'Pending',
                     'service_ticket_id' => $service8TicketId,
+                    'problem_title' => $problemTitle,
                 ]);
             }else{
                if( get_static_option('order_create_settings') !== 'anyone'){
@@ -1921,6 +1927,7 @@ class ServiceListController extends Controller
                     'customer_signing_status' => 'Pending',         
                     'admin_signing_status' => 'Pending',
                     'service_ticket_id' => $service8TicketId,
+                    'problem_title' => $problemTitle,
                 ]);
 
             }
@@ -3009,8 +3016,9 @@ class ServiceListController extends Controller
         $name = $request->name;
         $email = $request->email;
         $phone = $request->phone;
-        $service_ticket_id = $request->service_ticket_id;
-        \Log::debug("Service 8 Ticket ID : " . $service_ticket_id);
+        $service8TicketId = $request->service_ticket_id;
+        $problemTitle = $request->problem_title;
+        \Log::debug("Service 8 Problem Title : " . $problemTitle);
         if ($request->category_id != "" || $serviceProviderId !="" || $request->post_code != ""){
             
             if (is_string($request->category_id)) {
@@ -3189,7 +3197,7 @@ class ServiceListController extends Controller
                                 $userData->choose_service_city, $userData->choose_service_area,
                                 $userData->choose_service_country, $serviceIncludesData->id,
                                 $serviceIncludesData->include_service_quantity, $schedulesData->schedule,
-                                $order_note, $name, $email, $phone, $service_ticket_id
+                                $order_note, $name, $email, $phone, $service8TicketId, $problemTitle
                             );
                             $responseResult[] = json_decode($createServiceRequestResult, true);
                         }
@@ -3242,8 +3250,10 @@ class ServiceListController extends Controller
     }
 
  
-    public function createServiceRequest($serviceId, $sellerId, $isServiceOnline, $online_service_package_fee_final, $choose_service_city_final, $choose_service_area_final, $choose_service_country_final, $serviceIncludesDataId, $final_include_service_quantity, $schedule_final, $order_note_final, $finalaName, $finalEmail, $finalPhone, $service_ticket_id) {
+    public function createServiceRequest($serviceId, $sellerId, $isServiceOnline, $online_service_package_fee_final, $choose_service_city_final, $choose_service_area_final, $choose_service_country_final, $serviceIncludesDataId, $final_include_service_quantity, $schedule_final, $order_note_final, $finalaName, $finalEmail, $finalPhone, $service8TicketId, $problemTitle) {
         header('Content-type: application/json');
+        date_default_timezone_set('Asia/Kolkata');
+        $createdDate = date('Y-m-d H:i:s');
         $todayDate = date('d-m-Y');
         $customerId = '';
         $selected_payment_gateway = "annual_maintenance_charge";
@@ -3262,7 +3272,8 @@ class ServiceListController extends Controller
         $date = $todayDate;
         $order_note = $order_note_final;
         $schedule = $schedule_final;
-        $service8TicketId = $service_ticket_id;
+        $service8TicketId = $service8TicketId;
+        $problemTitle = $problemTitle;
         $services = [
             [
                 "id" => $serviceIncludesDataId,
@@ -3472,6 +3483,8 @@ class ServiceListController extends Controller
                 'customer_signing_status' => 'Pending',         
                 'admin_signing_status' => 'Pending', 
                 'service_ticket_id' => $service8TicketId,
+                'problem_title' => $problemTitle,
+                'created_at' => $createdDate,
             ]);
         }else{
             if(Auth::guard('web')->check() && Auth::guard('web')->user()->user_type == 1 ){
@@ -3487,8 +3500,8 @@ class ServiceListController extends Controller
                     'city' => $choose_service_city,
                     'area' => $choose_service_area,
                     'country' => $choose_service_country,
-                    'date' => '00.00.00',
-                    'schedule' => '00.00.00',
+                    'date' => \Carbon\Carbon::parse($date)->format('D F d Y'),
+                    'schedule' => $shedule,
                     'package_fee' => 0,
                     'extra_service' => 0,
                     'sub_total' => 0,
@@ -3509,6 +3522,8 @@ class ServiceListController extends Controller
                     'customer_signing_status' => 'Pending',         
                     'admin_signing_status' => 'Pending',
                     'service_ticket_id' => $service8TicketId,
+                    'problem_title' =>  $problemTitle,
+                    'created_at' => $createdDate,
                 ]);
             }else{
                if( get_static_option('order_create_settings') !== 'anyone'){
@@ -3548,6 +3563,8 @@ class ServiceListController extends Controller
                     'customer_signing_status' => 'Pending',         
                     'admin_signing_status' => 'Pending', 
                     'service_ticket_id' => $service8TicketId,
+                    'problem_title' =>  $problemTitle,
+                    'created_at' => $createdDate,
                 ]);
             }
         }

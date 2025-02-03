@@ -395,7 +395,7 @@ class ServiceController extends Controller
             $request->validate([
                 'category' => 'required',
                 'title' => 'required|max:191|unique:services',
-                'description' => 'required|min:150',
+                'description' => 'required|min:20',
                 'slug' => 'required',
                 'seller_id' => 'required',
             ]);
@@ -464,7 +464,7 @@ class ServiceController extends Controller
             $request->validate([
                 'category' => 'required',
                 'title' => 'required|max:191|unique:services,id,'.$id,
-                'description' => 'required|min:150',
+                'description' => 'required|min:20',
                 'seller_id' => 'required',
             ]);
 

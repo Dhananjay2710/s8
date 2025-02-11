@@ -16,18 +16,18 @@
         @include('frontend.user.buyer.header.buyer-header')
         <div class="dashboard__body">
             <div class="dashboard__inner">
-                <div class="thumb-ad">
+                {{-- <div class="thumb-ad">
                     @if(!empty($companyData->profile_background))
                         {!! render_image_markup_by_attachment_id($companyData->profile_background) !!}
                     @else
-                        <img src="{{ asset('assets/frontend/img/static/ads.jpg') }}" alt="ads">
+                        <img src="{{ asset('assets/frontend/img/static/user_background_img.jpg') }}" alt="ads">
                     @endif
 
-                </div>
+                </div> --}}
                 <!-- buyer profile section start-->
                 <div class="dashboard_accountProfile mt-4">
                     <x-error-message/>
-                    <div class="dashboard__inner__item dashboard_border padding-20 radius-10 bg-white">
+                    <div class="dashboard__inner__item dashboard_border padding-10 radius-10 bg-white">
                         <div class="dashboard_accountProfile__item">
 
                             <div class="dashboard_accountProfile__flex">
@@ -656,7 +656,7 @@
         <div class="dashboard__body">
             <div class="dashboard__inner">
                 <div class="dashboard_table__wrapper dashboard_border  padding-20 radius-10 bg-white">
-                    <h2 class="dashboard_table__title"> {{__('Add Company/Channel Deatils')}} </h2>
+                    <h2 class="dashboard_table__title"> {{__('Add Company/Channel Details')}} </h2>
                     <div class="notice-board">
                         <p class="text-danger">{{ __('If you are associated with a service provider or channel partner, please add your organizations details below. This information will help us better understand your business and streamline our collaboration.') }}</p>
                     </div>

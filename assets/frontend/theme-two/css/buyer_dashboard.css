@@ -1171,42 +1171,42 @@ span {
   border-radius: 7px;
 }
 .dashboard__body {
-  padding: 30px;
+  padding: 15px;
   min-height: 100vh;
 }
 @media (min-width: 1200px) and (max-width: 1399.98px) {
   .dashboard__body {
-    padding: 20px;
+    padding: 10px;
   }
 }
 @media (min-width: 992px) and (max-width: 1199.98px) {
   .dashboard__body {
-    padding: 20px;
+    padding: 10px;
   }
 }
 @media (min-width: 250px) and (max-width: 991.98px) {
   .dashboard__body {
-    padding: 30px;
+    padding: 15px;
   }
 }
 @media (min-width: 992px) and (max-width: 1200px) {
   .dashboard__body {
-    padding: 30px;
+    padding: 15px;
   }
 }
 @media (min-width: 1200px) and (max-width: 1600px) {
   .dashboard__body {
-    padding: 30px;
+    padding: 15px;
   }
 }
 @media only screen and (max-width: 575.98px) {
   .dashboard__body {
-    padding: 20px;
+    padding: 15px;
   }
 }
 @media only screen and (max-width: 375px) {
   .dashboard__body {
-    padding: 10px;
+    padding: 15px;
   }
 }
 
@@ -1302,37 +1302,37 @@ span {
 
 .dashboard__header {
   background-color: var(--white);
-  padding: 20px 40px;
+  padding: 10px 20px;
   position: relative;
 }
 @media (min-width: 992px) and (max-width: 1199.98px) {
   .dashboard__header {
-    padding: 20px 30px;
+    padding: 10px 15px;
   }
 }
 @media (min-width: 250px) and (max-width: 991.98px) {
   .dashboard__header {
-    padding: 20px 30px;
+    padding: 10px 15px;
   }
 }
 @media (min-width: 992px) and (max-width: 1200px) {
   .dashboard__header {
-    padding: 20px 30px;
+    padding: 10px 15px;
   }
 }
 @media (min-width: 1200px) and (max-width: 1600px) {
   .dashboard__header {
-    padding: 20px 30px;
+    padding: 10px 15px;
   }
 }
 @media only screen and (max-width: 575.98px) {
   .dashboard__header {
-    padding: 20px 20px;
+    padding: 10px 15px;
   }
 }
 @media only screen and (max-width: 375px) {
   .dashboard__header {
-    padding: 20px 10px;
+    padding: 10px 15px;
   }
 }
 .dashboard__header__title {
@@ -1778,13 +1778,13 @@ span {
   -webkit-box-align: start;
       -ms-flex-align: start;
           align-items: flex-start;
-  gap: 24px;
+  gap: 12px;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
 }
 
 .dashboard_promo__col {
-  width: calc(50% - 12px);
+  width: calc(33.3333333333% - 13.33px);
 }
 @media only screen and (max-width: 575.98px) {
   .dashboard_promo__col {
@@ -1822,7 +1822,7 @@ span {
 }
 
 .dashboard_promo {
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
   position: relative;
   z-index: 2;
@@ -1831,32 +1831,32 @@ span {
 }
 @media (min-width: 1400px) and (max-width: 1599.98px) {
   .dashboard_promo {
-    padding: 20px 15px;
+    padding: 10px 8px;
   }
 }
 @media (min-width: 1200px) and (max-width: 1399.98px) {
   .dashboard_promo {
-    padding: 20px 20px;
+    padding: 10px 10px;
   }
 }
 @media (min-width: 250px) and (max-width: 991.98px) {
   .dashboard_promo {
-    padding: 24px 20px;
+    padding: 12px 10px;
   }
 }
 @media (min-width: 992px) and (max-width: 1200px) {
   .dashboard_promo {
-    padding: 24px 20px;
+    padding: 12px 10px;
   }
 }
 @media (min-width: 1200px) and (max-width: 1600px) {
   .dashboard_promo {
-    padding: 24px 20px;
+    padding: 12px 10px;
   }
 }
 @media only screen and (max-width: 767.98px) {
   .dashboard_promo {
-    padding: 20px 15px;
+    padding: 10px 8px;
   }
 }
 .dashboard_promo__flex {
@@ -2007,15 +2007,15 @@ span {
 }
 .dashboard_recentOrder__item {
   border: 1px solid var(--border-color);
-  padding: 20px;
+  padding: 10px;
 }
 .dashboard_recentOrder__item:not(:last-child) {
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 .dashboard_recentOrder__item.open .dashboard_recentOrder__item__details {
   border-top: 1px solid var(--border-color);
-  padding-top: 24px;
-  margin-top: 24px;
+  padding-top: 12px;
+  margin-top: 12px;
 }
 .dashboard_recentOrder__item.open .dashboard_recentOrder__item__icon .toggle_recentOrder {
   -webkit-transform: rotate(180deg);
@@ -3691,7 +3691,8 @@ textarea.form-control {
 
 /* Account Profile */
 .dashboard_accountProfile {
-  max-width: 700px;
+  width: auto;
+  /* max-width: 700px; */
 }
 .dashboard_accountProfile__item:not(:last-child) {
   border-bottom: 1px solid var(--border-color);
@@ -4508,7 +4509,7 @@ textarea.form-control {
     }
 } */
 .dashboard__headerContents {
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 .dashboard__headerContents__flex {
   display: -webkit-box;

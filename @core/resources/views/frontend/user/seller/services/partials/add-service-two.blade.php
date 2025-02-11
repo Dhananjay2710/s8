@@ -50,7 +50,7 @@
                                     </div>
                                 @endif
                                 <div class="notice-board mb-0" style="border-left:5px solid #9e9e9e !important;">
-                                    <p class="text-secondary">{{__('This part is common for both of/on line services. After create service you will redirect
+                                    <p class="text-secondary">{{__('This part is common for both off/on line services. After create service you will redirect
                                     a page where you will create service attributes for offline or online.')}}</p>
                                 </div>
                             </div>

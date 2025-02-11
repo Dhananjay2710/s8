@@ -42,7 +42,7 @@
                             <div class="dashboard__headerGlobal__flex">
                                 <div class="dashboard__headerGlobal__content">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        <h4 class="dashboard_table__title"><?php echo e(__('Search Coupons Module')); ?></h4> <i class="las la-angle-down search_by_all"></i>
+                                        <h4 class="dashboard_table__title"><?php echo e(__('Search Coupons')); ?></h4> <i class="las la-angle-down search_by_all"></i>
                                     </button>
                                 </div>
                                 <div class="dashboard__headerGlobal__btn">

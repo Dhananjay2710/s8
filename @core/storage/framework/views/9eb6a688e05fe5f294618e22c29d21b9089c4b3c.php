@@ -115,7 +115,7 @@
                             <div class="dashboard__headerGlobal__flex">
                                 <div class="dashboard__headerGlobal__content">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        <h4 class="dashboard_table__title"><?php echo e(__('Search Service Request Module')); ?></h4> <i class="las la-angle-down search_by_all"></i>
+                                        <h4 class="dashboard_table__title"><?php echo e(__('Search Service Request')); ?></h4> <i class="las la-angle-down search_by_all"></i>
                                     </button>
                                 </div>
                                 <div class="dashboard__headerGlobal__btn">
@@ -431,6 +431,8 @@
                                         <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark"><?php echo e(__('Name : ')); ?></strong><?php echo e(optional($order->buyer)->name); ?> </a>
                                         <br>
                                         <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark"><?php echo e(__('Problem : ')); ?></strong><?php echo e($order->problem_title ?? "NA"); ?> </a>
+                                        <br>
+                                        <a href="javascript:void(0)" class="dashboard_table__main__order__contents__author"> <strong class="text-dark"><?php echo e(__('S8 Ticket Id : ')); ?></strong><?php echo e($order->service_ticket_id ?? "NA"); ?> </a>
                                     </div>
                                 </td>
                                 

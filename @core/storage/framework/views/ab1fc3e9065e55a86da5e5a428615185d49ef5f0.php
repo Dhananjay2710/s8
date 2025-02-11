@@ -93,7 +93,7 @@
                                     </div>
                                 <?php endif; ?>
                                 <div class="notice-board mb-0" style="border-left:5px solid #9e9e9e !important;">
-                                    <p class="text-secondary"><?php echo e(__('This part is common for both of/on line services. After create service you will redirect
+                                    <p class="text-secondary"><?php echo e(__('This part is common for both off/on line services. After create service you will redirect
                                     a page where you will create service attributes for offline or online.')); ?></p>
                                 </div>
                             </div>
@@ -118,15 +118,15 @@
                         <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('add-service', [])->html();
-} elseif ($_instance->childHasBeenRendered('pQeWZpz')) {
-    $componentId = $_instance->getRenderedChildComponentId('pQeWZpz');
-    $componentTag = $_instance->getRenderedChildComponentTagName('pQeWZpz');
+} elseif ($_instance->childHasBeenRendered('iLyJe5E')) {
+    $componentId = $_instance->getRenderedChildComponentId('iLyJe5E');
+    $componentTag = $_instance->getRenderedChildComponentTagName('iLyJe5E');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('pQeWZpz');
+    $_instance->preserveRenderedChild('iLyJe5E');
 } else {
     $response = \Livewire\Livewire::mount('add-service', []);
     $html = $response->html();
-    $_instance->logRenderedChild('pQeWZpz', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('iLyJe5E', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

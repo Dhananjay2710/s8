@@ -43,7 +43,7 @@
                                     @if(get_static_option('service_create_settings') == 'verified_seller')
                                         <p class="text-danger">{{__('You can not add services if you are not verified.')}}</p>
                                     @endif
-                                    <p class="text-danger">{{__('This part is common for both of/on line services. After create service you will redirect
+                                    <p class="text-danger">{{__('This part is common for both off/on line services. After create service you will redirect
                                     a page where you will create service attributes for offline or online.')}}</p>
                                 </div>
                             </div>

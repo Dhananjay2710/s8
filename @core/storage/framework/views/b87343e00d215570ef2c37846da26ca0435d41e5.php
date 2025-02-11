@@ -45,15 +45,7 @@
         <?php echo $__env->make('frontend.user.buyer.header.buyer-header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         <div class="dashboard__body">
             <div class="dashboard__inner">
-                <div class="thumb-ad">
-                    <?php if(!empty($companyData->profile_background)): ?>
-                        <?php echo render_image_markup_by_attachment_id($companyData->profile_background); ?>
-
-                    <?php else: ?>
-                        <img src="<?php echo e(asset('assets/frontend/img/static/ads.jpg')); ?>" alt="ads">
-                    <?php endif; ?>
-
-                </div>
+                
                 <!-- buyer profile section start-->
                 <div class="dashboard_accountProfile mt-4">
                     <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
@@ -71,7 +63,7 @@
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
-                    <div class="dashboard__inner__item dashboard_border padding-20 radius-10 bg-white">
+                    <div class="dashboard__inner__item dashboard_border padding-10 radius-10 bg-white">
                         <div class="dashboard_accountProfile__item">
 
                             <div class="dashboard_accountProfile__flex">
@@ -742,7 +734,7 @@
         <div class="dashboard__body">
             <div class="dashboard__inner">
                 <div class="dashboard_table__wrapper dashboard_border  padding-20 radius-10 bg-white">
-                    <h2 class="dashboard_table__title"> <?php echo e(__('Add Company/Channel Deatils')); ?> </h2>
+                    <h2 class="dashboard_table__title"> <?php echo e(__('Add Company/Channel Details')); ?> </h2>
                     <div class="notice-board">
                         <p class="text-danger"><?php echo e(__('If you are associated with a service provider or channel partner, please add your organizations details below. This information will help us better understand your business and streamline our collaboration.')); ?></p>
                     </div>

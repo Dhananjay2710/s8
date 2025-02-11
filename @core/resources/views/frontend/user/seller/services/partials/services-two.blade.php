@@ -13,13 +13,13 @@
                 <x-msg.success/>
 
                 <!-- search section start-->
-                <div class="dashboard__inner__item dashboard_border padding-20 radius-10 bg-white">
+                <div class="dashboard__inner__item dashboard_border padding-10 radius-10 bg-white">
                     <div class="dashboard__wallet">
                         <form action="{{ route('seller.services') }}" method="GET">
                             <div class="dashboard__headerGlobal__flex">
                                 <div class="dashboard__headerGlobal__content">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        <h4 class="dashboard_table__title">{{ __('Search Service Module') }}</h4> <i class="las la-angle-down search_by_all"></i>
+                                        <h4 class="dashboard_table__title">{{ __('Search Service') }}</h4> <i class="las la-angle-down search_by_all"></i>
                                     </button>
                                 </div>
                                 <div class="dashboard__headerGlobal__btn">
@@ -122,7 +122,7 @@
                                             </div>
                                           @else
                                             <div class="btn-wrapper margin-top-50 text-right">
-                                                <a href="{{route('seller.add.services')}}" class="dashboard_table__title__btn btn-bg-1 radius-5">{{__('Add Services')}}</a>
+                                                <a href="{{route('seller.add.services')}}" class="dashboard_table__title__btn btn-bg-1 radius-5">{{__('Add Service')}}</a>
                                             </div>
                                           @endif
                                     @else
@@ -134,7 +134,7 @@
                                  @endif
                              @else
                             <div class="btn-wrapper margin-top-50 text-right">
-                                <a href="{{route('seller.add.services')}}" class="dashboard_table__title__btn btn-bg-1 radius-5"> {{__('Add Services')}}</a>
+                                <a href="{{route('seller.add.services')}}" class="dashboard_table__title__btn btn-bg-1 radius-5"> {{__('Add Service')}}</a>
                             </div>
                         @endif
                     </div>
@@ -142,7 +142,7 @@
 
                 @if($services->count() > 0)
                     @foreach($services as $data)
-                        <div class="dashboard__inner__item dashboard_border padding-20 radius-10 bg-white">
+                        <div class="dashboard__inner__item dashboard_border padding-10 radius-10 bg-white">
                             <div class="rows dash-single-inner">
                                 <div class="dash-left-service">
                                     <div class="dashboard-services">
@@ -202,7 +202,7 @@
                                 <div class="dash-righ-service">
                                     <div class="dashboard-switch-flex-content">
                                         <div class="dashboard-switch-single">
-                                            <span class="dashboard-starting"> {{__('Starting From:')}} </span>
+                                            <span class="dashboard-starting"> {{__('Service Price :')}} </span>
                                             <h2 class="title-price color-3"> {{ amount_with_currency_symbol($data->price)}} </h2>
                                         </div>
                                         <div class="dashboard-switch-single">

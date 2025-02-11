@@ -10,10 +10,10 @@
 @section('content')
     <div class="col-lg-12 col-ml-12 padding-bottom-30">
         <div class="row">
-            <div class="col-12 mt-5">
+            <div class="col-12 mt-3">
                 <div class="card">
                     <div class="card-body">
-                        <div class="col-12 mt-5">
+                        <div class="col-12 mt-3">
                             <x-msg.error/>
                             <x-msg.success/>
                             <div class="card">

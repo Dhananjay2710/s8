@@ -22,7 +22,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="dashboard-settings margin-top-40">
-                                <h2 class="dashboards-title"> {{__('All Notification')}} </h2>
+                                <h2 class="dashboards-title"> {{__('All Notifications')}} </h2>
                             </div>
                         </div>
                     </div>

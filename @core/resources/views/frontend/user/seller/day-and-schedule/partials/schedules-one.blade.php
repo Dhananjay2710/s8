@@ -19,9 +19,9 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="dashboard-settings margin-top-40">
-                                <h2 class="dashboards-title"> {{__('All Schedules')}} </h2>
+                                <h2 class="dashboards-title"> {{__('My Schedules')}} </h2>
                                 <div class="notice-board">
-                                    <p class="text-danger">{{ __('schedules will show while a customer booking your service request') }}</p>
+                                    <p class="text-danger">{{ __('Your schedule will reflect your preferred time for assigning service requests.') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -32,12 +32,12 @@
                                     @php
                                         $allow_or_not = App\Schedule::select('allow_multiple_schedule')->first();
                                     @endphp
-                                    <label class="total_day_label"> {{ __('Allow Multiple Service Request to Same Schedule ') }} </label>
+                                    <label class="total_day_label"> {{ __('Enable multiple service requests for the same schedule') }} </label>
                                     <select name="allow_multiple_schedule">
                                         <option value="{{ __('yes') }}" @if($allow_or_not?->allow_multiple_schedule=='yes') selected @endif> {{ __('Yes') }}</option>
                                         <option value="{{ __('no') }}" @if($allow_or_not?->allow_multiple_schedule=='no') selected @endif> {{ __('No') }}</option>
                                     </select>
-                                    <p class="text-warning">{{ __('If you select yes than customer will place multiple service request at the same schedule') }}</p>
+                                    <p class="text-warning">{{ __('If you select Yes, multiple service requests will be scheduled for the same time') }}</p>
                                 </div>
                                 <input type="submit" value="{{__('Submit')}}" class="btn btn-success">
                             </form>

@@ -21,7 +21,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="dashboard-settings margin-top-40">
-                                <h2 class="dashboards-title"> {{__('All Days')}} </h2>
+                                <h2 class="dashboards-title"> {{__('Service Days')}} </h2>
                             </div>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                                 <tr>
                                     <th>{{ __('No') }}</th>
                                     <th>{{ __('Day') }}</th>
-                                    <th>{{ __('Schedule') }}</th>
+                                    <th>{{ __('Schedule Time') }}</th>
                                     <th>{{ __('Action') }}</th>
                                 </tr>
                                 </thead>

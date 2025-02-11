@@ -110,7 +110,7 @@
                 </li>
 
                 <li class="dashboard__bottom__list__item <?php if(request()->is('seller/seller-profile-verify*')): ?> active <?php elseif(request()->is('serviceprovider/seller-profile-verify*')): ?> active <?php endif; ?>">
-                    <a href="<?php echo e(route('seller.profile.verify')); ?>"> <i class="las la-user"></i> <?php echo e(__('Profile Verify')); ?> </a>
+                    <a href="<?php echo e(route('seller.profile.verify')); ?>"> <i class="las la-user"></i> <?php echo e(__('Profile Verification')); ?> </a>
                 </li>
                 <li class="dashboard__bottom__list__item <?php if(request()->is('seller/account-settings*')): ?> active <?php elseif(request()->is('serviceprovider/account-settings*')): ?> active <?php endif; ?>">
                     <a href="<?php echo e(route('seller.account.settings')); ?>"> <i class="las la-cog"></i> <?php echo e(__('Settings')); ?> </a>

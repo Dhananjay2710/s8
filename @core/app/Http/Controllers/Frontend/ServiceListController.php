@@ -43,6 +43,7 @@ use Str;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\BasicMail;
 use App\Doc8yAPI;
+use App\Helpers\StringMatchHelper;
 
 
 class ServiceListController extends Controller
@@ -1848,8 +1849,8 @@ class ServiceListController extends Controller
                 'service_provider_signing_status' => 'Pending', 
                 'customer_signing_status' => 'Pending',         
                 'admin_signing_status' => 'Pending',
-                'service_ticket_id' => $service8TicketId,
-                'problem_title' => $problemTitle,
+                'service_ticket_id' => "",
+                'problem_title' => "",
             ]);
         }else{
             if(Auth::guard('web')->check() && Auth::guard('web')->user()->user_type == 1 ){
@@ -1886,8 +1887,8 @@ class ServiceListController extends Controller
                     'service_provider_signing_status' => 'Pending', 
                     'customer_signing_status' => 'Pending',         
                     'admin_signing_status' => 'Pending',
-                    'service_ticket_id' => $service8TicketId,
-                    'problem_title' => $problemTitle,
+                    'service_ticket_id' => "",
+                    'problem_title' => "",
                 ]);
             }else{
                if( get_static_option('order_create_settings') !== 'anyone'){
@@ -1926,8 +1927,8 @@ class ServiceListController extends Controller
                     'service_provider_signing_status' => 'Pending', 
                     'customer_signing_status' => 'Pending',         
                     'admin_signing_status' => 'Pending',
-                    'service_ticket_id' => $service8TicketId,
-                    'problem_title' => $problemTitle,
+                    'service_ticket_id' => "",
+                    'problem_title' => "",
                 ]);
 
             }
@@ -3009,9 +3010,11 @@ class ServiceListController extends Controller
     {
         header('Content-type: application/json');
         \Log::debug("Search using category started");
-        $categoryID = $serviceCityId = $serviceAreaId = 0;
+        $slugPart = $slugSubPart = ""; 
+        $categoryID = $serviceCityId = $serviceAreaId = $subCategoryID =  0;
         $serviceProviderId = $request->service_provider_id ?? 0;
         $postCode = $request->post_code;
+        \Log::debug("Post Code : " . $postCode);
         $order_note = "";
         $name = $request->name;
         $email = $request->email;
@@ -3024,13 +3027,22 @@ class ServiceListController extends Controller
             if (is_string($request->category_id)) {
                 $parts = explode(':', $request->category_id);
                 $slugPart = trim($parts[0]);
+                $slugSubPart = trim($parts[1]);
                 \Log::debug("slug Part : " . $slugPart);
+                \Log::debug("slug sub Part : " . $slugSubPart);
                 $categoryData = Category::where("slug", $slugPart)->first();
-
+                $subCategoryData = Subcategory::where("slug", $slugSubPart)->first();
                 if ($categoryData != null) {
                     $categoryID = $categoryData->id;
                 } else {
                     $categoryID = 0;
+                }
+
+                if ($subCategoryData != null) {
+                    \Log::debug("Child Category Id : ". $subCategoryData->id);
+                    $subCategoryID = $subCategoryData->id;
+                } else {
+                    $subCategoryID = 0;
                 }
             } elseif (is_int($request->category_id)) {
                 $categoryID = $request->category_id;
@@ -3063,6 +3075,9 @@ class ServiceListController extends Controller
             if ($categoryID != 0){
                 \Log::debug("Service Provider Id : " . $serviceProviderId);
                 $services = Service::where('category_id', $categoryID)
+                    ->when(!empty($subCategoryID), function($q) use ($subCategoryID) {
+                        $q->where('subcategory_id', $subCategoryID);
+                    })
                     ->where('status', 1)
                     ->where('is_service_on', 1)
                     ->when(!empty($serviceProviderId), function($q) use ($serviceProviderId) {
@@ -3079,8 +3094,9 @@ class ServiceListController extends Controller
                     })
                     ->orderBy('price', 'ASC')
                     ->get();
+                \Log::debug("Services : " . print_r($services,true));
                 if ($services->isEmpty()) {
-                    $responseResult = [
+                    $responseResult[] = [
                         "status" => "error",
                         "title" => "API Failed",
                         "message" => "No services found for current  based on service area and city. Please try again later",
@@ -3105,7 +3121,12 @@ class ServiceListController extends Controller
                     ->get();
                     if ($serviceIncludesData->isNotEmpty()) {
                         \Log::debug("Inside if");
-                        $sortedServices[] = $service;
+                        if (StringMatchHelper::hasMatchingWord($service->title, $problemTitle, $slugPart, $slugSubPart)) {
+                            $sortedServices[] = $service;
+                            \Log::debug("True, Service added : Service Name and Provlem has matching words");
+                        } else {
+                            \Log::debug("False, Service Name and Problem has not found any matching words");
+                        }                        
                     } else {
                         \Log::debug("Service Includes Data is empty.");
                     }
@@ -3115,6 +3136,9 @@ class ServiceListController extends Controller
 
                 if ($arrayLengthAfter == 0){
                     $services = Service::where('category_id', $categoryID)
+                    ->when(!empty($subCategoryID), function($q) use ($subCategoryID) {
+                        $q->where('subcategory_id', $subCategoryID);
+                    })
                     ->where('status', 1)
                     ->where('is_service_on', 1)
                     ->when(subscriptionModuleExistsAndEnable('Subscription'),function($q){
@@ -3144,19 +3168,19 @@ class ServiceListController extends Controller
                 }
                 $counter = 0;
                 $selectedUser = null;
-                $usersList = array_keys($sortedServices);
-                $userCount = count($usersList);
+                $serviceList = array_keys($sortedServices);
+                $serviceCount = count($serviceList);
                 // New code
-                $nextUsers = self::getNextUsers($counter, $usersList, $selectedUser);
+                $allSortedServices = self::getNextUsers($counter, $serviceList, $selectedUser);
 
-                foreach ($nextUsers as $nextUser) {
-                    if (!isset($sortedServices[$nextUser])) {
-                        \Log::debug("User $nextUser not found in sortedServices.");
+                foreach ($allSortedServices as $nextService) {
+                    if (!isset($sortedServices[$nextService])) {
+                        \Log::debug("User $nextService not found in sortedServices.");
                         continue;
                     }
 
-                    $userData = $sortedServices[$nextUser];
-                    \Log::debug("Processing user: $nextUser\n");
+                    $userData = $sortedServices[$nextService];
+                    \Log::debug("Processing user: $nextService\n");
                     \Log::debug("Seller Id : " . $userData->seller_id . "\n Services Id : " . $userData->id);
 
                     $serviceIncludesData = Serviceinclude::where("service_id", $userData->id)->where("seller_id", $userData->seller_id)->get()->first();
@@ -3188,7 +3212,7 @@ class ServiceListController extends Controller
                             $responseResult[] = [
                                 "status" => "error",
                                 "title" => "API Failed",
-                                "message" => "No schedule time found for any day contact administrator for user: $nextUser."
+                                "message" => "No schedule time found for any day contact administrator for user: $nextService."
                             ];
                         } else {
                             \Log::debug("service : " . $userData->id);
@@ -3205,13 +3229,13 @@ class ServiceListController extends Controller
                         $responseResult[] = [
                             "status" => "error",
                             "title" => "API Failed",
-                            "message" => "No day created by service provider contact administrator for user: $nextUser."
+                            "message" => "No day created by service provider contact administrator for user: $nextService."
                         ];
-                        \Log::debug("No day created by service provider contact administrator for user: $nextUser. Search using category ended with error.");
+                        \Log::debug("No day created by service provider contact administrator for user: $nextService. Search using category ended with error.");
                     }
                 }
             } else {
-                $responseResult = [
+                $responseResult[] = [
                     "status" => "error",
                     "title" => "API Failed",
                     "message" => "Id Not Found for some input please provide proper inputs"
@@ -3219,7 +3243,7 @@ class ServiceListController extends Controller
                 \Log::debug("Id Not Found for some input please provide proper inputs \n Search using category ended with error");
             }
         } else {
-            $responseResult = [
+            $responseResult[] = [
                 "status" => "error",
                 "title" => "API Failed",
                 "message" => "Some inputs are empty"
@@ -3229,21 +3253,21 @@ class ServiceListController extends Controller
         exit(json_encode($responseResult));
     }
 
-    public function getNextUsers(&$counter, $usersList, $selectedUser) {
-        $userCount = count($usersList);
-        if ($userCount > 5) {
-            $userCount = 5;
+    public function getNextUsers(&$counter, $serviceList, $selectedUser) {
+        $serviceCount = count($serviceList);
+        if ($serviceCount > 5) {
+            $serviceCount = 5;
         } else {
-            $userCount = $userCount;
+            $serviceCount = $serviceCount;
         }
-        if ($selectedUser !== null && in_array($selectedUser, $usersList)) {
+        if ($selectedUser !== null && in_array($selectedUser, $serviceList)) {
             return [$selectedUser];
         }
     
         $selectedUsers = [];
-        for ($i = 0; $i < $userCount; $i++) {
-            $selectedUsers[] = $usersList[$counter];
-            $counter = ($counter + 1) % $userCount;
+        for ($i = 0; $i < $serviceCount; $i++) {
+            $selectedUsers[] = $serviceList[$counter];
+            $counter = ($counter + 1) % $serviceCount;
         }
     
         return $selectedUsers;

@@ -856,7 +856,8 @@
     }
 
     .card-body {
-        padding: 1.25rem;
+        /* padding: 1.25rem; */
+        padding: 12px;
     }
 
     /* hedaer */

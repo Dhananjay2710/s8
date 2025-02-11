@@ -35,7 +35,7 @@
         <div class="dashboard__body">
             <div class="dashboard__inner">
                 <div class="dashboard_table__wrapper dashboard_border  padding-20 radius-10 bg-white">
-                    <h2 class="dashboard_table__title"> <?php echo e(__('All Days')); ?> </h2>
+                    <h2 class="dashboard_table__title"> <?php echo e(__('Service Days')); ?> </h2>
                     <div class="dashboard_table__title__flex">
                         <form class="total_service_day" action="<?php echo e(route('seller.update.totalday')); ?>" method="post">
                             <?php echo csrf_field(); ?>
@@ -96,7 +96,7 @@
                                 <tr>
                                     <th><?php echo e(__('No')); ?></th>
                                     <th><?php echo e(__('Day')); ?></th>
-                                    <th><?php echo e(__('Schedule')); ?></th>
+                                    <th><?php echo e(__('Schedule Time')); ?></th>
                                     <th><?php echo e(__('Action')); ?></th>
                                 </tr>
                                 </thead>

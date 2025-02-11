@@ -61,10 +61,10 @@
 <?php $__env->startSection('content'); ?>
     <div class="col-lg-12 col-ml-12 padding-bottom-30">
         <div class="row">
-            <div class="col-12 mt-5">
+            <div class="col-12 mt-3">
                 <div class="card">
                     <div class="card-body">
-                        <div class="col-12 mt-5">
+                        <div class="col-12 mt-3">
                             <div class="card">
                                 <div class="card-body">
                                   <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>

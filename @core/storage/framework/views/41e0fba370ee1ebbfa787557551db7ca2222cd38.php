@@ -55,13 +55,13 @@
 <?php endif; ?>
 
                 <!-- search section start-->
-                <div class="dashboard__inner__item dashboard_border padding-20 radius-10 bg-white">
+                <div class="dashboard__inner__item dashboard_border padding-10 radius-10 bg-white">
                     <div class="dashboard__wallet">
                         <form action="<?php echo e(route('seller.services')); ?>" method="GET">
                             <div class="dashboard__headerGlobal__flex">
                                 <div class="dashboard__headerGlobal__content">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        <h4 class="dashboard_table__title"><?php echo e(__('Search Service Module')); ?></h4> <i class="las la-angle-down search_by_all"></i>
+                                        <h4 class="dashboard_table__title"><?php echo e(__('Search Service')); ?></h4> <i class="las la-angle-down search_by_all"></i>
                                     </button>
                                 </div>
                                 <div class="dashboard__headerGlobal__btn">
@@ -165,7 +165,7 @@
                                             </div>
                                           <?php else: ?>
                                             <div class="btn-wrapper margin-top-50 text-right">
-                                                <a href="<?php echo e(route('seller.add.services')); ?>" class="dashboard_table__title__btn btn-bg-1 radius-5"><?php echo e(__('Add Services')); ?></a>
+                                                <a href="<?php echo e(route('seller.add.services')); ?>" class="dashboard_table__title__btn btn-bg-1 radius-5"><?php echo e(__('Add Service')); ?></a>
                                             </div>
                                           <?php endif; ?>
                                     <?php else: ?>
@@ -178,7 +178,7 @@
                                  <?php endif; ?>
                              <?php else: ?>
                             <div class="btn-wrapper margin-top-50 text-right">
-                                <a href="<?php echo e(route('seller.add.services')); ?>" class="dashboard_table__title__btn btn-bg-1 radius-5"> <?php echo e(__('Add Services')); ?></a>
+                                <a href="<?php echo e(route('seller.add.services')); ?>" class="dashboard_table__title__btn btn-bg-1 radius-5"> <?php echo e(__('Add Service')); ?></a>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -186,7 +186,7 @@
 
                 <?php if($services->count() > 0): ?>
                     <?php $__currentLoopData = $services; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div class="dashboard__inner__item dashboard_border padding-20 radius-10 bg-white">
+                        <div class="dashboard__inner__item dashboard_border padding-10 radius-10 bg-white">
                             <div class="rows dash-single-inner">
                                 <div class="dash-left-service">
                                     <div class="dashboard-services">
@@ -247,7 +247,7 @@
                                 <div class="dash-righ-service">
                                     <div class="dashboard-switch-flex-content">
                                         <div class="dashboard-switch-single">
-                                            <span class="dashboard-starting"> <?php echo e(__('Starting From:')); ?> </span>
+                                            <span class="dashboard-starting"> <?php echo e(__('Service Price :')); ?> </span>
                                             <h2 class="title-price color-3"> <?php echo e(amount_with_currency_symbol($data->price)); ?> </h2>
                                         </div>
                                         <div class="dashboard-switch-single">

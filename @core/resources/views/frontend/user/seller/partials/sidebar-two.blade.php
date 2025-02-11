@@ -108,7 +108,7 @@
                 </li>
 
                 <li class="dashboard__bottom__list__item @if(request()->is('seller/seller-profile-verify*')) active @elseif(request()->is('serviceprovider/seller-profile-verify*')) active @endif">
-                    <a href="{{ route('seller.profile.verify')}}"> <i class="las la-user"></i> {{__('Profile Verify')}} </a>
+                    <a href="{{ route('seller.profile.verify')}}"> <i class="las la-user"></i> {{__('Profile Verification')}} </a>
                 </li>
                 <li class="dashboard__bottom__list__item @if(request()->is('seller/account-settings*')) active @elseif(request()->is('serviceprovider/account-settings*')) active @endif">
                     <a href="{{ route('seller.account.settings') }}"> <i class="las la-cog"></i> {{__('Settings')}} </a>

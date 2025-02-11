@@ -21,7 +21,7 @@
         <div class="dashboard__body">
             <div class="dashboard__inner">
                 <div class="dashboard_table__wrapper dashboard_border  padding-20 radius-10 bg-white">
-                    <h2 class="dashboard_table__title"> {{__('All Days')}} </h2>
+                    <h2 class="dashboard_table__title"> {{__('Service Days')}} </h2>
                     <div class="dashboard_table__title__flex">
                         <form class="total_service_day" action="{{ route('seller.update.totalday') }}" method="post">
                             @csrf
@@ -68,7 +68,7 @@
                                 <tr>
                                     <th>{{ __('No') }}</th>
                                     <th>{{ __('Day') }}</th>
-                                    <th>{{ __('Schedule') }}</th>
+                                    <th>{{ __('Schedule Time') }}</th>
                                     <th>{{ __('Action') }}</th>
                                 </tr>
                                 </thead>

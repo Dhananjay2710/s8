@@ -104,9 +104,12 @@
                                         <div class="single-info-input sub_category_wrapper">
                                             <label for="subcategory" class="info-title"> {{__('Select Sub Category')}} <span class="text-danger">*</span></label>
                                             <select  id="subcategory" class="subcategory" wire:model.defer="subcategory">
-                                                <option @if(!empty( $services['subcategory_id'])) value="{{ $services['subcategory_id'] }}"  @else value="" @endif>
-                                                    {{ optional($services->subcategory)->name }}
-                                                </option>
+                                                @foreach($sub_categories as $sub_category)
+                                                    <option value="{{ $sub_category->id }}"  @if($sub_category->id == $services['category_id']) selected @endif> {{ $sub_category->name }}</option>
+                                                    {{-- <option @if(!empty( $services['subcategory_id'])) value="{{ $services['subcategory_id'] }}"  @else value="" @endif>
+                                                        {{ optional($services->subcategory)->name }}
+                                                    </option> --}}
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -114,8 +117,11 @@
                                         <div class="single-info-input child_category_wrapper">
                                             <label for="child_category" class="info-title"> {{__('Select Child Category')}} </label>
                                             <select name="child_category" id="child_category" wire:model.defer="child_category">
-                                                <option @if(!empty( $services->child_category_id)) value="{{ $services->child_category_id }}"  @else value="" @endif>
-                                                    {{ optional($services->childcategory)->name }}</option>
+                                                @foreach($child_categories as $child_category)
+                                                    <option value="{{ $child_category->id }}"  @if($child_category->id == $services['child_category_id']) selected @endif> {{ $child_category->name }}</option>
+                                                    {{-- <option @if(!empty( $services->child_category_id)) value="{{ $services->child_category_id }}"  @else value="" @endif>
+                                                    {{ optional($services->childcategory)->name }}</option> --}}
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -843,6 +849,7 @@
             $(class_name_for_category).on('click', function () {
                 let cat_get_value = $("#category"). val();
                 let sub_cat_get_value = $("#subcategory"). val();
+                console.log("Sub Category", sub_cat_get_value); 
                 let child_cat_get_value = $("#child_category"). val();
                 @this.set('category', cat_get_value, true)
                 @this.set('subcategory', sub_cat_get_value, true)

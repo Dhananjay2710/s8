@@ -56,12 +56,12 @@
         <div class="dashboard__body">
 
             <div class="dashboard__inner mt-3">
-                <div class="dashboard_table__wrapper dashboard_border  padding-20 radius-10 bg-white">
+                <div class="dashboard_table__wrapper dashboard_border  padding-10 radius-10 bg-white">
                     <div class="row">
-                        <div class="col-lg-12 margin-top-40">
+                        <div class="col-lg-12 margin-top-15">
                             <div class="edit-profile">
                                 <div class="profile-info-dashboard mt-3">
-                                    <h4 class="dashboards-title"> <?php echo e(__('Profile Verify')); ?> </h4>
+                                    <h4 class="dashboards-title"> <?php echo e(__('Profile Verification')); ?> </h4>
                                     <?php if(!is_null($seller_verify_info) && !is_null($seller_verification_data) && $seller_verify_info->status === 1): ?>
                                             <div class="alert alert-success mt-3 mx-2" style="width: 170px">  <i class="las la-check-circle mx-2" style="font-size: 25px"></i><?php echo e(__('Profile Verified')); ?>
 
@@ -69,7 +69,8 @@
                                     <?php else: ?>
 
                                         <div class="notice-board mt-3">
-                                            <p class="text-danger"><?php echo e(__('Submit your original documents so that the admin can verify you. Once verified a badge will show in your profile that increase your service request possibility')); ?></p>
+                                            
+                                            <p class="text-danger"><?php echo e(__('Submit your original documents so that the admin can verify you.')); ?></p>
                                         </div>
 
                                         <div class="dashboard-profile-flex">
@@ -96,7 +97,7 @@
                                                     <div class="single-dashboard-input">
                                                         <div class="row">
                                                             <div class="col-xxl-6 col-lg-6">
-                                                                <div class="single-info-input margin-top-30">
+                                                                <div class="single-info-input margin-top-15">
                                                                     <div class="form-group">
                                                                         <div class="media-upload-btn-wrapper">
                                                                             <div class="img-wrap">

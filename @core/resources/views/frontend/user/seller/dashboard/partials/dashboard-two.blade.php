@@ -200,13 +200,13 @@
             </div>
                 <div class="row g-4 mt-1">
                     <div class="col-xxl-12">
-                        <div class="dashboard_recentOrder dashboard_border  bg-white padding-20 radius-10">
+                        <div class="dashboard_recentOrder dashboard_border  bg-white padding-10 radius-10">
                             <h4 class="dashboard_recentOrder__title">{{ __('Recent Service Request') }}</h4>
                             <div class="dashboard_recentOrder__inner">
                                 @if($last_five_order->count() >= 1)
                                     <div class="row g-4 mt-1">
                                         @foreach($last_five_order as $order)
-                                        <div class="col-xxl-6">
+                                        <div class="col-xxl-6 col-md-6 col-sm-6 col-xs-12">
                                           <div class="dashboard_recentOrder__item recentOrder_parent radius-10">
                                             <div class="dashboard_recentOrder__item__flex">
                                                 <div class="dashboard_recentOrder__item__service">
@@ -282,7 +282,7 @@
                         </div>
                     </div>
                     <div class="col-xxl-6">
-                        <div class="dashboard_table__wrapper dashboard_border  padding-20 radius-10 bg-white">
+                        <div class="dashboard_table__wrapper dashboard_border  padding-10 radius-10 bg-white">
                             <h4 class="dashboard_table__title">{{ __('This Month Summery ') }}</h4>
                             <div class="dashboard_promo__row row_col_2 mt-2">
                                 <div class="dashboard_promo__col dashboard_promo__child">
@@ -343,7 +343,7 @@
                         </div>
                     </div>
                     <div class="col-xxl-6">
-                        <div class="dashboard_table__wrapper dashboard_border  padding-20 radius-10 bg-white">
+                        <div class="dashboard_table__wrapper dashboard_border  padding-10 radius-10 bg-white">
                             <h4 class="dashboard_table__title">{{ __('To Do List') }}</h4>
                             <div class="text-end">
                                 <a href="{{ route('seller.todolist') }}" class="dashboard__notification__clearBtn text-end">{{ __('See All') }}</a>

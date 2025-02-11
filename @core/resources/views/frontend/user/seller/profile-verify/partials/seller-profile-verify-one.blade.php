@@ -30,16 +30,17 @@
                 <div class="dashboard-right">
                     <div class="profile-dashboards">
                         <div class="row">
-                            <div class="col-lg-12 margin-top-40">
+                            <div class="col-lg-12 margin-top-20">
                                 <div class="edit-profile">
                                     <div class="profile-info-dashboard">
-                                        <h2 class="dashboards-title"> {{__('Profile Verify')}} </h2>
+                                        <h2 class="dashboards-title"> {{__('Profile Verification')}} </h2>
 
                                         @if(!is_null($seller_verify_info) && $seller_verify_info->status === 1)
                                             <div class="alert alert-success"> <i class="las la-check-circle" style="font-size: 16px"></i> {{ __('Profile Verified')}}</div>
                                         @else
                                             <div class="notice-board">
-                                                <p class="text-danger">{{ __('Submit your original documents so that the admin can verify you. Once verified a badge will show in your profile that increase your service request possibility') }}</p>
+                                                {{-- <p class="text-danger">{{ __('Submit your original documents so that the admin can verify you. Once verified a badge will show in your profile that increase your service request possibility') }}</p> --}}
+                                                <p class="text-danger">{{ __('Submit your original documents so that the admin can verify you.') }}</p>
                                             </div>
 
                                             <div class="dashboard-profile-flex">

@@ -37,19 +37,45 @@
         <?php echo $__env->make('frontend.user.buyer.header.buyer-header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         <div class="dashboard__body">
             <div class="dashboard__inner">
-                <div class="dashboard_table__wrapper dashboard_border  padding-20 radius-10 bg-white">
+                <div class="dashboard_table__wrapper dashboard_border  padding-10 radius-10 bg-white">
                     <div class="row">
-                        <div class="col-lg-12">
-                            <div class="dashboard-settings margin-top-40">
-                                <h4 class="dashboards-title"> <?php echo e(__('All Schedules')); ?> </h4>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="dashboard-settings margin-top-15">
+                                <h4 class="dashboards-title"> <?php echo e(__('My Schedules')); ?> </h4>
                                 <div class="notice-board">
-                                    <p class="text-danger"><?php echo e(__('schedules will show while a customer booking your service request')); ?></p>
+                                    <p class="text-danger"><?php echo e(__('Your schedule will reflect your preferred time for assigning service requests.')); ?></p>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="dashboard-settings margin-top-15">
+                                <form action="<?php echo e(route('seller.allow.multiple.schedule')); ?>" method="post">
+                                    <?php echo csrf_field(); ?>
+                                    <div class="allow_multiple_schedule">
+                                        <?php
+                                            $allow_or_not = App\Schedule::select('allow_multiple_schedule')->first();
+                                        ?>
+                                        <label class="total_day_label label_title"> <?php echo e(__('Enable multiple service requests for the same schedule')); ?> </label>
+                                        <div class="row">
+                                            <div class="col-md-9 col-sm-9 col-xs-6">
+                                                <select name="allow_multiple_schedule">
+                                                    <option value="<?php echo e(__('yes')); ?>" <?php if($allow_or_not?->allow_multiple_schedule=='yes'): ?> selected <?php endif; ?>> <?php echo e(__('Yes')); ?></option>
+                                                    <option value="<?php echo e(__('no')); ?>" <?php if($allow_or_not?->allow_multiple_schedule=='no'): ?> selected <?php endif; ?>> <?php echo e(__('No')); ?></option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 col-sm-3 col-xs-6">
+                                                <button type="submit" class="dashboard_table__title__btn btn-bg-1 radius-5" style="border: none"><?php echo e(__('Submit')); ?></button>
+                                            </div>
+                                        </div>
+                                        <p class="text-warning mt-3"><?php echo e(__('If you select Yes, multiple service requests will be scheduled for the same time')); ?></p>
+                                    </div>
+                                    
+                                </form>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-5"> <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+                    <div class="mt-2"> <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.msg.error','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('msg.error'); ?>
 <?php if ($component->shouldRender()): ?>
@@ -66,25 +92,10 @@
 <?php endif; ?> </div>
 
                     <div class="dashboard_table__title__flex mt-3">
-                        <div class="">
-                            <form action="<?php echo e(route('seller.allow.multiple.schedule')); ?>" method="post">
-                                <?php echo csrf_field(); ?>
-                                <div class="allow_multiple_schedule">
-                                    <?php
-                                        $allow_or_not = App\Schedule::select('allow_multiple_schedule')->first();
-                                    ?>
-                                    <label class="total_day_label label_title"> <?php echo e(__('Allow Multiple Service Request to Same Schedule ')); ?> </label>
-                                    <select name="allow_multiple_schedule">
-                                        <option value="<?php echo e(__('yes')); ?>" <?php if($allow_or_not?->allow_multiple_schedule=='yes'): ?> selected <?php endif; ?>> <?php echo e(__('Yes')); ?></option>
-                                        <option value="<?php echo e(__('no')); ?>" <?php if($allow_or_not?->allow_multiple_schedule=='no'): ?> selected <?php endif; ?>> <?php echo e(__('No')); ?></option>
-                                    </select>
-                                    <p class="text-warning mt-3"><?php echo e(__('If you select yes than customer will place multiple service request at the same schedule')); ?></p>
-                                </div>
-                                <div class="btn-wrapper mt-3">
-                                    <button type="submit" class="dashboard_table__title__btn btn-bg-1 radius-5" style="border: none"><?php echo e(__('Submit')); ?></button>
-                                </div>
-                            </form>
-                        </div>
+                         <div class="">
+                            <h5 class="dashboards-title"> <?php echo e(__('Manage your schedules from here')); ?> </h5>
+                            
+                        </div> 
 
                         <div class="btn-wrapper">
                             <a href="javascript:void(0)"
@@ -94,7 +105,7 @@
                         </div>
                     </div>
 
-                    <div class="dashboard-service-single-item border-1 margin-top-40 mt-4">
+                    <div class="dashboard-service-single-item border-1 margin-top-15 mt-4">
                         <div class="rows dash-single-inner">
                             <table class="table table-bordered">
                                 <thead>

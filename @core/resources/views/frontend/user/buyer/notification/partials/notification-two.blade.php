@@ -11,7 +11,7 @@
                 <!-- Tickets table section start-->
                 <div class="dashboard_table__wrapper dashboard_border  padding-20 radius-10 bg-white">
                     <div class="dashboard_table__title__flex">
-                        <h4 class="dashboard_table__title mb-2">{{__('All Notification')}}</h4>
+                        <h4 class="dashboard_table__title mb-2">{{__('All Notifications')}}</h4>
                     </div>
                     @if(Auth::guard('web')->user()->notifications()->count() >= 1)
                         <div class="dashboard_table__main custom--table mt-4">

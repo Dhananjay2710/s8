@@ -83,7 +83,7 @@
 
                                     <div class="col-sm-12" wire:ignore>
                                         <div class="single-info-input">
-                                            <label for="description" class="info-title"> <?php echo e(__('Service Description')); ?> <span class="text-danger">*</span> <small class="text-info"><?php echo e(__('minimum 150 characters')); ?> </small>  </label>
+                                            <label for="description" class="info-title"> <?php echo e(__('Service Description')); ?> <span class="text-danger">*</span> <small class="text-info"><?php echo e(__('minimum 20 characters')); ?> </small>  </label>
                                             <textarea id="summernote" class="form--control textarea--form textarea-input" cols="20" rows="2" placeholder="<?php echo e(__('Type Description')); ?>"><?php echo $services->description; ?></textarea>
                                         </div>
                                     </div>
@@ -117,10 +117,10 @@
                                         <div class="single-info-input sub_category_wrapper">
                                             <label for="subcategory" class="info-title"> <?php echo e(__('Select Sub Category')); ?> <span class="text-danger">*</span></label>
                                             <select  id="subcategory" class="subcategory" wire:model.defer="subcategory">
-                                                <option <?php if(!empty( $services['subcategory_id'])): ?> value="<?php echo e($services['subcategory_id']); ?>"  <?php else: ?> value="" <?php endif; ?>>
-                                                    <?php echo e(optional($services->subcategory)->name); ?>
-
-                                                </option>
+                                                <?php $__currentLoopData = $sub_categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sub_category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <option value="<?php echo e($sub_category->id); ?>"  <?php if($sub_category->id == $services['category_id']): ?> selected <?php endif; ?>> <?php echo e($sub_category->name); ?></option>
+                                                    
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </select>
                                         </div>
                                     </div>
@@ -128,8 +128,10 @@
                                         <div class="single-info-input child_category_wrapper">
                                             <label for="child_category" class="info-title"> <?php echo e(__('Select Child Category')); ?> </label>
                                             <select name="child_category" id="child_category" wire:model.defer="child_category">
-                                                <option <?php if(!empty( $services->child_category_id)): ?> value="<?php echo e($services->child_category_id); ?>"  <?php else: ?> value="" <?php endif; ?>>
-                                                    <?php echo e(optional($services->childcategory)->name); ?></option>
+                                                <?php $__currentLoopData = $child_categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $child_category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <option value="<?php echo e($child_category->id); ?>"  <?php if($child_category->id == $services['child_category_id']): ?> selected <?php endif; ?>> <?php echo e($child_category->name); ?></option>
+                                                    
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </select>
                                         </div>
                                     </div>
@@ -867,6 +869,7 @@
             $(class_name_for_category).on('click', function () {
                 let cat_get_value = $("#category"). val();
                 let sub_cat_get_value = $("#subcategory"). val();
+                console.log("Sub Category", sub_cat_get_value); 
                 let child_cat_get_value = $("#child_category"). val();
                 window.livewire.find('<?php echo e($_instance->id); ?>').set('category', cat_get_value, true)
                 window.livewire.find('<?php echo e($_instance->id); ?>').set('subcategory', sub_cat_get_value, true)

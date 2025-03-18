@@ -111,12 +111,14 @@ class LocationController extends Controller
                 'service_area'=> 'required|max:191|unique:service_areas',
                 'service_city_id'=> 'required',
                 'country_id'=> 'required',
+                'pincode' => 'required|unique:service_areas',
             ]);
     
             ServiceArea::create([
                'service_area' => $request->service_area,
                'service_city_id' => $request->service_city_id,
                'country_id' => $request->country_id,
+               'pincode' => $request->pincode,
            ]);
     
            return redirect()->back()->with(FlashMsg::item_new('New Service Area Added'));
@@ -132,12 +134,14 @@ class LocationController extends Controller
             'up_service_area'=> 'required|max:191|unique:service_areas,service_area,'.$request->up_id,
             'up_service_city_id'=> 'required',
             'up_country_id'=> 'required',
+            'up_pincode' => 'required',
         ]);
 
        ServiceArea::where('id',$request->up_id)->update([
             'service_area'=>$request->up_service_area,
             'service_city_id'=>$request->up_service_city_id,
             'country_id'=>$request->up_country_id,
+            'pincode'=>$request->up_pincode,
         ]);
 
         

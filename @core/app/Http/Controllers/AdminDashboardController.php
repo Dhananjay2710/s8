@@ -34,11 +34,13 @@ class AdminDashboardController extends Controller
         $total_earning = Order::where('status',2)->sum('commission_amount');
         $pending_order = Order::where('status',0)->count();
         $pending_service = Service::where('status',0)->count();
-        $pending_payout_request = PayoutRequest::where('status',0)->count();
-        $total_amount_paid = PayoutRequest::where('status',1)->sum('amount');
+        $pending_payout_request = PayoutRequest::where('status',0)->where('payment_type','Withdraw')->count();
+        $penalty_payout_request = PayoutRequest::where('status',1)->where('payment_type','Penalty')->count();
+        $total_amount_paid = PayoutRequest::where('status',1)->where('payment_type','Withdraw')->sum('amount');
+        $total_amount_penalties = PayoutRequest::where('status',1)->where('payment_type','Penalty')->sum('amount');
         $total_payout = Order::where('status',2)->sum('total');
         $payout_liability = Order::where('status',2)->sum('total') - Order::where('status',2)->sum('commission_amount');
-        $pending_payout_liability = $payout_liability - $total_amount_paid;
+        $pending_payout_liability = $payout_liability - ($total_amount_paid + $total_amount_penalties);
         $new_user_today = User::whereYear('created_at', Carbon::now()->year)
             ->whereMonth('created_at',Carbon::now()->month)
             ->whereDay('created_at',Carbon::now()->day)
@@ -51,18 +53,18 @@ class AdminDashboardController extends Controller
         ->take(10)
         ->get();
 
-        // $most_sell_10_services = Order::selectRaw('service_id, COUNT(orders.service_id) as total')
-        //     ->with('service')
-        //     ->groupBy('service_id')
-        //     ->orderBy('total','desc')
-        //     ->take(10)
-        //     ->get();
-        $most_sell_10_services = Order::selectRaw('service_id, COUNT(s8_orders.service_id) as total')
+        $most_sell_10_services = Order::selectRaw('service_id, COUNT(orders.service_id) as total')
             ->with('service')
             ->groupBy('service_id')
             ->orderBy('total','desc')
             ->take(10)
             ->get();
+        // $most_sell_10_services = Order::selectRaw('service_id, COUNT(s8_orders.service_id) as total')
+        //     ->with('service')
+        //     ->groupBy('service_id')
+        //     ->orderBy('total','desc')
+        //     ->take(10)
+        //     ->get();
 
 
         //get last 12 months data
@@ -123,8 +125,20 @@ class AdminDashboardController extends Controller
             'daily_income_list',
             'monthly_income_list',
             'monthly_order_list',
-            'daily_order_list'
+            'daily_order_list',
+            'total_amount_penalties',
+            'penalty_payout_request',
         ));
+    }
+
+    public function allDevices()
+    {
+        return view('backend.admin-devices');
+    }
+
+    public function allTickets()
+    {
+        return view('backend.admin-tickets');
     }
 
     public function lang_change_backend(Request $request)

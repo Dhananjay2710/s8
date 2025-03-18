@@ -55,9 +55,11 @@ class PayoutRequestController extends Controller
     public function view_request($id=null){
         $request_details = PayoutRequest::where('id',$id)->first();
         $complete_order_balance = Order::where(['status'=>2,'seller_id'=>$request_details->seller_id])->sum('total');
-        $total_earnings = PayoutRequest::where('seller_id',$request_details->seller_id)->sum('amount');
-        $remaining_balance = float_amount_with_currency_symbol($complete_order_balance - $total_earnings);
-        return view('backend.pages.payout-request.payout-request-details',compact('request_details','remaining_balance'));
+        $total_earnings = PayoutRequest::where('seller_id',$request_details->seller_id)->where('payment_type', 'Withdraw')->sum('amount');
+        $total_penalties = PayoutRequest::where('seller_id',$request_details->seller_id)->where('payment_type', 'Penalty')->sum('amount');
+        $total = $total_earnings + $total_penalties;
+        $remaining_balance = float_amount_with_currency_symbol($complete_order_balance - $total);
+        return view('backend.pages.payout-request.payout-request-details',compact('request_details','remaining_balance','total_penalties'));
     }
 
     //delete 

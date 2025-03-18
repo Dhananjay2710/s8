@@ -207,11 +207,11 @@
                             <label for="Active" class="paymentGateway_add__item__img">{{ __('Active') }} <strong class="numbers">{{ $active_orders->count() }}</strong></label>
                         </div>
                         <div class="paymentGateway_add__item_seller_order custom_radio__single_seller_order radius-10">
-                            <label for="Delivered" class="paymentGateway_add__item__img">{{ __('Delivered') }} <strong class="numbers">{{ $complete_orders->count() }}</strong></label>
+                            <label for="Completed " class="paymentGateway_add__item__img">{{ __('Completed') }} <strong class="numbers">{{ $complete_orders->count() }}</strong></label>
                         </div>
-                        <div class="paymentGateway_add__item_seller_order custom_radio__single_seller_order radius-10">
-                            <label for="Completed" class="paymentGateway_add__item__img">{{ __('Completed') }} <strong class="numbers">{{ $deliver_orders->count() }}</strong></label>
-                        </div>
+                        <!-- <div class="paymentGateway_add__item_seller_order custom_radio__single_seller_order radius-10">
+                            <label for="Delivered" class="paymentGateway_add__item__img">{{ __('Delivered') }} <strong class="numbers">{{ $deliver_orders->count() }}</strong></label>
+                        </div> -->
                         <div class="paymentGateway_add__item_seller_order custom_radio__single_seller_order radius-10">
                             <label for="Cancelled" class="paymentGateway_add__item__img">{{ __('Cancelled') }} <strong class="numbers">{{ $cancel_orders->count() }}</strong></label>
                         </div>
@@ -289,14 +289,15 @@
                                                             <span class="text-info"><strong>{{__('Payment Type: ')}}</strong> <br>  {{ __('Cash on Delivery') }}</span> <br>
                                                             <span><x-cancel-order :url="route('seller.order.cancel.cod.payment.pending',$order->id)"/></span>
                                                         @elseif ($order->payment_gateway == 'annual_maintenance_charge')
-                                                            <span class="text-info"><strong>{{__('Payment Type: ')}}</strong>{{ __('AMC') }}</span>
+                                                            <span class="text-info"><strong>{{__('Payment Type: ')}}</strong>{{ __('Payment_AMC') }}</span>
                                                             <br>
                                                             <span><x-cancel-order :url="route('seller.order.cancel.cod.payment.pending',$order->id)"/></span>
                                                         @endif
                                                     @endif
 
                                                     @if ($order->payment_status == 'complete')
-                                                        <div class="dashboard_table__main__priority"><strong>{{__('Payment Status: ')}}</strong> <span class="priorityBtn completed">{{ __('Payment_AMC') }}</span> </div>
+                                                        <div class="dashboard_table__main__priority"><strong>{{__('Payment Type: ')}}</strong> <span class="priorityBtn pending">{{ __('Payment_AMC') }}</span> </div>
+                                                        <div class="dashboard_table__main__priority"><strong>{{__('Payment Status: ')}}</strong> <span class="priorityBtn completed">{{ __('Completed') }}</span> </div>
                                                     @endif
                                                     
                                                     @if(empty($order->payment_status))
@@ -362,13 +363,13 @@
                                             <span class="text-info"><strong>{{__('Payment Type: ')}}</strong> <br>  {{ __('Cash on Delivery') }}</span> <br>
                                             <span><x-cancel-order :url="route('seller.order.cancel.cod.payment.pending',$order->id)"/></span>
                                         @elseif ($order->payment_gateway == 'annual_maintenance_charge')
-                                            <span class="text-info"><strong>{{__('Payment Type: ')}}</strong>{{ __('AMC') }}</span>
+                                            <span class="text-info"><strong>{{__('Payment Type: ')}}</strong>{{ __('Payment_AMC') }}</span>
                                             <br>
                                             <span><x-cancel-order :url="route('seller.order.cancel.cod.payment.pending',$order->id)"/></span>
                                         @endif
                                     @endif
                                     @if ($order->payment_status == 'complete')
-                                     <div class="dashboard_table__main__priority"><strong>{{__('Payment Status: ')}}</strong> <span class="priorityBtn completed">{{ __('Payment_AMC') }}</span> </div>
+                                     <div class="dashboard_table__main__priority"><strong>{{__('Payment Status: ')}}</strong> <span class="priorityBtn completed">{{ __('Completed') }}</span> </div>
                                     @endif
                                     @if(empty($order->payment_status))
                                          <div class="dashboard_table__main__priority"><strong>{{__('Payment Status: ')}}</strong>  <span class="priorityBtn pending">{{ __('Pending') }}</span> </div>
@@ -389,7 +390,7 @@
 
                                 <!-- order complete request start-->
                                 <td data-label="Service Request Status" >
-                                <span class="{{ in_array($order->order_complete_request,[0,1]) ? 'pending' : ' completed' }} d-block">
+                                    <span class="{{ in_array($order->order_complete_request,[0,1]) ? 'pending' : ' completed' }} d-block">
                                     @if ($isHideSideBarAndHeader)
                                         @php  $review_count = \App\Review::where('order_id',$order->id)->where('type', 1)->where('seller_id',Auth::guard('web')->user()->id)->get(); @endphp
                                     @else
@@ -416,17 +417,21 @@
                                             <div class="dashboard_table__main__priority">
                                                 <a href="javascript:void(0)" class="priorityBtn cancel">{{ __('Request Cancelled') }}</a>
                                             </div>
+                                        @elseif($order->payment_status == '' && $order->status == 5)
+                                            <div class="dashboard_table__main__priority">
+                                                <a href="javascript:void(0)" class="priorityBtn cancel">{{ __('Request Incompetent') }}</a>
+                                            </div>
                                         @else
                                             <div class="dashboard_table__main__priority mt-3">
                                                 <a href="javascript:void(0)" class="priorityBtn pending">{{ __('Request Pending') }}</a>
                                             </div>
                                         @endif
 
-                                        @elseif($order->order_complete_request == 2)
-                                            <div class="dashboard_table__main__priority   @if(request()->path() == 'seller/orders' || request()->path() == 'serviceprovider/orders') mt-5 @else mt-4 @endif ">
-                                                <a href="javascript:void(0)" class="priorityBtn completed">{{ __('Completed') }}</a>
-                                            </div>
-                                        @endif
+                                    @elseif($order->order_complete_request == 2)
+                                        <div class="dashboard_table__main__priority   @if(request()->path() == 'seller/orders' || request()->path() == 'serviceprovider/orders') mt-5 @else mt-4 @endif ">
+                                            <a href="javascript:void(0)" class="priorityBtn completed">{{ __('Completed') }}</a>
+                                        </div>
+                                    @endif
 
                                         @if ($order->order_complete_request == 3)
                                             <a href="#0" class="edit_status_modal"
@@ -438,17 +443,19 @@
                                                 data-file-signing-status="{{ $order->service_provider_signing_status }}">
                                                 <span class="dash-icon color-1 text-success"> {{ __('Raised Request') }}</span>
                                             </a> <br>
-                                        @if(optional($order->completedeclinehistory)->count() >=1)
-                                            <span class="btn btn-warning mt-1"><a href="{{ route('seller.order.request.decline.history',$order->id) }}"> {{ __('View History') }} </a></span>
+                                            @if(optional($order->completedeclinehistory)->count() >=1)
+                                                <span class="btn btn-warning mt-1"><a href="{{ route('seller.order.request.decline.history',$order->id) }}"> {{ __('View History') }} </a></span>
+                                            @endif
                                         @endif
-                                    @endif
-                                </span>
+                                    </span>
                                     @if(request()->path() == 'seller/orders' || request()->path() == 'serviceprovider/orders')
                                         <!-- order complete request start-->
                                         @if($order->status == 0 && $order->payment_status == 'pending')
                                             <span class="mx-1 pending"> {{ __('No Request Created') }}</span>
                                         @elseif($order->status == 4 && $order->payment_status == '')
                                             {{-- <span class="mx-1 cancel"> {{ __('Request Cancelled') }}</span> --}}
+                                        @elseif($order->status == 5 && $order->payment_status == '')
+                                            <span class="mx-1 cancel"> {{ __('Incompetent') }}</span>
                                         @else
                                             <a href="#0"
                                             data-bs-toggle="modal"
@@ -639,8 +646,7 @@
 
 
     <!--Status Modal -->
-    <div class="modal fade" id="editStatusModal" tabindex="-1" role="dialog" aria-labelledby="editModal"
-         aria-hidden="true">
+    <div class="modal fade" id="editStatusModal" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
         <form action="{{ route('seller.order.status') }}" method="post">
             <input type="hidden" id="order_id" name="order_id">
             @csrf
@@ -652,12 +658,36 @@
                     <div class="modal-body">
 
                         <div class="form-group">
-                            <label for="up_day_id" class="label_title">{{ __('Select Status') }}</label>
+                            <label for="status" class="label_title">{{ __('Select Status') }}</label>
                             <select name="status" id="status" class="form-control">
                                 <option value="">{{ __('Select Status') }}</option>
                                 <option value="2">{{ __('Completed') }}</option>
+                                <option value="3">{{ __('Work in Progress') }}</option>
                             </select>
-                            <p id="completed-text" class="text-info mt-2" style="display: none;">{{ __('Completed: Service Request is completed and closed.') }}</p>
+                            <p id="completed-text" class="text-info mt-2" style="display: none;">
+                                {{ __('Completed: Service Request is completed and closed.') }}
+                            </p>
+                        </div>
+
+                        <!-- Work in Progress Dropdown -->
+                        <div class="form-group" id="work-in-progress-dropdown" style="display: none;">
+                            <label for="progress_type" class="label_title">{{ __('Select Work Progress Type') }}</label>
+                            <select name="progress_type" id="progress_type" class="form-control">
+                                <option value="">{{ __('Select Type') }}</option>
+                                <option value="SLM">{{ __('SLM') }}</option>
+                                <option value="Spares Required">{{ __('Spares Required') }}</option>
+                            </select>
+                        </div>
+
+                        <!-- Spares Parts Dropdown -->
+                        <div class="form-group" id="spare-parts-dropdown" style="display: none;">
+                            <label for="spare_part" class="label_title">{{ __('Select Spare Part') }}</label>
+                            <select name="spare_part" id="spare_part" class="form-control">
+                                <option value="">{{ __('Select Spare Part') }}</option>
+                                <option value="Printer">{{ __('Printer') }}</option>
+                                <option value="Display">{{ __('Display') }}</option>
+                                <option value="Battery">{{ __('Battery') }}</option>
+                            </select>
                         </div>
 
                         <div class="form-group m-3">
@@ -665,18 +695,18 @@
                                 <div class="img-wrap"></div>
                                 <input type="hidden" name="image">
                                 <button type="button" class="btn btn-info media_upload_form_btn"
-                                        data-btntitle="{{__('Select Image')}}"
-                                        data-modaltitle="{{__('Upload Image')}}" 
-                                        data-bs-toggle="modal"
-                                        data-mulitple="true"
-                                        data-bs-target="#media_upload_modal">
+                                    data-btntitle="{{__('Select Image')}}"
+                                    data-modaltitle="{{__('Upload Image')}}" 
+                                    data-bs-toggle="modal"
+                                    data-mulitple="true"
+                                    data-bs-target="#media_upload_modal">
                                     {{__('Upload Image')}}
                                 </button>
                                 <small>{{ __('image format: jpg,jpeg,png')}}</small>
                             </div>
                         </div>
-
-                        <div class="form-group m-3">
+                    </div>
+                    <!-- <div class="form-group m-3">
                             <div class="row">
                                 <div class="col-md-5">
                                     <div class="media-upload-btn-wrapper">
@@ -702,11 +732,10 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                    </div> -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
-                        <button type="submit" class="btn btn-primary">{{ __('Save changes') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
                     </div>
                 </div>
             </div>
@@ -744,7 +773,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group m-3">
+                            <!-- <div class="form-group m-3">
                                 <div class="row">
                                     <div class="col-md-5">
                                         <div class="media-upload-btn-wrapper">
@@ -770,7 +799,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
                                 <button type="submit" class="btn btn-primary">{{ __('Send Review') }}</button>
@@ -947,7 +976,7 @@
                 $(document).on('click','.swal_status_change_decline',function(e){
                     e.preventDefault();
                     Swal.fire({
-                        title: '{{__("Are you sure to decline the order")}}',
+                        title: '{{__("Are you sure to decline the order?")}}',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -961,17 +990,58 @@
                 });
 
                 //order incompetent status
-                $(document).on('click','.swal_status_change_incompetent',function(e){
+                // $(document).on('click','.swal_status_change_incompetent',function(e){
+                //     e.preventDefault();
+                //     Swal.fire({
+                //         title: '{{__("Are you incompetent to complete this order?")}}',
+                //         icon: 'warning',
+                //         showCancelButton: true,
+                //         confirmButtonColor: '#3085d6',
+                //         cancelButtonColor: '#d33',
+                //         confirmButtonText: "{{__('Yes, I am incompetent!')}}"
+                //     }).then((result) => {
+                //         if (result.isConfirmed) {
+                //             $(this).next().find('.swal_form_submit_btn_incompetent_order').trigger('click');
+                //         }
+                //     });
+                // });
+                $(document).on('click', '.swal_status_change_incompetent', function(e) {
                     e.preventDefault();
+                    let penaltiesOptions = '';
+                    @foreach($penalties as $penalty)
+                        penaltiesOptions += `<option value="{{ $penalty->id }}">{{ $penalty->penalty_reason }}</option>`;
+                    @endforeach
+
                     Swal.fire({
-                        title: '{{__("Are you incompetent to complete this order")}}',
+                        title: '{{__("Are you incompetent to complete this order? Select Reason to proceed")}}',
                         icon: 'warning',
+                        html: `
+                            <select id="incompetentReason" class="swal2-input">
+                                <option value="">{{ __('Select Reason') }}</option>
+                                ${penaltiesOptions}
+                            </select>
+                        `,
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: "{{__('Yes, I am incompetent!')}}"
+                        confirmButtonText: "{{__('Yes, I am incompetent!')}}",
+                        preConfirm: () => {
+                            const reasonSelect = Swal.getPopup().querySelector('#incompetentReason');
+                            const reasonId = reasonSelect.value;
+                            const reasonText = reasonSelect.options[reasonSelect.selectedIndex].text;
+                            if (!reasonId) {
+                                Swal.showValidationMessage('{{__("Please select a reason")}}');
+                            }
+                            return { reasonId: reasonId, reasonText: reasonText };
+                        }
                     }).then((result) => {
                         if (result.isConfirmed) {
+                            const reasonId = result.value.reasonId;
+                            const reasonText = result.value.reasonText;
+                            console.log("Selected Reason ID: ", reasonId);
+                            console.log("Selected Reason Text: ", reasonText);
+                            document.getElementById('penalty_reason_id').value = reasonId;
+                            document.getElementById('penalty_reason_text').value = reasonText;
                             $(this).next().find('.swal_form_submit_btn_incompetent_order').trigger('click');
                         }
                     });
@@ -1088,55 +1158,97 @@
                 const modal = this;
                 modal.querySelector('#order_id').value = orderId;
                 // Make an XHR call to get the updated file signing status
-                fetchUpdatedData(orderId);
+                // fetchUpdatedData(orderId);
             });
 
-            const signDocumentBtn = document.getElementById('signDocumentBtn');
-            signDocumentBtn.addEventListener('click', function () {
-                const fileLink = this.getAttribute('data-file-link');
-                if (fileLink) {
-                    const width = 1000;
-                    const height = 800;
-                    const left = (screen.width / 2) - (width / 2);
-                    const top = (screen.height / 2) - (height / 2);
-                    const signWindow = window.open(fileLink, 'SignDocumentWindow', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
+            const statusDropdown = document.getElementById("status");
+            const completedText = document.getElementById("completed-text");
+            const workInProgressDropdown = document.getElementById("work-in-progress-dropdown");
+            const sparePartsDropdown = document.getElementById("spare-parts-dropdown");
 
-                    // Set the timer duration (in seconds)
-                    let timerDuration = 180;
-                    const timerDisplay = document.getElementById('timerDisplay');
+            // Handle status dropdown change
+            statusDropdown.addEventListener("change", function () {
+                console.log("Status Changed: ", this.value);
 
-                    // Update the timer every second
-                    const countdownTimer = setInterval(function () {
-                        if (timerDuration > 0) {
-                            timerDuration--;
-                            const minutes = Math.floor(timerDuration / 60);
-                            const seconds = timerDuration % 60;
-                            timerDisplay.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-                        } else {
-                            clearInterval(countdownTimer);
-                        }
-                    }, 1000);
-
-                    // Close the window after 3 minutes (180000 milliseconds)
-                    const autoCloseTimer = setTimeout(function () {
-                        signWindow.close();
-                    }, 180000);
-
-                    // Check if the window is closed manually
-                    const checkWindowClosed = setInterval(function () {
-                        if (signWindow.closed) {
-                            clearInterval(checkWindowClosed);
-                            clearInterval(countdownTimer);
-                            clearTimeout(autoCloseTimer);
-                            timerDisplay.textContent = "Signing window has closed.";
-                            const orderId = document.querySelector('#order_id').value;
-                            fetchUpdatedData(orderId);
-                        }
-                    }, 500);
+                if (this.value == "2") {
+                    completedText.style.display = "block";
+                    workInProgressDropdown.style.display = "none";
+                    sparePartsDropdown.style.display = "none";
+                } else if (this.value == "3") {
+                    completedText.style.display = "none";
+                    workInProgressDropdown.style.display = "block";
+                    sparePartsDropdown.style.display = "none";
                 } else {
-                    alert('No file link provided.');
+                    completedText.style.display = "none";
+                    workInProgressDropdown.style.display = "none";
+                    sparePartsDropdown.style.display = "none";
                 }
             });
+
+            setInterval(function () {
+                const progressTypeDropdown = document.getElementById("progress_type");
+                if (progressTypeDropdown) {
+                    console.log("Interval Check - Progress Type: ", progressTypeDropdown.value);
+
+                    if (progressTypeDropdown.value === "Spares Required") {
+                        sparePartsDropdown.style.display = "block";
+                    } else {
+                        sparePartsDropdown.style.display = "none";
+                    }
+                }
+            }, 2000);
+
+            // Ensure the event listener is added when the modal opens
+            $('#editStatusModal').on('shown.bs.modal', function () {
+                console.log("Modal Opened - Ready to Handle Events");
+            });
+
+            // const signDocumentBtn = document.getElementById('signDocumentBtn');
+            // signDocumentBtn.addEventListener('click', function () {
+            //     const fileLink = this.getAttribute('data-file-link');
+            //     if (fileLink) {
+            //         const width = 1000;
+            //         const height = 800;
+            //         const left = (screen.width / 2) - (width / 2);
+            //         const top = (screen.height / 2) - (height / 2);
+            //         const signWindow = window.open(fileLink, 'SignDocumentWindow', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
+
+            //         // Set the timer duration (in seconds)
+            //         let timerDuration = 180;
+            //         const timerDisplay = document.getElementById('timerDisplay');
+
+            //         // Update the timer every second
+            //         const countdownTimer = setInterval(function () {
+            //             if (timerDuration > 0) {
+            //                 timerDuration--;
+            //                 const minutes = Math.floor(timerDuration / 60);
+            //                 const seconds = timerDuration % 60;
+            //                 timerDisplay.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            //             } else {
+            //                 clearInterval(countdownTimer);
+            //             }
+            //         }, 1000);
+
+            //         // Close the window after 3 minutes (180000 milliseconds)
+            //         const autoCloseTimer = setTimeout(function () {
+            //             signWindow.close();
+            //         }, 180000);
+
+            //         // Check if the window is closed manually
+            //         const checkWindowClosed = setInterval(function () {
+            //             if (signWindow.closed) {
+            //                 clearInterval(checkWindowClosed);
+            //                 clearInterval(countdownTimer);
+            //                 clearTimeout(autoCloseTimer);
+            //                 timerDisplay.textContent = "Signing window has closed.";
+            //                 const orderId = document.querySelector('#order_id').value;
+            //                 fetchUpdatedData(orderId);
+            //             }
+            //         }, 500);
+            //     } else {
+            //         alert('No file link provided.');
+            //     }
+            // });
 
 
             // For reviewModal model
@@ -1150,142 +1262,143 @@
                 fetchUpdatedData(orderId);
             });
 
-            const signDocumentBtnOfCustomer = document.getElementById('signDocumentBtnOfCustomer');
-            signDocumentBtnOfCustomer.addEventListener('click', function () {
-                const customerFileLink = this.getAttribute('data-order_customer_file_link');
-                if (customerFileLink) {
-                    const width = 1000;
-                    const height = 800;
-                    const left = (screen.width / 2) - (width / 2);
-                    const top = (screen.height / 2) - (height / 2);
-                    const signWindowOfCustomer = window.open(customerFileLink, 'SignDocumentWindowOfCustomer', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
+            // const signDocumentBtnOfCustomer = document.getElementById('signDocumentBtnOfCustomer');
+            // signDocumentBtnOfCustomer.addEventListener('click', function () {
+            //     const customerFileLink = this.getAttribute('data-order_customer_file_link');
+            //     if (customerFileLink) {
+            //         const width = 1000;
+            //         const height = 800;
+            //         const left = (screen.width / 2) - (width / 2);
+            //         const top = (screen.height / 2) - (height / 2);
+            //         const signWindowOfCustomer = window.open(customerFileLink, 'SignDocumentWindowOfCustomer', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
 
-                    // Set the timer duration (in seconds)
-                    let timerDuration = 180;
-                    const timerDisplayOfCustomer = document.getElementById('timerDisplayOfCustomer');
+            //         // Set the timer duration (in seconds)
+            //         let timerDuration = 180;
+            //         const timerDisplayOfCustomer = document.getElementById('timerDisplayOfCustomer');
 
-                    // Update the timer every second
-                    const countdownTimer = setInterval(function () {
-                        if (timerDuration > 0) {
-                            timerDuration--;
-                            const minutes = Math.floor(timerDuration / 60);
-                            const seconds = timerDuration % 60;
-                            timerDisplayOfCustomer.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-                        } else {
-                            clearInterval(countdownTimer);
-                        }
-                    }, 1000);
+            //         // Update the timer every second
+            //         const countdownTimer = setInterval(function () {
+            //             if (timerDuration > 0) {
+            //                 timerDuration--;
+            //                 const minutes = Math.floor(timerDuration / 60);
+            //                 const seconds = timerDuration % 60;
+            //                 timerDisplayOfCustomer.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            //             } else {
+            //                 clearInterval(countdownTimer);
+            //             }
+            //         }, 1000);
 
-                    // Close the window after 3 minutes (180000 milliseconds)
-                    const autoCloseTimer = setTimeout(function () {
-                        signWindow.close();
-                    }, 180000);
+            //         // Close the window after 3 minutes (180000 milliseconds)
+            //         const autoCloseTimer = setTimeout(function () {
+            //             signWindow.close();
+            //         }, 180000);
 
-                    const checkWindowClosed = setInterval(function () {
-                        if (signWindowOfCustomer.closed) {
-                            clearInterval(checkWindowClosed);
-                            clearInterval(countdownTimer);
-                            clearTimeout(autoCloseTimer);
-                            timerDisplayOfCustomer.textContent = "Signing window has closed.";
-                            const orderId = document.querySelector('#order_id').value;
-                            fetchUpdatedDataOfCustomer(orderId);
-                        }
-                    }, 1000);
-                } else {
-                    alert('No file link provided.');
-                }
-            });
-
-            // fetch updated data using xhr call
-            function fetchUpdatedData(orderId) {
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET', `/providers/serviceprovider/ordersdetailsupdateapi/${orderId}`, true);
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        console.log("XHR Success");
-                        // Parse the JSON response
-                        const response = JSON.parse(xhr.responseText);
-                        const fileLink = response.service_provider_file_link;
-                        const fileSigningStatus = response.service_provider_signing_status;
-                        // Update the modal's fileStatusOfCustomer element
-                        updateDOM(fileSigningStatus, fileLink)
-                    } else if (xhr.readyState === 4) {
-                        console.error('Failed to fetch updated data.');
-                    }
-                };
-                xhr.send();
-            }
+            //         const checkWindowClosed = setInterval(function () {
+            //             if (signWindowOfCustomer.closed) {
+            //                 clearInterval(checkWindowClosed);
+            //                 clearInterval(countdownTimer);
+            //                 clearTimeout(autoCloseTimer);
+            //                 timerDisplayOfCustomer.textContent = "Signing window has closed.";
+            //                 const orderId = document.querySelector('#order_id').value;
+            //                 fetchUpdatedDataOfCustomer(orderId);
+            //             }
+            //         }, 1000);
+            //     } else {
+            //         alert('No file link provided.');
+            //     }
+            // });
 
             // fetch updated data using xhr call
-            function fetchUpdatedDataOfCustomer(orderId) {
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET', `/providers/serviceprovider/ordersdetailsupdateapi/${orderId}`, true);
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        console.log("XHR Success");
-                        // Parse the JSON response
-                        const response = JSON.parse(xhr.responseText);
-                        const fileLink = response.customer_file_link;
-                        const fileSigningStatus = response.customer_signing_status;
-                        // Update the modal's fileStatusOfCustomer element
-                        updateDOMOfCustomer(fileSigningStatus, fileLink)
-                    } else if (xhr.readyState === 4) {
-                        console.error('Failed to fetch updated data.');
-                    }
-                };
-                xhr.send();
-            }
-            // update DOM
-            function updateDOM(status, link) {
-                signDocumentBtn.setAttribute('data-file-link', link);
-                const fileStatusElement = document.querySelector('#fileStatus');
-                fileStatusElement.textContent = status;
-                setFileStatusColor(status);
-                if (link && status !== 'Signed') {
-                    signDocumentBtn.disabled = false;
-                } else {
-                    signDocumentBtn.disabled = true;
-                    timerDisplay.textContent = '';
-                }
-            }
+            // function fetchUpdatedData(orderId) {
+            //     const xhr = new XMLHttpRequest();
+            //     xhr.open('GET', `/providers/serviceprovider/ordersdetailsupdateapi/${orderId}`, true);
+            //     xhr.onreadystatechange = function () {
+            //         if (xhr.readyState === 4 && xhr.status === 200) {
+            //             console.log("XHR Success");
+            //             // Parse the JSON response
+            //             const response = JSON.parse(xhr.responseText);
+            //             const fileLink = response.service_provider_file_link;
+            //             const fileSigningStatus = response.service_provider_signing_status;
+            //             // Update the modal's fileStatusOfCustomer element
+            //             updateDOM(fileSigningStatus, fileLink)
+            //         } else if (xhr.readyState === 4) {
+            //             console.error('Failed to fetch updated data.');
+            //         }
+            //     };
+            //     xhr.send();
+            // }
+
+            // fetch updated data using xhr call
+            // function fetchUpdatedDataOfCustomer(orderId) {
+            //     const xhr = new XMLHttpRequest();
+            //     xhr.open('GET', `/providers/serviceprovider/ordersdetailsupdateapi/${orderId}`, true);
+            //     xhr.onreadystatechange = function () {
+            //         if (xhr.readyState === 4 && xhr.status === 200) {
+            //             console.log("XHR Success");
+            //             // Parse the JSON response
+            //             const response = JSON.parse(xhr.responseText);
+            //             const fileLink = response.customer_file_link;
+            //             const fileSigningStatus = response.customer_signing_status;
+            //             // Update the modal's fileStatusOfCustomer element
+            //             updateDOMOfCustomer(fileSigningStatus, fileLink)
+            //         } else if (xhr.readyState === 4) {
+            //             console.error('Failed to fetch updated data.');
+            //         }
+            //     };
+            //     xhr.send();
+            // }
 
             // update DOM
-            function updateDOMOfCustomer(status, link) {
-                signDocumentBtn.setAttribute('data-order_customer_file_link', link);
-                const fileStatusElement = document.querySelector('#fileStatusOfCustomer');
-                fileStatusElement.textContent = status;
-                setFileStatusColorOfCustomer(status);
-                if (link && status !== 'Signed') {
-                    signDocumentBtn.disabled = false;
-                } else {
-                    signDocumentBtn.disabled = true;
-                    timerDisplayOfCustomer.textContent = '';
-                }
-            }
+            // function updateDOM(status, link) {
+            //     signDocumentBtn.setAttribute('data-file-link', link);
+            //     const fileStatusElement = document.querySelector('#fileStatus');
+            //     fileStatusElement.textContent = status;
+            //     setFileStatusColor(status);
+            //     if (link && status !== 'Signed') {
+            //         signDocumentBtn.disabled = false;
+            //     } else {
+            //         signDocumentBtn.disabled = true;
+            //         timerDisplay.textContent = '';
+            //     }
+            // }
+
+            // update DOM
+            // function updateDOMOfCustomer(status, link) {
+            //     signDocumentBtn.setAttribute('data-order_customer_file_link', link);
+            //     const fileStatusElement = document.querySelector('#fileStatusOfCustomer');
+            //     fileStatusElement.textContent = status;
+            //     setFileStatusColorOfCustomer(status);
+            //     if (link && status !== 'Signed') {
+            //         signDocumentBtn.disabled = false;
+            //     } else {
+            //         signDocumentBtn.disabled = true;
+            //         timerDisplayOfCustomer.textContent = '';
+            //     }
+            // }
 
             // set file status color
-            function setFileStatusColor(status) {
-                const fileStatusElement = document.querySelector('#fileStatus');
-                if (status === 'Pending') {
-                    fileStatusElement.style.color = 'red';
-                } else if (status === 'Signed') {
-                    fileStatusElement.style.color = 'green';
-                } else {
-                    fileStatusElement.style.color = 'black';
-                }
-            }
+            // function setFileStatusColor(status) {
+            //     const fileStatusElement = document.querySelector('#fileStatus');
+            //     if (status === 'Pending') {
+            //         fileStatusElement.style.color = 'red';
+            //     } else if (status === 'Signed') {
+            //         fileStatusElement.style.color = 'green';
+            //     } else {
+            //         fileStatusElement.style.color = 'black';
+            //     }
+            // }
 
             // set file status color
-            function setFileStatusColorOfCustomer(status) {
-                const fileStatusElement = document.querySelector('#fileStatusOfCustomer');
-                if (status === 'Pending') {
-                    fileStatusElement.style.color = 'red';
-                } else if (status === 'Signed') {
-                    fileStatusElement.style.color = 'green';
-                } else {
-                    fileStatusElement.style.color = 'black';
-                }
-            }
+            // function setFileStatusColorOfCustomer(status) {
+            //     const fileStatusElement = document.querySelector('#fileStatusOfCustomer');
+            //     if (status === 'Pending') {
+            //         fileStatusElement.style.color = 'red';
+            //     } else if (status === 'Signed') {
+            //         fileStatusElement.style.color = 'green';
+            //     } else {
+            //         fileStatusElement.style.color = 'black';
+            //     }
+            // }
         });
     </script>
 @endsection

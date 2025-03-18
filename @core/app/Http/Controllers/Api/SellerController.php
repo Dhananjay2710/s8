@@ -51,13 +51,15 @@ class SellerController extends Controller
         $complete_order_balance_without_tax = $complete_order_balance_with_tax - $complete_order_tax;
         $admin_commission_amount = $get_sum->sum('commission_amount');
         $remaning_balance = $complete_order_balance_without_tax-$admin_commission_amount;
-        $total_earnings = PayoutRequest::where('seller_id',$buyer_id)->sum('amount');
-        $remaning_balance = $remaning_balance - $total_earnings;
+        $total_earnings = PayoutRequest::where('seller_id',$buyer_id)->where('payment_type','Withdraw')->sum('amount');
+        $total_penalties = PayoutRequest::where('seller_id',$buyer_id)->where('payment_type','Penalty')->sum('amount');
+        $remaning_balance = $remaning_balance - ($total_earnings + $total_penalties);
 
         if($request->amount <= $remaning_balance){
             PayoutRequest::create([
                 'seller_id' => $buyer_id,
                 'amount' => $request->amount,
+                'payment_type' => 'Withdraw',
                 'payment_gateway' => __('Nothing'),
                 'seller_note' => __('Deposit to wallet'),
                 'status' => 1,
@@ -181,9 +183,9 @@ class SellerController extends Controller
         
         //
         
-        $total_earnings = PayoutRequest::where('seller_id',$seller_id)->sum('amount');
-        
-        $remaning_balance -= $total_earnings;
+        $total_earnings = PayoutRequest::where('seller_id',$seller_id)->where('payment_type', 'Withdraw')->sum('amount');
+        $total_penalties = PayoutRequest::where('seller_id',$seller_id)->where('payment_type', 'Penalty')->sum('amount');     
+        $remaning_balance -= ($total_earnings + $total_penalties);
         
         return response()->success([
             'pending_order' => $pending_order ?? null, 
@@ -425,26 +427,27 @@ class SellerController extends Controller
             $complete_order_balance_without_tax = $complete_order_balance_with_tax - $complete_order_tax;
             $admin_commission_amount = Order::where(['status'=>2,'seller_id'=>$seller_id])->sum('commission_amount');
             $remaning_balance = $complete_order_balance_without_tax-$admin_commission_amount;
-            $total_earnings = PayoutRequest::where('seller_id',$seller_id)->sum('amount');
-
-             $available_balance = $remaning_balance - $total_earnings;
-             if($request->amount<=0 || $request->amount >$available_balance){
+            $total_earnings = PayoutRequest::where('seller_id',$seller_id)->where('payment_type', 'Withdraw')->sum('amount');
+            $total_penalties = PayoutRequest::where('seller_id',$seller_id)->where('payment_type', 'Penalty')->sum('amount');
+            $available_balance = $remaning_balance - ($total_earnings + $total_penalties);
+            if($request->amount<=0 || $request->amount >$available_balance){
                 return response()->error(['message' => __('Enter a valid amount')]); 
-             }  
+            }  
              
-             $min_amount = AmountSettings::select('min_amount')->first();
-             $max_amount = AmountSettings::select('max_amount')->first();
-             if($request->amount < $min_amount->min_amount){
-                 $msg = sprintf(__('Withdraw amount not less than %s'),float_amount_with_currency_symbol($min_amount->min_amount));
-                 return response()->error(['message' => $msg]); 
-             } 
-             if($request->amount > $max_amount->max_amount){
+            $min_amount = AmountSettings::select('min_amount')->first();
+            $max_amount = AmountSettings::select('max_amount')->first();
+            if($request->amount < $min_amount->min_amount){
+                $msg = sprintf(__('Withdraw amount not less than %s'),float_amount_with_currency_symbol($min_amount->min_amount));
+                return response()->error(['message' => $msg]); 
+            } 
+            if($request->amount > $max_amount->max_amount){
                 $msg = sprintf(__('Withdraw amount must less or equal to %s'),float_amount_with_currency_symbol($max_amount->max_amount));
                 return response()->error(['message' => $msg]); 
             }
 
             $payout_info = PayoutRequest::create([
                 'seller_id' => Auth::guard('sanctum')->user()->id,
+                'payment_type' => 'Withdraw',
                 'amount' => $request->amount,
                 'payment_gateway' => $request->payment_gateway,
                 'seller_note' => $request->seller_note,

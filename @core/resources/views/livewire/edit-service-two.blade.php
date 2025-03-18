@@ -672,7 +672,7 @@
                                             <div class="single-settings">
                                                 <div>
                                                     <div class="add-input append-additional-includes mt-4">
-                                                        @foreach($post_code_inputs as $key => $value)
+                                                        <!-- @foreach($post_code_inputs as $key => $value)
                                                             <div wire:ignore.self>
                                                                 <div class="single-dashboard-input what-include-element mt-4">
                                                                     <div class="row align-items-center g-4">
@@ -684,6 +684,34 @@
                                                                         </div>
                                                                         <div class="col-lg-2 col-sm-6">
                                                                             <button class="@if($key == 0) d-none @endif btn btn-danger remove-include mt-3"  wire:click.prevent="removeAddressServices({{$key}})"><i class="las la-times"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach -->
+                                                        @foreach($post_code_inputs as $key => $value)
+                                                            <div wire:ignore.self>
+                                                                <div class="single-dashboard-input what-include-element mt-4">
+                                                                    <div class="row align-items-center g-4">
+                                                                        <div class="col-lg-4 col-sm-6">
+                                                                            <div class="single-info-input">
+                                                                                <label class="label_title">{{ __('Post Code') }} <span class="text-danger">*</span> </label>
+                                                                                <select class="form--control" wire:model.defer="post_code_inputs.{{ $key }}.service_post_code">
+                                                                                    <option value="">{{ __('Select Service Area') }}</option>
+                                                                                    @foreach ($serviceAreas as $servicearea)
+                                                                                        <option value="{{ $servicearea->pincode }}" 
+                                                                                            {{ is_array($value) && isset($value['service_post_code']) && $value['service_post_code'] === $servicearea->pincode ? 'selected' : '' }}>
+                                                                                            {{ $servicearea->service_area }}, {{ $servicearea->pincode }}
+                                                                                        </option>
+                                                                                    @endforeach
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-2 col-sm-6">
+                                                                            <button class="@if($key == 0) d-none @endif btn btn-danger remove-include mt-3" 
+                                                                                wire:click.prevent="removeAddressServices({{ $key }})">
+                                                                                <i class="las la-times"></i>
+                                                                            </button>
                                                                         </div>
                                                                     </div>
                                                                 </div>

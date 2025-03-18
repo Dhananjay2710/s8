@@ -59,6 +59,7 @@ use App\SignzyAPI;
 use App\Helpers\StringMatchHelper;
 use App\Helpers\TokenGenrateHelper;
 use App\Company;
+use App\Penalty;
 
 class SellerController extends Controller
 {
@@ -87,7 +88,8 @@ class SellerController extends Controller
 
         $this_month = Order::where(['seller_id' => $seller_id, 'status' => 2])->whereMonth('created_at', Carbon::now()->month);
         //earning or withdraw calculate
-        $total_earnings = PayoutRequest::where('seller_id', $seller_id)->sum('amount');
+        $total_earnings = PayoutRequest::where('seller_id',$seller_id)->where('payment_type', 'Withdraw')->sum('amount');
+        $total_penalties = PayoutRequest::where('seller_id',$seller_id)->where('payment_type', 'Penalty')->sum('amount');
         $last_five_order = Order::where('seller_id', $seller_id)->latest()->take(4)->get();
         $this_month_order_count = $this_month->count();
 
@@ -97,7 +99,8 @@ class SellerController extends Controller
         $this_month_admin_commission = $this_month->sum('commission_amount');
         $this_month_balance_without_tax_and_admin_commission = $this_month_total_balance_with_tax - ($this_month_total_tax + $this_month_admin_commission);
         //this month earning or withdraw calculate
-        $this_month_earnings = PayoutRequest::where('seller_id', $seller_id)->whereMonth('created_at', Carbon::now()->month)->sum('amount');
+        $this_month_earnings = PayoutRequest::where('seller_id', $seller_id)->where('payment_type', 'Withdraw')->whereMonth('created_at', Carbon::now()->month)->sum('amount');
+        $this_month_penalties = PayoutRequest::where('seller_id', $seller_id)->where('payment_type', 'Penalty')->whereMonth('created_at', Carbon::now()->month)->sum('amount');
 
         //to do list 
         $to_do_list = ToDoList::where(['user_id' => $seller_id, 'status' => 0])->take(3)->latest()->get();
@@ -153,7 +156,9 @@ class SellerController extends Controller
             'active_order_list',
             'complete_order_list',
             'active_order',
-            'total_order'
+            'total_order',
+            'total_penalties',
+            'this_month_penalties'
         ));
     }
 
@@ -1702,7 +1707,8 @@ class SellerController extends Controller
         $cancel_orders = Order::where('seller_id', Auth::guard('web')->user()->id)->where('job_post_id', NULL)->where('status',4);
         $incompetent_orders = Order::where('seller_id', Auth::guard('web')->user()->id)->where('job_post_id', NULL)->where('status',5);
         $isHideSideBarAndHeader = true;
-        return view('frontend.user.seller.order.orders', compact('orders','active_orders','complete_orders','deliver_orders','cancel_orders', 'incompetent_orders', 'all_orders', 'pending_orders', 'isHideSideBarAndHeader'));
+        $penalties = Penalty::all();
+        return view('frontend.user.seller.order.orders', compact('orders','active_orders','complete_orders','deliver_orders','cancel_orders', 'incompetent_orders', 'all_orders', 'pending_orders', 'isHideSideBarAndHeader', 'penalties'));
     }
 
     public function serviceProviderRequests(Request $request)
@@ -1766,7 +1772,8 @@ class SellerController extends Controller
         $cancel_orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->where('status',4);
         $incompetent_orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->where('status',5);
         $isHideSideBarAndHeader = false;
-        return view('frontend.user.seller.order.orders', compact('orders','active_orders','complete_orders','deliver_orders','cancel_orders', 'incompetent_orders', 'all_orders', 'pending_orders', 'isHideSideBarAndHeader', 'serviceProviderId', 'token'));
+        $penalties = Penalty::all();
+        return view('frontend.user.seller.order.orders', compact('orders','active_orders','complete_orders','deliver_orders','cancel_orders', 'incompetent_orders', 'all_orders', 'pending_orders', 'isHideSideBarAndHeader', 'serviceProviderId', 'token', 'penalties'));
     }
 
     public function sellerJobOrders(Request $request)
@@ -1834,7 +1841,8 @@ class SellerController extends Controller
         $cancel_orders = Order::where('seller_id', Auth::guard('web')->user()->id)->where('job_post_id', '!=', NULL)->where('status',4);
         $incompetent_orders = Order::where('seller_id',  Auth::guard('web')->user()->id)->where('job_post_id', NULL)->where('status',5);
         $isHideSideBarAndHeader = true;
-        return view('frontend.user.seller.order.orders', compact('orders','active_orders','complete_orders','deliver_orders','cancel_orders', 'all_orders', 'pending_orders', 'incompetent_orders', 'isHideSideBarAndHeader'));
+        $penalties = Penalty::all();
+        return view('frontend.user.seller.order.orders', compact('orders','active_orders','complete_orders','deliver_orders','cancel_orders', 'all_orders', 'pending_orders', 'incompetent_orders', 'isHideSideBarAndHeader', 'penalties'));
     }
 
     public function activeOrders()
@@ -2009,6 +2017,44 @@ class SellerController extends Controller
                     }
 
                     return redirect()->back();
+                }elseif($request->status==3){
+                    \Log::debug("Insinde SLM selected");
+                    \Log::debug("Progress Type : " . $request->progress_type);
+                    if ($request->progress_type == 'SLM') {
+                        event(new UpdateTicket([
+                            'sr_id' => $order_details->id,
+                            'stage_name' => 'Assigned to SLM',
+                            'service_ticket_id' => $order_details->service_ticket_id,
+                            'service_provider_id' => $order_details->seller_id,
+                            'service_provider_email' => $seller->email,
+                            'service_provider_name' => $seller->name,
+                        ]));
+                    } elseif($request->progress_type == "Spares Required") {
+                        event(new UpdateTicket([
+                            'sr_id' => $order_details->id,
+                            'stage_name' => 'Assigned to SLM',
+                            'service_ticket_id' => $order_details->service_ticket_id,
+                            'service_provider_id' => $order_details->seller_id,
+                            'service_provider_email' => $seller->email,
+                            'service_provider_name' => $seller->name,
+                        ]));
+                    }
+                    
+                    //Send email after change status
+                    // try {
+                    //     $message_body_buyer =__('Hello, ').$payment_status->name. __(' A new request is created for complete an service request.').'</br>' . ' <span class="verify-code">'.__('Service Request ID is: ') . $payment_status->id. '</span>';
+                    //     $message_body_admin =__('Hello Admin A new request is created for complete an service request.').'</br>' . ' <span class="verify-code">'.__('Service Request ID is: ') . $payment_status->id. '</span>';
+                    //     Mail::to($payment_status->email)->send(new BasicMail([
+                    //         'subject' => __('New Request For Complete an Service Request'),
+                    //         'message' => $message_body_buyer
+                    //     ]));
+                    //     Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
+                    //         'subject' => __('New Request For Complete an Service Request'),
+                    //         'message' => $message_body_admin
+                    //     ]));
+                    // } catch (\Exception $e) {
+                    //     return redirect()->back()->with(FlashMsg::item_new($e->getMessage()));
+                    // }
                 }
             }else{
 
@@ -2070,13 +2116,26 @@ class SellerController extends Controller
         return redirect()->back();
     }
 
-    public function orderIncompetent($id=null)
+    public function orderIncompetent(Request $request, $id=null)
     {
-        Order::where('id',$id)->update(['status'=>5]);
+        $penaltyId = $request->input('penalty_reason_id');
+        $penaltyReason = $request->input('penalty_reason_text');
+        Order::where('id',$id)->update(['payment_status'=>'','status'=>5]);
         $orderData = Order::where('id',$id)->get();
         $order_info_decode = json_decode($orderData, true);
         $statusValue = $order_info_decode[0]['status'];
         $SR_ID = $order_info_decode[0]['id'];
+        $packageFee = $order_info_decode[0]['package_fee'];
+        $penaltyPercentage = Penalty::select('penalty_percentage')->where('id',$penaltyId)->first();
+        $penaltyAmount = ($packageFee * $penaltyPercentage->penalty_percentage) / 100;
+        PayoutRequest::create([
+            'seller_id' => Auth::guard('web')->user()->id,
+            'payment_type' => 'Penalty',
+            'amount' => $penaltyAmount,
+            'payment_gateway' => "Payment_AMC",
+            'seller_note' => "Penalty Amount",
+            'status' => 1,
+        ]);
         $seller = User::select(['id','email','name'])->where('id',$order_info_decode[0]['seller_id'])->first();
         if ($statusValue == 5){
             // update ticket stage to Waiting to Assign 
@@ -2255,10 +2314,10 @@ class SellerController extends Controller
         $complete_order_balance_without_tax = $complete_order_balance_with_tax - $complete_order_tax;
         $admin_commission_amount = Order::where(['status'=>2,'seller_id'=>$seller_id])->sum('commission_amount');
         $remaning_balance = $complete_order_balance_without_tax-$admin_commission_amount;
-        $total_earnings = PayoutRequest::where('seller_id',$seller_id)->sum('amount');
-
+        $total_earnings = PayoutRequest::where('seller_id',$seller_id)->where('payment_type', 'Withdraw')->sum('amount');
+        $total_penalties = PayoutRequest::where('seller_id',$seller_id)->where('payment_type', 'Penalty')->sum('amount');
         return view('frontend.user.seller.payout.payout-request',compact(
-            'pending_order','complete_order','remaning_balance','all_payout_request','total_earnings'
+            'pending_order','complete_order','remaning_balance','all_payout_request','total_earnings','total_penalties'
         ));
     }
 
@@ -2270,7 +2329,7 @@ class SellerController extends Controller
                 'payment_gateway' => 'required|string|max:191',
             ],[
                 'amount.required' => __('Amount required'),
-                'amount.numeric' => serviceProviderRequests__('Amount must be numeric'),
+                'amount.numeric' => __('Amount must be numeric'),
                 'payment_gateway.required' =>  __('Payment Gateway required'),
             ]);
 
@@ -2281,8 +2340,8 @@ class SellerController extends Controller
             $complete_order_balance_without_tax = $complete_order_balance_with_tax - $complete_order_tax;
             $admin_commission_amount = Order::where(['status'=>2,'seller_id'=>$seller_id])->sum('commission_amount');
             $remaning_balance = $complete_order_balance_without_tax-$admin_commission_amount;
-            $total_earnings = PayoutRequest::where('seller_id',$seller_id)->sum('amount');
-
+            $total_earnings = PayoutRequest::where('seller_id',$seller_id)->where('payment_type', 'Withdraw')->sum('amount');
+            $total_penalties = PayoutRequest::where('seller_id',$seller_id)->where('payment_type', 'Penalty')->sum('amount');
             $available_balance = $remaning_balance - $total_earnings;
             if($request->amount<=0 || $request->amount >$available_balance){
                 toastr_error(__('Enter a valid amount'));
@@ -2304,6 +2363,7 @@ class SellerController extends Controller
 
             PayoutRequest::create([
                 'seller_id' => Auth::guard('web')->user()->id,
+                'payment_type' => 'Withdraw',
                 'amount' => $request->amount,
                 'payment_gateway' => $request->payment_gateway,
                 'seller_note' => $request->seller_note,

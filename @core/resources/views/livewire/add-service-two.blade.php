@@ -718,17 +718,28 @@
                                                         <div class="add-input append-additional-includes mt-4">
                                                             <div wire:ignore class="single-dashboard-input what-include-element">
                                                                 <div class="row g-4">
-                                                                    <div class="col-lg-4 col-sm-6">
+                                                                    <!-- <div class="col-lg-4 col-sm-6">
                                                                         <div class="single-info-input">
                                                                             <label class="label_title">{{ __('Post Code') }} <span class="text-danger">*</span> </label>
                                                                             <input class="form--control" type="number" wire:model.defer="include_service_postcode.0" placeholder="{{__('Post Code')}}">
+                                                                        </div>
+                                                                    </div> -->
+                                                                    <div class="col-lg-4 col-sm-6">
+                                                                        <div class="single-info-input">
+                                                                            <label class="label_title">{{ __('Post Code') }} <span class="text-danger">*</span> </label>
+                                                                            <select class="form--control" wire:model.defer="include_service_postcode.0" name="service_area" id="service_area">
+                                                                                <option value="">{{ __('Select Service Area') }}</option>
+                                                                                @foreach ($serviceAreas as $servicearea)
+                                                                                    <option value="{{ $servicearea->pincode }}">{{ $servicearea->service_area }}, {{ $servicearea->pincode }}</option>
+                                                                                @endforeach
+                                                                            </select>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
 
                                                             @if(is_array($address_service))
-                                                                @foreach($address_service as $key => $value)
+                                                                <!-- @foreach($address_service as $key => $value)
                                                                     <div wire:ignore.self>
                                                                         <div class="single-dashboard-input what-include-element mt-4">
                                                                             <div class="row align-items-center g-4">
@@ -740,6 +751,32 @@
                                                                                 </div>
                                                                                 <div class=" col-lg-2 col-sm-6 is_service_online_hide">
                                                                                     <button class="btn btn-danger remove-include mt-3" wire:click.prevent="removeAddressServices({{$key}})"><i class="las la-times"></i></button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach -->
+                                                                @foreach($address_service as $key => $value)
+                                                                    <div wire:ignore.self>
+                                                                        <div class="single-dashboard-input what-include-element mt-4">
+                                                                            <div class="row align-items-center g-4">
+                                                                                <div class="col-lg-4 col-sm-6">
+                                                                                    <div class="single-info-input">
+                                                                                        <label class="label_title">{{ __('Post Code') }} <span class="text-danger">*</span> </label>
+                                                                                        <select class="form--control" wire:model.defer="include_service_postcode.{{ $key }}">
+                                                                                            <option value="">{{ __('Select Service Area') }}</option>
+                                                                                            @foreach ($serviceAreas as $servicearea)
+                                                                                                <option value="{{ $servicearea->pincode }}">
+                                                                                                    {{ $servicearea->service_area }}, {{ $servicearea->pincode }}
+                                                                                                </option>
+                                                                                            @endforeach
+                                                                                        </select>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-2 col-sm-6 is_service_online_hide">
+                                                                                    <button class="btn btn-danger remove-include mt-3" wire:click.prevent="removeAddressServices({{ $key }})">
+                                                                                        <i class="las la-times"></i>
+                                                                                    </button>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -897,8 +934,6 @@
                      $('.service-price-show-hide').show()
                  }
              });
-
-
          });
      </script>
  @endpush

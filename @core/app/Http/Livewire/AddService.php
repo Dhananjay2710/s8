@@ -4,6 +4,9 @@ namespace App\Http\Livewire;
 
 use App\AdminCommission;
 use App\Category;
+use App\Country;
+use App\ServiceCity;
+use App\ServiceArea;
 use App\Mail\BasicMail;
 use App\OnlineServiceFaq;
 use App\SellerVerify;
@@ -148,7 +151,10 @@ class AddService extends Component
     public function render()
     {
         $categories = Category::where('status', 1)->get();
-        return view('livewire.add-service-two', compact('categories'));
+        $countries = Country::all();
+        $serviceCities = ServiceCity::all();
+        $serviceAreas = ServiceArea::all();
+        return view('livewire.add-service-two', compact('categories', 'countries', 'serviceCities', 'serviceAreas'));
     }
 
     public function serviceResetForm()

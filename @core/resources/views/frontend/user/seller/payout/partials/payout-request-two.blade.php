@@ -141,12 +141,29 @@
                                     <a href="{{ route('buyer.orders') }}">
                                         <div class="dashboard_promo__contents">
                                             <span class="dashboard_promo__subtitle">{{ __('Remaining Balance') }}</span>
-                                            <h4 class="dashboard_promo__title mt-2">{{ float_amount_with_currency_symbol($remaning_balance-$total_earnings) }}</h4>
+                                            <h4 class="dashboard_promo__title mt-2">{{ float_amount_with_currency_symbol($remaning_balance-($total_earnings+$total_penalties)) }}</h4>
                                         </div>
                                     </a>
                                     <div class="dashboard_promo__icon">
                                         <i class="fa-solid fa-indian-rupee-sign"></i>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <br>
+                <div class="col-xxl-12 col-lg-12">
+                    <div class="dashboard_promo__col dashboard_promo__child">
+                        <div class="dashboard_promo bg-white">
+                            <div class="dashboard_promo__flex">
+                                <div class="dashboard_promo__contents">
+                                    <span class="dashboard_promo__subtitle">{{ __('Total Penalty') }}</span>
+                                    <h4 class="dashboard_promo__title mt-2">{{ float_amount_with_currency_symbol($total_penalties) }} </h4>
+                                </div>
+                                <div class="dashboard_promo__icon">
+                                    <i class="fa-solid fa-indian-rupee-sign" style="color: red;"></i>
                                 </div>
                             </div>
                         </div>
@@ -158,7 +175,7 @@
                     <div class="dashboard_table__title__flex">
                         <div class="dashboard__headerContents__left">
                             <h4 class="dashboard_table__title"> {{__('Payout History')}} </h4>
-                            <p class="text-danger">{{ __('You can create a request for withdraw your earnings.') }}</p>
+                            <p class="text-primary">{{ __('You can create a request for withdraw your earnings.') }}</p>
                         </div>
                         <div class="btn-wrapper" data-bs-toggle="modal" data-bs-target="#openTicket">
                             <a href="javascript:void(0)"
@@ -179,6 +196,7 @@
                                 <tr>
                                     <th> {{ __('ID') }}</th>
                                     <th> {{ __('Payment Method') }} </th>
+                                    <th> {{ __('Payment Type') }} </th>
                                     <th> {{ __('Request Date') }} </th>
                                     <th> {{ __('Request Amount') }} </th>
                                     <th> {{ __('Request Status') }} </th>
@@ -190,13 +208,19 @@
                                     <tr>
                                         <td>{{ $pay_request->id }} </td>
                                         <td>{{ __($pay_request->payment_gateway) }}</td>
+                                        <td>
+                                            <div class="dashboard_table__main__priority">
+                                                @if ($pay_request->payment_type == 'Penalty')  <span class="priorityBtn cancel">{{ __($pay_request->payment_type) }}</span>@endif
+                                                @if ($pay_request->payment_type == 'Withdraw')  <span class="priorityBtn completed">{{ __($pay_request->payment_type) }}</span>@endif
+                                            </div>
+                                        </td>
                                         <td>{{ $pay_request->created_at->diffForHumans() }} </td>
                                         <td> {{ float_amount_with_currency_symbol($pay_request->amount) }} </td>
                                         <td>
-                                        <div class="dashboard_table__main__priority">
-                                            @if ($pay_request->status == 0)  <span class="priorityBtn pending">{{ __('Pending') }}</span>@endif
-                                            @if ($pay_request->status == 1)  <span class="priorityBtn completed">{{ __('Completed') }}</span>@endif
-                                        </div>
+                                            <div class="dashboard_table__main__priority">
+                                                @if ($pay_request->status == 0)  <span class="priorityBtn pending">{{ __('Pending') }}</span>@endif
+                                                @if ($pay_request->status == 1)  <span class="priorityBtn completed">{{ __('Completed') }}</span>@endif
+                                            </div>
                                         </td>
                                         <td>
                                             <div class="dashboard_table__main__actions">

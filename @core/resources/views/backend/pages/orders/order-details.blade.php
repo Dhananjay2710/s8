@@ -12,7 +12,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-4">   
+                                <div class="col-md-10">   
                                     <div class="checkbox-inlines">
                                         <label><strong>{{ __('Service Request ID:') }} </strong>#{{ $order_details->id }}</label>
                                     </div>
@@ -20,6 +20,8 @@
                                 <div class="col-md-2"> 
                                     <button type="button" class="btn btn-info" onclick="goBack()">Go Back</button>
                                 </div>
+                                <!--Code for Signing of file for admin side-->
+                                <!--
                                 <div class="col-md-2">
                                     <div class="checkbox-inlines">
                                         <div id="timerDisplay"></div>
@@ -37,7 +39,7 @@
                                             {{ __('Approved by Signing') }}
                                         </button>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

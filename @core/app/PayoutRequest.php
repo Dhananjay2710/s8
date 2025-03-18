@@ -10,7 +10,7 @@ class PayoutRequest extends Model
     use HasFactory;
 
     protected $table = 'payout_requests';
-    protected $fillable = ['seller_id','amount','payment_gateway','payment_receipt','seller_note','admin-note','status'];
+    protected $fillable = ['seller_id','amount','payment_type','payment_gateway','payment_receipt','seller_note','admin-note','status'];
 
     public function seller(){
         return $this->belongsTo(User::class,'seller_id','id');

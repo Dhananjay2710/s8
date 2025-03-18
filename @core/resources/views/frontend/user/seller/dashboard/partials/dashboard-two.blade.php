@@ -137,12 +137,28 @@
                                     <a href="{{ route('seller.payout') }}">
                                     <div class="dashboard_promo__contents">
                                         <span class="dashboard_promo__subtitle">{{ __('Remaining Balance') }}</span>
-                                        <h4 class="dashboard_promo__title mt-2"> {{ float_amount_with_currency_symbol($remaning_balance - $total_earnings)  }}
+                                        <h4 class="dashboard_promo__title mt-2"> {{ float_amount_with_currency_symbol($remaning_balance - ($total_earnings+$total_penalties))  }}
                                         </h4>
                                     </div>
                                     </a>
                                     <div class="dashboard_promo__icon">
                                         <i class="fa-solid fa-indian-rupee-sign"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard_promo__col dashboard_promo__child">
+                            <div class="dashboard_promo bg-white">
+                                <div class="dashboard_promo__flex">
+                                    <a href="{{ route('seller.payout') }}">
+                                    <div class="dashboard_promo__contents">
+                                        <span class="dashboard_promo__subtitle">{{ __('Total Penalty') }}</span>
+                                        <h4 class="dashboard_promo__title mt-2"> {{ float_amount_with_currency_symbol($total_penalties)  }}
+                                        </h4>
+                                    </div>
+                                    </a>
+                                    <div class="dashboard_promo__icon">
+                                        <i class="fa-solid fa-indian-rupee-sign" style="color: red;"></i>
                                     </div>
                                 </div>
                             </div>
@@ -307,6 +323,19 @@
                                             </div>
                                             <div class="dashboard_promo__icon">
                                                 <i class="fa-solid fa-indian-rupee-sign"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dashboard_promo__col dashboard_promo__child">
+                                    <div class="dashboard_promo bg-white">
+                                        <div class="dashboard_promo__flex">
+                                            <div class="dashboard_promo__contents">
+                                                <span class="dashboard_promo__subtitle">{{ __('Penalties') }}</span>
+                                                <h4 class="dashboard_promo__title mt-2">{{ float_amount_with_currency_symbol($this_month_penalties) }}</h4>
+                                            </div>
+                                            <div class="dashboard_promo__icon">
+                                                <i class="fa-solid fa-indian-rupee-sign" style="color: red;"></i>
                                             </div>
                                         </div>
                                     </div>

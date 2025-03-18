@@ -22,6 +22,34 @@
                         </a>
                     </li>
 
+                    <li class="{{ active_menu('admin-devices') }}" id="openDevicesWindow">
+                        <a href="javascript:void(0);" aria-expanded="true">
+                            <i class="ti-mobile"></i>
+                            <span>@lang('All Devices')</span>
+                        </a>
+                    </li>
+
+                    <li class="{{ active_menu('admin-s8tickets') }}" id="openTicketsWindow">
+                        <a href="javascript:void(0);" aria-expanded="true">
+                            <i class="ti-ticket"></i>
+                            <span>@lang('All Tickets')</span>
+                        </a>
+                    </li>
+
+                    {{-- <li class="{{ active_menu('admin-devices') }}">
+                        <a href="{{ route('admin.devices') }}" aria-expanded="true">
+                            <i class="ti-mobile"></i>
+                            <span>@lang('All Devices')</span>
+                        </a>
+                    </li> 
+                    
+                    <li class="{{ active_menu('admin-s8tickets') }}">
+                        <a href="{{ route('admin.s8tickets') }}" aria-expanded="true">
+                            <i class="ti-ticket"></i>
+                            <span>@lang('All Tickets')</span>
+                        </a>
+                    </li>--}}
+
                     @can('public-chat')
                         @if(moduleExists("LiveChat"))
                             <li class="{{ active_menu('admin-home/chat-users/seller') }}
@@ -241,6 +269,24 @@
                                 @can('slider-list')
                                     <li class="{{ active_menu('admin-home/slider/add-new-slider') }} @if (request()->is('admin-home/slider/edit-slider/*')) active @endif"><a
                                          href="{{ route('admin.slider.new') }}">{{ __('Slider Settings') }}</a></li>
+                                @endcan
+                            </ul>
+                        </li>
+                    @endcan
+
+                    @canany(['penalty-list', 'penalty-create'])
+                        <li class="{{ active_menu('admin-home/penalty') }}
+                        @if (request()->is('admin-home/penalty/*')) active @endif">
+                            <a href="javascript:void(0)" aria-expanded="true"><i class="ti-view-list"></i>
+                                <span>{{ __('Penalties') }}</span></a>
+                            <ul class="collapse">
+                                @can('penalty-list')
+                                    <li class="{{ active_menu('admin-home/penalty') }} @if (request()->is('admin-home/category/edit/*')) active @endif"><a
+                                            href="{{ route('admin.penalty') }}">{{ __('All Penalties') }}</a></li>
+                                @endcan
+                                @can('penalty-create')
+                                    <li class="{{ active_menu('admin-home/penalty/new') }}"><a
+                                            href="{{ route('admin.penalty.new') }}">{{ __('Add New Penalty') }}</a></li>
                                 @endcan
                             </ul>
                         </li>
@@ -851,3 +897,27 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("openDevicesWindow").addEventListener("click", function() {
+            let url = "https://bank.ariticapp.com/ma/s/contacts?contentOnly=1";
+            let windowFeatures = "width=1200,height=800,top=100,left=100,resizable=yes,scrollbars=yes";
+            let newWindow = window.open(url, "DevicesWindow", windowFeatures);
+
+            if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
+                alert("Popup blocked! Please allow popups for this site.");
+            }
+        });
+
+        document.getElementById("openTicketsWindow").addEventListener("click", function() {
+            let url = "https://bank.ariticapp.com/ma/s/ticketskanban/index?contentOnly=1";
+            let windowFeatures = "width=1200,height=800,top=100,left=100,resizable=yes,scrollbars=yes";
+            let newWindow = window.open(url, "DevicesWindow", windowFeatures);
+
+            if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
+                alert("Popup blocked! Please allow popups for this site.");
+            }
+        });
+    });
+</script>

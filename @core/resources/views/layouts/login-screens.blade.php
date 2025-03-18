@@ -69,6 +69,7 @@
     <!-- others plugins -->
     <script src="{{asset('assets/backend/js/plugins.js')}}"></script>
     <script src="{{asset('assets/backend/js/scripts.js')}}"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     @yield('scripts')
 </body>
 </html>

@@ -44,7 +44,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Mail\BasicMail;
 use App\Doc8yAPI;
 use App\Helpers\StringMatchHelper;
-
+use App\Events\PusherMessage;
+use Modules\LiveChat\Entities\LiveChatMessage;
 
 class ServiceListController extends Controller
 {
@@ -450,9 +451,10 @@ class ServiceListController extends Controller
                     'iswhatsappmessagesend' => 'false',
                 ];
 
-                $resultOfUserRegister = Doc8yAPI::userRegister($userDataToSubmit);
-                $decodedData = json_decode($resultOfUserRegister,true);
-                \Log::debug("Result of User Register : " . print_r($decodedData,true));
+                // Register User On Service Doc
+                // $resultOfUserRegister = Doc8yAPI::userRegister($userDataToSubmit);
+                // $decodedData = json_decode($resultOfUserRegister,true);
+                // \Log::debug("Result of User Register : " . print_r($decodedData,true));
             }
         }
 
@@ -853,45 +855,56 @@ class ServiceListController extends Controller
                     "Date" => $todayDate
                 ];
 
-                $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
-                $DecodeData = json_decode($resultOfFormSubmiation,true);
-                \Log::debug("Result of Form Creation : " . print_r($DecodeData,true));
-                if ($DecodeData['status'] == "error"){
-                    $resultData = [
-                        "status" => "success",
-                        "title" => "API Success",
-                        "message" => "New Service Request id : " . $last_order_id ." successfully created",
-                        "servicerequestid" => $last_order_id,
-                        "serviceprovidername" => $seller->name,
-                        "serviceproviderid" => $seller->id,
-                        "serviceprovideremail" => $seller->email,
-                    ];
-                    \Log::debug("Result : " . print_r($status,true));
-                    exit(json_encode($resultData));
-                } else {
-                    $fileId = $DecodeData['fileid'];
-                    $signingLink = $DecodeData['signinglinks'];
-                    \Log::debug("File ID : " . $fileId . "\nSigning Link : " . $signingLink);
+                // $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
+                // $DecodeData = json_decode($resultOfFormSubmiation,true);
+                // \Log::debug("Result of Form Creation : " . print_r($DecodeData,true));
+                // if ($DecodeData['status'] == "error"){
+                //     $resultData = [
+                //         "status" => "success",
+                //         "title" => "API Success",
+                //         "message" => "New Service Request id : " . $last_order_id ." successfully created",
+                //         "servicerequestid" => $last_order_id,
+                //         "serviceprovidername" => $seller->name,
+                //         "serviceproviderid" => $seller->id,
+                //         "serviceprovideremail" => $seller->email,
+                //     ];
+                //     \Log::debug("Result : " . print_r($status,true));
+                //     exit(json_encode($resultData));
+                // } else {
+                //     $fileId = $DecodeData['fileid'];
+                //     $signingLink = $DecodeData['signinglinks'];
+                //     \Log::debug("File ID : " . $fileId . "\nSigning Link : " . $signingLink);
 
-                    Order::where('id',$last_order_id)->update([
-                        'file_id' => $fileId,
-                        'service_provider_file_link' => $signingLink[0],
-                        'customer_file_link' => $signingLink[1],
-                        'admin_file_link' => $signingLink[2],
-                    ]);
+                //     Order::where('id',$last_order_id)->update([
+                //         'file_id' => $fileId,
+                //         'service_provider_file_link' => $signingLink[0],
+                //         'customer_file_link' => $signingLink[1],
+                //         'admin_file_link' => $signingLink[2],
+                //     ]);
 
-                    $resultData = [
-                        "status" => "success",
-                        "title" => "API Success",
-                        "message" => "New Service Request id : " . $last_order_id ." successfully created",
-                        "servicerequestid" => $last_order_id,
-                        "serviceprovidername" => $seller->name,
-                        "serviceproviderid" => $seller->id,
-                        "serviceprovideremail" => $seller->email,
-                    ];
-                    \Log::debug("Result : " . print_r($status,true));
-                    exit(json_encode($resultData));
-                }
+                //     $resultData = [
+                //         "status" => "success",
+                //         "title" => "API Success",
+                //         "message" => "New Service Request id : " . $last_order_id ." successfully created",
+                //         "servicerequestid" => $last_order_id,
+                //         "serviceprovidername" => $seller->name,
+                //         "serviceproviderid" => $seller->id,
+                //         "serviceprovideremail" => $seller->email,
+                //     ];
+                //     \Log::debug("Result : " . print_r($status,true));
+                //     exit(json_encode($resultData));
+                // }
+                $resultData = [
+                    "status" => "success",
+                    "title" => "API Success",
+                    "message" => "New Service Request id : " . $last_order_id ." successfully created",
+                    "servicerequestid" => $last_order_id,
+                    "serviceprovidername" => $seller->name,
+                    "serviceproviderid" => $seller->id,
+                    "serviceprovideremail" => $seller->email,
+                ];
+                \Log::debug("Result : " . print_r($status,true));
+                exit(json_encode($resultData));
             }
         }
 
@@ -923,56 +936,57 @@ class ServiceListController extends Controller
                 "ServiceId" => $last_order_id,
                 "Date" => $todayDate
             ];
-            // $resultOfFormSubmiation = Doc8yAPI::sumbitData($seller->phone, $formDataToSubmit);
-            $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
-            $decodeData = json_decode($resultOfFormSubmiation,true);
-            \Log::debug("Result of Form Creation : " . print_r($decodeData,true));
-            
-            // if ($decodeData['status'] == 'error'){
-            //     Order::where('id', $last_order_id)->delete();
-            //     $status = [
-            //         "status" => "error",
-            //         "title" => "API Failed",
-            //         "message" => "Creation of document get failed",
+            // $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
+            // $decodeData = json_decode($resultOfFormSubmiation,true);
+            // \Log::debug("Result of Form Creation : " . print_r($decodeData,true));
+            // if ($decodeData['status'] == "error"){
+            //     $resultData = [
+            //         "status" => "success",
+            //         "title" => "API Success",
+            //         "message" => "New Service Request id : " . $last_order_id ." successfully created. But Form aganist it not created in doc8.",
+            //         "servicerequestid" => $last_order_id,
+            //         "serviceprovidername" => $seller->name,
+            //         "serviceproviderid" => $seller->id,
+            //         "serviceprovideremail" => $seller->email,
             //     ];
+            //     \Log::debug("Result : " . print_r($resultData,true));
+            //     exit(json_encode($resultData));
+            // } else {
+            //     $fileId = $decodeData['file_id'];
+            //     $signingLink = $decodeData['signinglinks'];
+            //     \Log::debug("File ID : " . $fileId . "\nSigning Link : " . print_r($signingLink,true));
+
+            //     Order::where('id',$last_order_id)->update([
+            //         'file_id' => $fileId,
+            //         'service_provider_file_link' => $signingLink[0],
+            //         'customer_file_link' => $signingLink[1],
+            //         'admin_file_link' => $signingLink[2],
+            //     ]);
+
+            //     $status = [
+            //         "status" => "success",
+            //         "title" => "API Success",
+            //         "message" => "New service request id : " . $last_order_id ." successfully created",
+            //         "servicerequestid" => $last_order_id,
+            //         "serviceprovidername" => $seller->name,
+            //         "serviceproviderid" => $seller->id,
+            //         "serviceprovideremail" => $seller->email,
+            //     ];
+            //     \Log::debug("Result : " . print_r($status,true));
             //     exit(json_encode($status));
             // }
-            if ($decodeData['status'] == "error"){
-                $resultData = [
-                    "status" => "success",
-                    "title" => "API Success",
-                    "message" => "New Service Request id : " . $last_order_id ." successfully created. But Form aganist it not created in doc8.",
-                    "servicerequestid" => $last_order_id,
-                    "serviceprovidername" => $seller->name,
-                    "serviceproviderid" => $seller->id,
-                    "serviceprovideremail" => $seller->email,
-                ];
-                \Log::debug("Result : " . print_r($resultData,true));
-                exit(json_encode($resultData));
-            } else {
-                $fileId = $decodeData['file_id'];
-                $signingLink = $decodeData['signinglinks'];
-                \Log::debug("File ID : " . $fileId . "\nSigning Link : " . print_r($signingLink,true));
 
-                Order::where('id',$last_order_id)->update([
-                    'file_id' => $fileId,
-                    'service_provider_file_link' => $signingLink[0],
-                    'customer_file_link' => $signingLink[1],
-                    'admin_file_link' => $signingLink[2],
-                ]);
-
-                $status = [
-                    "status" => "success",
-                    "title" => "API Success",
-                    "message" => "New service request id : " . $last_order_id ." successfully created",
-                    "servicerequestid" => $last_order_id,
-                    "serviceprovidername" => $seller->name,
-                    "serviceproviderid" => $seller->id,
-                    "serviceprovideremail" => $seller->email,
-                ];
-                \Log::debug("Result : " . print_r($status,true));
-                exit(json_encode($status));
-            }
+            $status = [
+                "status" => "success",
+                "title" => "API Success",
+                "message" => "New service request id : " . $last_order_id ." successfully created",
+                "servicerequestid" => $last_order_id,
+                "serviceprovidername" => $seller->name,
+                "serviceproviderid" => $seller->id,
+                "serviceprovideremail" => $seller->email,
+            ];
+            \Log::debug("Result : " . print_r($status,true));
+            exit(json_encode($status));
         }
         if($request->selected_payment_gateway === 'manual_payment') {
             $order_details = Order::find($last_order_id);
@@ -1023,45 +1037,56 @@ class ServiceListController extends Controller
                 "Date" => $todayDate
             ];
            
-            $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
-            $DecodeData = json_decode($resultOfFormSubmiation,true);
-            \Log::debug("Result of Form Creation : " . print_r($DecodeData,true));
-            if ($DecodeData['status'] == "error"){
-                $resultData = [
-                    "status" => "success",
-                    "title" => "API Success",
-                    "message" => "New Service Request id : " . $last_order_id ." successfully created",
-                    "servicerequestid" => $last_order_id,
-                    "serviceprovidername" => $seller->name,
-                    "serviceproviderid" => $seller->id,
-                    "serviceprovideremail" => $seller->email,
-                ];
-                \Log::debug("Result : " . print_r($status,true));
-                exit(json_encode($resultData));
-            } else {
-                $fileId = $DecodeData['fileid'];
-                $signingLink = $DecodeData['signinglinks'];
-                \Log::debug("File ID : " . $fileId . "\nSigning Link : " . $signingLink);
+            // $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
+            // $DecodeData = json_decode($resultOfFormSubmiation,true);
+            // \Log::debug("Result of Form Creation : " . print_r($DecodeData,true));
+            // if ($DecodeData['status'] == "error"){
+            //     $resultData = [
+            //         "status" => "success",
+            //         "title" => "API Success",
+            //         "message" => "New Service Request id : " . $last_order_id ." successfully created",
+            //         "servicerequestid" => $last_order_id,
+            //         "serviceprovidername" => $seller->name,
+            //         "serviceproviderid" => $seller->id,
+            //         "serviceprovideremail" => $seller->email,
+            //     ];
+            //     \Log::debug("Result : " . print_r($status,true));
+            //     exit(json_encode($resultData));
+            // } else {
+            //     $fileId = $DecodeData['fileid'];
+            //     $signingLink = $DecodeData['signinglinks'];
+            //     \Log::debug("File ID : " . $fileId . "\nSigning Link : " . $signingLink);
 
-                Order::where('id',$last_order_id)->update([
-                    'file_id' => $fileId,
-                    'service_provider_file_link' => $signingLink[0],
-                    'customer_file_link' => $signingLink[1],
-                    'admin_file_link' => $signingLink[2],
-                ]);
+            //     Order::where('id',$last_order_id)->update([
+            //         'file_id' => $fileId,
+            //         'service_provider_file_link' => $signingLink[0],
+            //         'customer_file_link' => $signingLink[1],
+            //         'admin_file_link' => $signingLink[2],
+            //     ]);
 
-                $status = [
-                    "status" => "success",
-                    "title" => "API Success",
-                    "message" => "New service request id : " . $last_order_id ." successfully created",
-                    "servicerequestid" => $last_order_id,
-                    "serviceprovidername" => $seller->name,
-                    "serviceproviderid" => $seller->id,
-                    "serviceprovideremail" => $seller->email,
-                ];
-                \Log::debug("Result : " . print_r($status,true));
-                exit(json_encode($status));
-            }
+            //     $status = [
+            //         "status" => "success",
+            //         "title" => "API Success",
+            //         "message" => "New service request id : " . $last_order_id ." successfully created",
+            //         "servicerequestid" => $last_order_id,
+            //         "serviceprovidername" => $seller->name,
+            //         "serviceproviderid" => $seller->id,
+            //         "serviceprovideremail" => $seller->email,
+            //     ];
+            //     \Log::debug("Result : " . print_r($status,true));
+            //     exit(json_encode($status));
+            // }
+            $status = [
+                "status" => "success",
+                "title" => "API Success",
+                "message" => "New service request id : " . $last_order_id ." successfully created",
+                "servicerequestid" => $last_order_id,
+                "serviceprovidername" => $seller->name,
+                "serviceproviderid" => $seller->id,
+                "serviceprovideremail" => $seller->email,
+            ];
+            \Log::debug("Result : " . print_r($status,true));
+            exit(json_encode($status));
         } else {
             if ($request->selected_payment_gateway === 'paypal') {
                 try{
@@ -3005,8 +3030,8 @@ class ServiceListController extends Controller
         ]);
     }
 
-    //search by category
-    public function searchUsingCategory(Request $request)
+    //search by define rule
+    public function searchServiceProvider(Request $request)
     {
         header('Content-type: application/json');
         \Log::debug("Search using category started");
@@ -3022,6 +3047,7 @@ class ServiceListController extends Controller
         $service8TicketId = $request->service_ticket_id;
         $problemTitle = $request->problem_title;
         \Log::debug("Service 8 Problem Title : " . $problemTitle);
+        $responseResult = [];
         if ($request->category_id != "" || $serviceProviderId !="" || $request->post_code != ""){
             
             if (is_string($request->category_id)) {
@@ -3094,7 +3120,7 @@ class ServiceListController extends Controller
                     })
                     ->orderBy('price', 'ASC')
                     ->get();
-                \Log::debug("Services : " . print_r($services,true));
+                // \Log::debug("Services : " . print_r($services,true));
                 if ($services->isEmpty()) {
                     $responseResult[] = [
                         "status" => "error",
@@ -3135,6 +3161,7 @@ class ServiceListController extends Controller
                 \Log::debug("Afte for loop : " . $arrayLengthAfter );
 
                 if ($arrayLengthAfter == 0){
+                    \Log::debug("Insinde if array length after is 0");
                     $services = Service::where('category_id', $categoryID)
                     ->when(!empty($subCategoryID), function($q) use ($subCategoryID) {
                         $q->where('subcategory_id', $subCategoryID);
@@ -3152,6 +3179,15 @@ class ServiceListController extends Controller
                     })
                     ->orderBy('price', 'ASC')
                     ->get();
+                    $lengthOfServicesList = count($services);
+                    \Log::debug("Length of Services List : " . $lengthOfServicesList);
+                    if ($lengthOfServicesList == 0){
+                        $responseResult[] = [
+                            "status" => "error",
+                            "title" => "API Failed",
+                            "message" => "No Service Provider Found",
+                        ];
+                    }
                     foreach($services as $service){
                         $serviceIncludesData = Serviceaddresses::where("service_id", $service->id)
                         ->where("seller_id", $service->seller_id)
@@ -3170,6 +3206,13 @@ class ServiceListController extends Controller
                 $selectedUser = null;
                 $serviceList = array_keys($sortedServices);
                 $serviceCount = count($serviceList);
+                if ($serviceCount == 0 ){
+                    $responseResult[] = [
+                        "status" => "error",
+                        "title" => "API Failed",
+                        "message" => "No Service Provider Found 2",
+                    ];
+                }
                 // New code
                 $allSortedServices = self::getNextUsers($counter, $serviceList, $selectedUser);
 
@@ -3449,9 +3492,10 @@ class ServiceListController extends Controller
                     'iswhatsappmessagesend' => 'false',
                 ];
 
-                $resultOfUserRegister = Doc8yAPI::userRegister($userDataToSubmit);
-                $decodedData = json_decode($resultOfUserRegister,true);
-                \Log::debug("Result of User Register : " . print_r($decodedData,true));
+                // Register User 
+                // $resultOfUserRegister = Doc8yAPI::userRegister($userDataToSubmit);
+                // $decodedData = json_decode($resultOfUserRegister,true);
+                // \Log::debug("Result of User Register : " . print_r($decodedData,true));
             }
         }
 
@@ -3863,45 +3907,56 @@ class ServiceListController extends Controller
                     "Date" => $todayDate
                 ];
 
-                $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
-                $DecodeData = json_decode($resultOfFormSubmiation,true);
-                \Log::debug("Result of Form Creation : " . print_r($DecodeData,true));
-                if ($DecodeData['status'] == "error"){
-                    $resultData = [
-                        "status" => "success",
-                        "title" => "API Success",
-                        "message" => "New Service Request id : " . $last_order_id ." successfully created",
-                        "servicerequestid" => $last_order_id,
-                        "serviceprovidername" => $seller->name,
-                        "serviceproviderid" => $seller->id,
-                        "serviceprovideremail" => $seller->email,
-                    ];
-                    \Log::debug("Result : " . print_r($status,true));
-                    exit(json_encode($resultData));
-                } else {
-                    $fileId = $DecodeData['fileid'];
-                    $signingLink = $DecodeData['signinglinks'];
-                    \Log::debug("File ID : " . $fileId . "\nSigning Link : " . $signingLink);
+                // $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
+                // $DecodeData = json_decode($resultOfFormSubmiation,true);
+                // \Log::debug("Result of Form Creation : " . print_r($DecodeData,true));
+                // if ($DecodeData['status'] == "error"){
+                //     $resultData = [
+                //         "status" => "success",
+                //         "title" => "API Success",
+                //         "message" => "New Service Request id : " . $last_order_id ." successfully created",
+                //         "servicerequestid" => $last_order_id,
+                //         "serviceprovidername" => $seller->name,
+                //         "serviceproviderid" => $seller->id,
+                //         "serviceprovideremail" => $seller->email,
+                //     ];
+                //     \Log::debug("Result : " . print_r($status,true));
+                //     exit(json_encode($resultData));
+                // } else {
+                //     $fileId = $DecodeData['fileid'];
+                //     $signingLink = $DecodeData['signinglinks'];
+                //     \Log::debug("File ID : " . $fileId . "\nSigning Link : " . $signingLink);
 
-                    Order::where('id',$last_order_id)->update([
-                        'file_id' => $fileId,
-                        'service_provider_file_link' => $signingLink[0],
-                        'customer_file_link' => $signingLink[1],
-                        'admin_file_link' => $signingLink[2],
-                    ]);
+                //     Order::where('id',$last_order_id)->update([
+                //         'file_id' => $fileId,
+                //         'service_provider_file_link' => $signingLink[0],
+                //         'customer_file_link' => $signingLink[1],
+                //         'admin_file_link' => $signingLink[2],
+                //     ]);
 
-                    $resultData = [
-                        "status" => "success",
-                        "title" => "API Success",
-                        "message" => "New Service Request id : " . $last_order_id ." successfully created",
-                        "servicerequestid" => $last_order_id,
-                        "serviceprovidername" => $seller->name,
-                        "serviceproviderid" => $seller->id,
-                        "serviceprovideremail" => $seller->email,
-                    ];
-                    \Log::debug("Result : " . print_r($resultData,true));
-                    return json_encode($resultData);
-                }
+                //     $resultData = [
+                //         "status" => "success",
+                //         "title" => "API Success",
+                //         "message" => "New Service Request id : " . $last_order_id ." successfully created",
+                //         "servicerequestid" => $last_order_id,
+                //         "serviceprovidername" => $seller->name,
+                //         "serviceproviderid" => $seller->id,
+                //         "serviceprovideremail" => $seller->email,
+                //     ];
+                //     \Log::debug("Result : " . print_r($resultData,true));
+                //     return json_encode($resultData);
+                // }
+                $resultData = [
+                    "status" => "success",
+                    "title" => "API Success",
+                    "message" => "New Service Request id : " . $last_order_id ." successfully created",
+                    "servicerequestid" => $last_order_id,
+                    "serviceprovidername" => $seller->name,
+                    "serviceproviderid" => $seller->id,
+                    "serviceprovideremail" => $seller->email,
+                ];
+                \Log::debug("Result : " . print_r($resultData,true));
+                return json_encode($resultData);
             }
         }
 
@@ -3933,56 +3988,56 @@ class ServiceListController extends Controller
                 "ServiceId" => $last_order_id,
                 "Date" => $todayDate
             ];
-            // $resultOfFormSubmiation = Doc8yAPI::sumbitData($seller->phone, $formDataToSubmit);
-            $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
-            $decodeData = json_decode($resultOfFormSubmiation,true);
-            \Log::debug("Result of Form Creation : " . print_r($decodeData,true));
-            
-            // if ($decodeData['status'] == 'error'){
-            //     Order::where('id', $last_order_id)->delete();
-            //     $status = [
-            //         "status" => "error",
-            //         "title" => "API Failed",
-            //         "message" => "Creation of document get failed",
+            // $resultOfFormSubmiation = Doc8yAPI::createDuplicateDocumentAndRequest($seller->phone, $formDataToSubmit);
+            // $decodeData = json_decode($resultOfFormSubmiation,true);
+            // \Log::debug("Result of Form Creation : " . print_r($decodeData,true));
+            // if ($decodeData['status'] == "error"){
+            //     $resultData = [
+            //         "status" => "success",
+            //         "title" => "API Success",
+            //         "message" => "New Service Request id : " . $last_order_id ." successfully created. But Form aganist it not created in doc8.",
+            //         "servicerequestid" => $last_order_id,
+            //         "serviceprovidername" => $seller->name,
+            //         "serviceproviderid" => $seller->id,
+            //         "serviceprovideremail" => $seller->email,
             //     ];
-            //     exit(json_encode($status));
+            //     \Log::debug("Result : " . print_r($resultData,true));
+            //     return json_encode($resultData);
+            // } else {
+            //     $fileId = $decodeData['file_id'];
+            //     $signingLink = $decodeData['signinglinks'];
+            //     \Log::debug("File ID : " . $fileId . "\nSigning Link : " . print_r($signingLink,true));
+
+            //     Order::where('id',$last_order_id)->update([
+            //         'file_id' => $fileId,
+            //         'service_provider_file_link' => $signingLink[0],
+            //         'customer_file_link' => $signingLink[1],
+            //         'admin_file_link' => $signingLink[2],
+            //     ]);
+
+            //     $resultData = [
+            //         "status" => "success",
+            //         "title" => "API Success",
+            //         "message" => "New service request id : " . $last_order_id ." successfully created",
+            //         "servicerequestid" => $last_order_id,
+            //         "serviceprovidername" => $seller->name,
+            //         "serviceproviderid" => $seller->id,
+            //         "serviceprovideremail" => $seller->email,
+            //     ];
+            //     \Log::debug("Result : " . print_r($resultData,true));
+            //     return json_encode($resultData);
             // }
-            if ($decodeData['status'] == "error"){
-                $resultData = [
-                    "status" => "success",
-                    "title" => "API Success",
-                    "message" => "New Service Request id : " . $last_order_id ." successfully created. But Form aganist it not created in doc8.",
-                    "servicerequestid" => $last_order_id,
-                    "serviceprovidername" => $seller->name,
-                    "serviceproviderid" => $seller->id,
-                    "serviceprovideremail" => $seller->email,
-                ];
-                \Log::debug("Result : " . print_r($resultData,true));
-                return json_encode($resultData);
-            } else {
-                $fileId = $decodeData['file_id'];
-                $signingLink = $decodeData['signinglinks'];
-                \Log::debug("File ID : " . $fileId . "\nSigning Link : " . print_r($signingLink,true));
-
-                Order::where('id',$last_order_id)->update([
-                    'file_id' => $fileId,
-                    'service_provider_file_link' => $signingLink[0],
-                    'customer_file_link' => $signingLink[1],
-                    'admin_file_link' => $signingLink[2],
-                ]);
-
-                $resultData = [
-                    "status" => "success",
-                    "title" => "API Success",
-                    "message" => "New service request id : " . $last_order_id ." successfully created",
-                    "servicerequestid" => $last_order_id,
-                    "serviceprovidername" => $seller->name,
-                    "serviceproviderid" => $seller->id,
-                    "serviceprovideremail" => $seller->email,
-                ];
-                \Log::debug("Result : " . print_r($resultData,true));
-                return json_encode($resultData);
-            }
+            $resultData = [
+                "status" => "success",
+                "title" => "API Success",
+                "message" => "New service request id : " . $last_order_id ." successfully created",
+                "servicerequestid" => $last_order_id,
+                "serviceprovidername" => $seller->name,
+                "serviceproviderid" => $seller->id,
+                "serviceprovideremail" => $seller->email,
+            ];
+            \Log::debug("Result : " . print_r($resultData,true));
+            return json_encode($resultData);
         }
     }
 

@@ -475,7 +475,7 @@
                                         <label for="ticketTitle" class="label_title">{{ __('Comments') }}</label>
                                         <textarea id="message" name="message" cols="20" rows="4"  class="form--control radius-10 textarea-input" placeholder="{{ __('Post Comments') }}"></textarea>
                                     </div>
-                                    <div class="form-group m-3">
+                                    <!-- <div class="form-group m-3">
                                         <div class="row">
                                             <div class="col-md-5">
                                                 <div class="media-upload-btn-wrapper">
@@ -501,7 +501,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
 

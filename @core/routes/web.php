@@ -158,7 +158,7 @@ Route::group(['middleware'=>['auth','inactiveuser']],function(){
 
 Route::group(['prefix' => '/api/v1/'], function () {
     Route::get('book-now/create-service-order', 'Frontend\ServiceListController@createServiceOrder')->name('service.create.ordered');
-    Route::get('/service-list/searchusingcategory', 'Frontend\ServiceListController@searchUsingCategory')->name('search.using.category');
+    Route::get('/service-list/searchserviceprovider', 'Frontend\ServiceListController@searchServiceProvider')->name('search.using.category');
     Route::get('update/servicerquest/filestatus', 'Frontend\ServiceListController@updateServiceRequestFileStatus')->name('service.update.filestaus');
 });
 

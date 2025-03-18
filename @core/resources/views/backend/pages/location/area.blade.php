@@ -44,6 +44,7 @@
                                 <th>{{__('City')}}</th>
                                 <th>{{__('Country')}}</th>
                                 <th>{{__('Status')}}</th>
+                                <th>{{__('Pin Code')}}</th>
                                 <th>{{__('Create Date')}}</th>
                                 <th>{{__('Action')}}</th>
                                 </thead>
@@ -67,6 +68,7 @@
                                                     <span><x-status-change :url="route('admin.area.status',$data->id)"/></span>
                                                 @endcan        
                                             </td>
+                                            <td>{{$data->pincode}}</td>
                                             <td>{{date('d-m-Y', strtotime($data->created_at))}}</td>
                                             <td>
                                                 @can('area-delete')
@@ -79,6 +81,7 @@
                                                 class="btn btn-primary btn-xs mb-3 mr-1 area_item_edit_btn"
                                                 data-id="{{$data->id}}"
                                                 data-area="{{$data->service_area}}"
+                                                data-pincode="{{$data->pincode}}"
                                                 data-city="{{optional($data->city)->id}}"
                                                 data-country="{{optional($data->country)->id}}"
                                                 >
@@ -136,6 +139,11 @@
                             <input type="text" class="form-control" name="up_service_area" id="up_service_area" placeholder="{{__('Service Area')}}">
                         </div>
 
+                        <div class="form-group">
+                            <label for="up_pincode">{{__('Pin Code')}}</label>
+                            <input type="text" class="form-control" name="up_pincode" id="up_pincode" placeholder="{{__('Pincode')}}">
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Close')}}</button>
@@ -174,11 +182,13 @@
                     var el = $(this);
                     var id = el.data('id');
                     var area = el.data('area');
+                    var pincode = el.data('pincode');
                     var city = el.data('city');
                     var country = el.data('country');
                     var form = $('#area_edit_modal');
                     form.find('#up_id').val(id);
                     form.find('#up_service_area').val(area);
+                    form.find('#up_pincode').val(pincode);
                     form.find('#up_service_city_id').val(city);
                     form.find('#up_country_id').val(country);
                 });

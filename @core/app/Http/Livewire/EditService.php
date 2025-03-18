@@ -5,6 +5,9 @@ namespace App\Http\Livewire;
 use App\AdminCommission;
 use App\Category;
 use App\ChildCategory;
+use App\Country;
+use App\ServiceCity;
+use App\ServiceArea;
 use App\EditServiceHistory;
 use App\MetaData;
 use App\OnlineServiceFaq;
@@ -274,7 +277,10 @@ class EditService extends Component
         $categories = Category::where('status', 1)->get();
         $sub_categories = Subcategory::all();
         $child_categories = ChildCategory::all();
-        return view('livewire.edit-service-two', compact('categories', 'sub_categories', 'child_categories'));
+        $countries = Country::all();
+        $serviceCities = ServiceCity::all();
+        $serviceAreas = ServiceArea::all();
+        return view('livewire.edit-service-two', compact('categories', 'sub_categories', 'child_categories', 'countries', 'serviceCities', 'serviceAreas'));
     }
 
 

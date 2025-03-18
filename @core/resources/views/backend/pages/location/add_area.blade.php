@@ -24,32 +24,44 @@
                         </div>
                         <form action="{{route('admin.area.add')}}" method="post">
                             @csrf
-                            <div class="tab-content margin-top-40">
-                                
-                                <div class="form-group">
-                                    <label for="country_id">{{__('Service Country')}}</label>
-                                    <select name="country_id" id="country_id" class="form-control" >
-                                        <option value="">{{ __('Select Country') }}</option>
-                                        @foreach($countries as $country)
-                                        <option value="{{ $country->id }}">{{ $country->country }}</option>
-                                        @endforeach
-                                    </select>
+                            <div class="tab-content margin-top-20">
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6 col-xs-6">
+                                        <div class="form-group">
+                                            <label for="country_id">{{__('Service Country')}}</label>
+                                            <select name="country_id" id="country_id" class="form-control" >
+                                                <option value="">{{ __('Select Country') }}</option>
+                                                @foreach($countries as $country)
+                                                <option value="{{ $country->id }}">{{ $country->country }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-6">
+                                        <div class="form-group">
+                                            <label for="city">{{__('Service City')}}</label>
+                                            <select name="service_city_id" id="service_city_id" class="form-control" >
+                                                <option value="">{{ __('Select City') }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-
-                                <div class="form-group">
-                                    <label for="city">{{__('Service City')}}</label>
-                                    <select name="service_city_id" id="service_city_id" class="form-control" >
-                                        <option value="">{{ __('Select City') }}</option>
-                                    </select>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6 col-xs-6">
+                                        <div class="form-group">
+                                            <label for="service_area">{{__('Service Area')}}</label>
+                                            <input type="text" class="form-control" name="service_area" id="service_area" placeholder="{{__('Service Area')}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-6">
+                                        <div class="form-group">
+                                            <label for="pincode">{{__('Pin Code')}}</label>
+                                            <input type="number" class="form-control" name="pincode" id="pincode" placeholder="{{__('Pin Code')}}">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="service_area">{{__('Service Area')}}</label>
-                                    <input type="text" class="form-control" name="service_area" id="service_area" placeholder="{{__('Service Area')}}">
-                                </div>
-                                
-                                <button type="submit" class="btn btn-primary mt-3 submit_btn">{{__('Submit ')}}</button>
-
-                              </div>
+                                <center><button type="submit" class="btn btn-primary mt-3 submit_btn">{{__('Add')}}</button></center>
+                            </div>
                         </form>
                    </div>
                 </div>

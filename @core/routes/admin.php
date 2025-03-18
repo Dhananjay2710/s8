@@ -7,6 +7,8 @@ Route::middleware(['setlang'])->group(function(){
                                                      ADMIN PANEL ROUTES
 ----------------------------------------------------------------------------------------------------------------------------*/
     Route::get('/', 'AdminDashboardController@adminIndex')->name('admin.home');
+    Route::get('/devices', 'AdminDashboardController@allDevices')->name('admin.devices');
+    Route::get('/s8tickets', 'AdminDashboardController@allTickets')->name('admin.s8tickets');
     Route::get('/dark-mode-toggle', 'AdminDashboardController@dark_mode_toggle')->name('admin.dark.mode.toggle');
   
     Route::get('/media-upload/page','MediaUploadController@all_upload_media_images_for_page')->name('admin.upload.media.images.page');
@@ -116,6 +118,18 @@ Route::group(['prefix'=>'brand'],function(){
         Route::post('/delete/{id}','SliderController@delete_slider')->name('admin.slider.delete');
         Route::post('/bulk-action', 'SliderController@bulk_action')->name('admin.slider.bulk.action');
     });
+
+/*----------------------------------------------------------------------------------------------------------------------------
+| PENALTY ROUTES
+|----------------------------------------------------------------------------------------------------------------------------*/
+Route::group(['prefix'=>'penalty'],function(){
+    Route::get('/','PenaltyController@index')->name('admin.penalty');
+    Route::match(['get','post'],'/add-new-penalty','PenaltyController@add_new_penalty')->name('admin.penalty.new');
+    Route::match(['get','post'],'/edit-penalty/{id?}','PenaltyController@edit_penalty')->name('admin.penalty.edit');
+    Route::post('/change-status/{id}','PenaltyController@change_status')->name('admin.penalty.status');
+    Route::post('/delete/{id}','PenaltyController@delete_penalty')->name('admin.penalty.delete');
+    Route::post('/bulk-action', 'PenaltyController@bulk_action')->name('admin.penalty.bulk.action');
+});
 
 /*----------------------------------------------------------------------------------------------------------------------------
 | CATEGORY ROUTES

@@ -122,9 +122,9 @@
         margin: 0 auto;
         text-align: center;
       }
-    }
-         
-</style>
+    }     
+    </style>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 @endsection
 
 @section('content')
@@ -186,7 +186,7 @@
                     </div>
                     <div class="orders-flex-content">
                         <div class="icon">
-                            <i class="las la-file-invoice-dollar"></i>
+                            <i class="las la-rupee-sign"></i>
                         </div>
                         <div class="contents">
                             <h2 class="order-titles">{{ float_amount_with_currency_symbol($total_earning) }} </h2>
@@ -235,7 +235,7 @@
                     </div>
                     <div class="orders-flex-content">
                         <div class="icon">
-                            <i class="las la-dollar-sign"></i>
+                            <i class="las la-rupee-sign"></i>
                         </div>
                         <div class="contents">
                             <h2 class="order-titles"> {{ $pending_payout_request }}</h2>
@@ -268,7 +268,7 @@
                     </div>
                     <div class="orders-flex-content">
                         <div class="icon">
-                            <i class="las la-file-invoice-dollar"></i>
+                            <i class="las la-rupee-sign"></i>
                         </div>
                         <div class="contents">
                             <h2 class="order-titles">{{ float_amount_with_currency_symbol($total_payout) }} </h2>
@@ -284,7 +284,7 @@
                     </div>
                     <div class="orders-flex-content">
                         <div class="icon">
-                            <i class="las la-file-invoice-dollar"></i>
+                            <i class="las la-rupee-sign"></i>
                         </div>
                         <div class="contents">
                             <h2 class="order-titles">{{ float_amount_with_currency_symbol($payout_liability) }} </h2>
@@ -300,7 +300,7 @@
                     </div>
                     <div class="orders-flex-content">
                         <div class="icon">
-                            <i class="las la-file-invoice-dollar"></i>
+                            <i class="las la-rupee-sign"></i>
                         </div>
                         <div class="contents">
                             <h2 class="order-titles"> {{ float_amount_with_currency_symbol($total_amount_paid) }} </h2>
@@ -316,11 +316,43 @@
                     </div>
                     <div class="orders-flex-content">
                         <div class="icon">
-                            <i class="las la-file-invoice-dollar"></i>
+                            <i class="las la-rupee-sign"></i>
                         </div>
                         <div class="contents">
                             <h2 class="order-titles">{{ float_amount_with_currency_symbol($pending_payout_liability) }} </h2>
                             <span class="order-para">{{ __('Pending Payout Liability') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 margin-top-30 orders-child">
+                <div class="single-orders">
+                    <div class="orders-shapes">
+                        <img src="{{ asset('assets/frontend/img/static/orders-shapes.png') }}" alt="">
+                    </div>
+                    <div class="orders-flex-content">
+                        <div class="icon">
+                            <i class="las la-rupee-sign"></i>
+                        </div>
+                        <div class="contents">
+                            <h2 class="order-titles">{{ $penalty_payout_request }} </h2>
+                            <span class="order-para">{{ __('Total Penalties') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 margin-top-30 orders-child">
+                <div class="single-orders">
+                    <div class="orders-shapes">
+                        <img src="{{ asset('assets/frontend/img/static/orders-shapes2.png') }}" alt="">
+                    </div>
+                    <div class="orders-flex-content">
+                        <div class="icon">
+                            <i class="las la-rupee-sign"></i>
+                        </div>
+                        <div class="contents">
+                            <h2 class="order-titles">{{ float_amount_with_currency_symbol($total_amount_penalties) }} </h2>
+                            <span class="order-para">{{ __('All Penalties Amount') }}</span>
                         </div>
                     </div>
                 </div>
@@ -519,6 +551,18 @@
             }]
         },
     });
+
+    console.log("Pusher Start");
+    Pusher.logToConsole = true;
+    var pusher = new Pusher('6296a3a638be8c94ca96', {
+      cluster: 'ap2'
+    });
+
+    var channel = pusher.subscribe('chat');
+    channel.bind('message.new', function(data) {
+      alert(JSON.stringify(data));
+    });
+    console.log("Pusher End");
 
     </script>
 @endsection

@@ -316,7 +316,7 @@
                     var udpateId = '';
                     var formContainer = $(this).parent();
                     var sortableId = formContainer.parent().parent().parent().attr('id');
-
+                    
                     $.ajax({
                         type: "POST",
                         url: formAction,
@@ -335,6 +335,14 @@
                                 form.find('span.text-success').remove();
                             }, 2000);
 
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("AJAX Error: ", status, error);
+                            console.error("Response Text: ", xhr.responseText);
+                            form.append('<span class="text-danger">Error: ' + xhr.status + ' - ' + xhr.statusText + '</span>');
+                            setTimeout(function () {
+                                form.find('span.text-danger').remove();
+                            }, 3000);
                         }
                     });
 

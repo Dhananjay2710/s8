@@ -81,6 +81,19 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td><h6>{{__('Pincode')}}</h6></td>
+                                        <td>
+                                            <div class="form-group">
+                                                <select class="form-control mapping_select">
+                                                    <option value="">{{__('Select Field')}}</option>
+                                                    {!! $option_markup !!}
+                                                </select>
+                                                <input type="hidden" name="pincode">
+                                            </div>
+                                            <p class="text-info">{{ __('Select pincode and only unique pincode added automatically according to the selected country, city and area.') }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td><h6>{{__('Status')}}</h6></td>
                                         <td>
                                             <div class="form-group">

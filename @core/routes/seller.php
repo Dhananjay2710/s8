@@ -148,11 +148,6 @@ Route::group(['prefix'=>'seller','middleware'=>['auth','inactiveuser','BuyerChec
     Route::match(['get','post'],'/verify-account-number','Frontend\SellerController@sellerVerifyAccountNumber')->name('seller.profile.verify.bankaccount');
 });
 
-Route::group(['prefix'=>'serviceprovider'],function(){
-    //Services all order list
-    Route::get('/servicerequests','Frontend\SellerController@serviceProviderRequests')->name('seller.servicerequests');
-});
-
 Route::group(['prefix'=>'serviceprovider','middleware'=>['auth','inactiveuser','BuyerCheck','userEmailVerify','setlang','globalVariable']],function(){
     Route::get('/dashboard','Frontend\SellerController@sellerDashboard')->name('seller.dashboard');
     Route::get('/profile','Frontend\SellerController@sellerProfile')->name('seller.profile');
@@ -294,10 +289,4 @@ Route::group(['prefix'=>'serviceprovider','middleware'=>['auth','inactiveuser','
     Route::match(['get','post'],'/verify-aadhaar-number','Frontend\SellerController@sellerVerifyAadhaarNumber')->name('seller.profile.verify.aadhaar');
     Route::match(['get','post'],'/verify-aadhaar-otp','Frontend\SellerController@sellerVerifyAadhaarOTP')->name('seller.profile.verify.otp');
     Route::match(['get','post'],'/verify-account-number','Frontend\SellerController@sellerVerifyAccountNumber')->name('seller.profile.verify.bankaccount');
-});
-
-Route::group(['prefix'=>'serviceprovider'],function(){
-    //Services all order list
-    Route::get('/servicerequests','Frontend\SellerController@serviceProviderRequests')->name('seller.servicerequests');
-    Route::get('/ordersdetailsupdateapi/{id}','Frontend\SellerController@orderDetailsForUpdate')->name('seller.order.details.update');
 });

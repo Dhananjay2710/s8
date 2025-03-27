@@ -78,7 +78,7 @@
                                 @if ($isHideSideBarAndHeader) 
                                     {{ route('seller.orders') }}
                                 @else
-                                    {{ route('seller.servicerequests') }} 
+                                    {{ route('serviceprovider.servicerequests') }} 
                                 @endif 
                                   
                             @endif" method="GET">
@@ -706,33 +706,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="form-group m-3">
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <div class="media-upload-btn-wrapper">
-                                        <div class="img-wrap"></div>
-                                        <p id="fileLink"></p>
-                                        <button id="signDocumentBtn" type="button" class="btn btn-info" data-file-link="">
-                                            {{ __('Sign Document') }}
-                                        </button>
-                                        <small>{{ __('Sign the document') }}</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="media-upload-btn-wrapper" style="padding-top: 5px">
-                                        <div id="timerDisplay">Time left: 3:00</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="media-upload-btn-wrapper">
-                                        <div id="iframeContainer" style="margin-top: 20px;">
-                                            <p>Signing Status</p>
-                                            <p id="fileStatus"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                    </div> -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
                         <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
@@ -773,33 +746,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="form-group m-3">
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <div class="media-upload-btn-wrapper">
-                                            <div class="img-wrap"></div>
-                                            <p id="fileLinkOfCustomer"></p>
-                                            <button id="signDocumentBtnOfCustomer" type="button" class="btn btn-info" data-order_customer_file_link="">
-                                                {{ __('Sign Document') }}
-                                            </button>
-                                            <small>{{ __('Sign the document') }}</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="media-upload-btn-wrapper" style="padding-top: 5px">
-                                            <div id="timerDisplayOfCustomer">Time left: 3:00</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="media-upload-btn-wrapper">
-                                            <div id="iframeContainerOfCustomer" style="margin-top: 20px;">
-                                                <p>{{ __('Signing Status') }}</p>
-                                                <p id="fileStatusOfCustomer"></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
                                 <button type="submit" class="btn btn-primary">{{ __('Send Review') }}</button>
@@ -1203,54 +1149,6 @@
                 console.log("Modal Opened - Ready to Handle Events");
             });
 
-            // const signDocumentBtn = document.getElementById('signDocumentBtn');
-            // signDocumentBtn.addEventListener('click', function () {
-            //     const fileLink = this.getAttribute('data-file-link');
-            //     if (fileLink) {
-            //         const width = 1000;
-            //         const height = 800;
-            //         const left = (screen.width / 2) - (width / 2);
-            //         const top = (screen.height / 2) - (height / 2);
-            //         const signWindow = window.open(fileLink, 'SignDocumentWindow', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
-
-            //         // Set the timer duration (in seconds)
-            //         let timerDuration = 180;
-            //         const timerDisplay = document.getElementById('timerDisplay');
-
-            //         // Update the timer every second
-            //         const countdownTimer = setInterval(function () {
-            //             if (timerDuration > 0) {
-            //                 timerDuration--;
-            //                 const minutes = Math.floor(timerDuration / 60);
-            //                 const seconds = timerDuration % 60;
-            //                 timerDisplay.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-            //             } else {
-            //                 clearInterval(countdownTimer);
-            //             }
-            //         }, 1000);
-
-            //         // Close the window after 3 minutes (180000 milliseconds)
-            //         const autoCloseTimer = setTimeout(function () {
-            //             signWindow.close();
-            //         }, 180000);
-
-            //         // Check if the window is closed manually
-            //         const checkWindowClosed = setInterval(function () {
-            //             if (signWindow.closed) {
-            //                 clearInterval(checkWindowClosed);
-            //                 clearInterval(countdownTimer);
-            //                 clearTimeout(autoCloseTimer);
-            //                 timerDisplay.textContent = "Signing window has closed.";
-            //                 const orderId = document.querySelector('#order_id').value;
-            //                 fetchUpdatedData(orderId);
-            //             }
-            //         }, 500);
-            //     } else {
-            //         alert('No file link provided.');
-            //     }
-            // });
-
-
             // For reviewModal model
             const reviewModal = document.getElementById('reviewModal');
             reviewModal.addEventListener('show.bs.modal', function (event) {
@@ -1261,144 +1159,6 @@
                 // Make an XHR call to get the updated file signing status
                 fetchUpdatedData(orderId);
             });
-
-            // const signDocumentBtnOfCustomer = document.getElementById('signDocumentBtnOfCustomer');
-            // signDocumentBtnOfCustomer.addEventListener('click', function () {
-            //     const customerFileLink = this.getAttribute('data-order_customer_file_link');
-            //     if (customerFileLink) {
-            //         const width = 1000;
-            //         const height = 800;
-            //         const left = (screen.width / 2) - (width / 2);
-            //         const top = (screen.height / 2) - (height / 2);
-            //         const signWindowOfCustomer = window.open(customerFileLink, 'SignDocumentWindowOfCustomer', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
-
-            //         // Set the timer duration (in seconds)
-            //         let timerDuration = 180;
-            //         const timerDisplayOfCustomer = document.getElementById('timerDisplayOfCustomer');
-
-            //         // Update the timer every second
-            //         const countdownTimer = setInterval(function () {
-            //             if (timerDuration > 0) {
-            //                 timerDuration--;
-            //                 const minutes = Math.floor(timerDuration / 60);
-            //                 const seconds = timerDuration % 60;
-            //                 timerDisplayOfCustomer.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-            //             } else {
-            //                 clearInterval(countdownTimer);
-            //             }
-            //         }, 1000);
-
-            //         // Close the window after 3 minutes (180000 milliseconds)
-            //         const autoCloseTimer = setTimeout(function () {
-            //             signWindow.close();
-            //         }, 180000);
-
-            //         const checkWindowClosed = setInterval(function () {
-            //             if (signWindowOfCustomer.closed) {
-            //                 clearInterval(checkWindowClosed);
-            //                 clearInterval(countdownTimer);
-            //                 clearTimeout(autoCloseTimer);
-            //                 timerDisplayOfCustomer.textContent = "Signing window has closed.";
-            //                 const orderId = document.querySelector('#order_id').value;
-            //                 fetchUpdatedDataOfCustomer(orderId);
-            //             }
-            //         }, 1000);
-            //     } else {
-            //         alert('No file link provided.');
-            //     }
-            // });
-
-            // fetch updated data using xhr call
-            // function fetchUpdatedData(orderId) {
-            //     const xhr = new XMLHttpRequest();
-            //     xhr.open('GET', `/providers/serviceprovider/ordersdetailsupdateapi/${orderId}`, true);
-            //     xhr.onreadystatechange = function () {
-            //         if (xhr.readyState === 4 && xhr.status === 200) {
-            //             console.log("XHR Success");
-            //             // Parse the JSON response
-            //             const response = JSON.parse(xhr.responseText);
-            //             const fileLink = response.service_provider_file_link;
-            //             const fileSigningStatus = response.service_provider_signing_status;
-            //             // Update the modal's fileStatusOfCustomer element
-            //             updateDOM(fileSigningStatus, fileLink)
-            //         } else if (xhr.readyState === 4) {
-            //             console.error('Failed to fetch updated data.');
-            //         }
-            //     };
-            //     xhr.send();
-            // }
-
-            // fetch updated data using xhr call
-            // function fetchUpdatedDataOfCustomer(orderId) {
-            //     const xhr = new XMLHttpRequest();
-            //     xhr.open('GET', `/providers/serviceprovider/ordersdetailsupdateapi/${orderId}`, true);
-            //     xhr.onreadystatechange = function () {
-            //         if (xhr.readyState === 4 && xhr.status === 200) {
-            //             console.log("XHR Success");
-            //             // Parse the JSON response
-            //             const response = JSON.parse(xhr.responseText);
-            //             const fileLink = response.customer_file_link;
-            //             const fileSigningStatus = response.customer_signing_status;
-            //             // Update the modal's fileStatusOfCustomer element
-            //             updateDOMOfCustomer(fileSigningStatus, fileLink)
-            //         } else if (xhr.readyState === 4) {
-            //             console.error('Failed to fetch updated data.');
-            //         }
-            //     };
-            //     xhr.send();
-            // }
-
-            // update DOM
-            // function updateDOM(status, link) {
-            //     signDocumentBtn.setAttribute('data-file-link', link);
-            //     const fileStatusElement = document.querySelector('#fileStatus');
-            //     fileStatusElement.textContent = status;
-            //     setFileStatusColor(status);
-            //     if (link && status !== 'Signed') {
-            //         signDocumentBtn.disabled = false;
-            //     } else {
-            //         signDocumentBtn.disabled = true;
-            //         timerDisplay.textContent = '';
-            //     }
-            // }
-
-            // update DOM
-            // function updateDOMOfCustomer(status, link) {
-            //     signDocumentBtn.setAttribute('data-order_customer_file_link', link);
-            //     const fileStatusElement = document.querySelector('#fileStatusOfCustomer');
-            //     fileStatusElement.textContent = status;
-            //     setFileStatusColorOfCustomer(status);
-            //     if (link && status !== 'Signed') {
-            //         signDocumentBtn.disabled = false;
-            //     } else {
-            //         signDocumentBtn.disabled = true;
-            //         timerDisplayOfCustomer.textContent = '';
-            //     }
-            // }
-
-            // set file status color
-            // function setFileStatusColor(status) {
-            //     const fileStatusElement = document.querySelector('#fileStatus');
-            //     if (status === 'Pending') {
-            //         fileStatusElement.style.color = 'red';
-            //     } else if (status === 'Signed') {
-            //         fileStatusElement.style.color = 'green';
-            //     } else {
-            //         fileStatusElement.style.color = 'black';
-            //     }
-            // }
-
-            // set file status color
-            // function setFileStatusColorOfCustomer(status) {
-            //     const fileStatusElement = document.querySelector('#fileStatusOfCustomer');
-            //     if (status === 'Pending') {
-            //         fileStatusElement.style.color = 'red';
-            //     } else if (status === 'Signed') {
-            //         fileStatusElement.style.color = 'green';
-            //     } else {
-            //         fileStatusElement.style.color = 'black';
-            //     }
-            // }
         });
     </script>
 @endsection

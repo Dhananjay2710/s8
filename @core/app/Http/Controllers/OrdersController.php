@@ -273,34 +273,6 @@ class OrdersController extends Controller
         return view('backend.pages.orders.order-details',compact('order_details','order_includes','order_additionals','isHideMenu','order_declines_history'));
     }
 
-    public function serviceRequestDetails(Request $request, $id){
-
-        \Log::debug("Service Request Deatils Start");
-        $token = $request->token;
-        \Log::debug("Id : " . $id . "\nToken : " . $token);
-
-        $order_details = Order::where('id',$id)->first();
-        $order_includes = OrderInclude::where('order_id',$id)->get();
-        $order_additionals = OrderAdditional::where('order_id',$id)->get();
-
-        \Log::debug("Seller Id : " . $order_details->seller_id);
-        $finalToken = TokenGenrateHelper::genrateToken($order_details->seller_id);
-        if($token !== $finalToken){
-            abort(401);
-        }
-
-        // admin notification
-        $notification = AdminNotification::where('order_id', $id)->first();
-        if (!empty($notification)){
-            if ($notification->status == 0){
-                AdminNotification::where('order_id', $id)->update(['status' => 1]);
-            }
-        }
-        $isHideMenu = true;
-        \Log::debug("Service Request Deatils End");
-        return view('backend.pages.orders.order-details',compact('order_details','order_includes','order_additionals','isHideMenu'));
-    }
-
     public function orderStatus(Request $request)
     {
         Order::where('id',$request->order_id)->update(['status'=>$request->status]);

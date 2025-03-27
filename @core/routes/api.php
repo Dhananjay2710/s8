@@ -24,6 +24,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+Route::group(['prefix'=>'v1'],function(){
+    Route::post('/searchserviceprovider/assignservicerequest', [ServiceController::class,'searchServiceProviderAndAssignServiceRequest']);
+});
+
+Route::group(['middleware' => ['web','globalVariable', 'maintains_mode','setlang']],function(){
+    Route::group(['prefix' => 'v1'], function () {
+        Route::get('/serviceprovider/servicerequests', [SellerController::class,'serviceProviderRequests'])->name('serviceprovider.servicerequests');
+    });
+});
+
+
 Route::group(['prefix'=>'v1', 'middleware' => 'setlang'],function(){
     
     //todo: amount settings
@@ -182,7 +194,6 @@ Route::group(['prefix'=>'v1', 'middleware' => 'setlang'],function(){
         Route::get('job/recent-jobs', [JobDetailsController::class, 'recent_jobs']);
     }
 
-    // Route::get('service/servicerequests', [ServiceController::class,'serviceProviderRequests']);
     //verify 
     Route::group(['middleware' => 'auth:sanctum'],function (){
         Route::post('service/order', [ServiceController::class,'order']);
@@ -314,9 +325,6 @@ Route::group(['prefix'=>'v1', 'middleware' => 'setlang'],function(){
                 Route::get('/info', [SellerSubscriptionController::class, 'subscription_info'])->name('seller.subscription.info');
                 Route::get('/history', [SellerSubscriptionController::class, 'subscription_history'])->name('seller.subscription.history');
             });
-        }
-        
+        } 
     });
-  
-
 });

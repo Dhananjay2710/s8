@@ -20,26 +20,6 @@
                                 <div class="col-md-2"> 
                                     <button type="button" class="btn btn-info" onclick="goBack()">Go Back</button>
                                 </div>
-                                <!--Code for Signing of file for admin side-->
-                                <!--
-                                <div class="col-md-2">
-                                    <div class="checkbox-inlines">
-                                        <div id="timerDisplay"></div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="checkbox-inlines">
-                                        <div>Signing Status</div>
-                                        <centre><div id="fileStatusOfAdmin"></div></centre>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="checkbox-inlines">
-                                        <button id="signDocumentBtnOfAdmin" type="button" class="btn btn-info" data-order_admin_file_link={{ $order_details->admin_file_link }}>
-                                            {{ __('Approved by Signing') }}
-                                        </button>
-                                    </div>
-                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -469,100 +449,6 @@
 
         var orderDetails = @json($order_details);
         console.log("Order Details : ", orderDetails.id);
-        var admin_file_link = orderDetails.admin_file_link;
-        var admin_file_status = orderDetails.admin_signing_status;
-        var order_id = orderDetails.id;
-       
-        var fileStatusOfAdmin = document.getElementById('fileStatusOfAdmin');
-        fileStatusOfAdmin.textContent = admin_file_status;
-        setFileStatusColor(admin_file_status);
-        var timerDisplay = document.getElementById('timerDisplay');
-        timerDisplay.textContent = '';
-        // for reviewModal model after click on yes
-        document.getElementById('signDocumentBtnOfAdmin').addEventListener('click', function() {
-            console.log('admin_file_link : ', admin_file_link);
-            if (admin_file_link) {
-                const width = 1000;
-                const height = 800;
-                const left = (screen.width / 2) - (width / 2);
-                const top = (screen.height / 2) - (height / 2);
-                var signWindow = window.open(admin_file_link, 'signDocumentForAdmin', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
-                // Set the timer duration (in seconds)
-                let timerDuration = 180;
-
-                // Update the timer every second
-                const countdownTimer = setInterval(function () {
-                    if (timerDuration > 0) {
-                        timerDuration--;
-                        const minutes = Math.floor(timerDuration / 60);
-                        const seconds = timerDuration % 60;
-                        timerDisplay.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-                    } else {
-                        clearInterval(countdownTimer);
-                    }
-                }, 1000);
-
-                // Close the window after 3 minutes (180000 milliseconds)
-                const autoCloseTimer = setTimeout(function () {
-                    signWindow.close();
-                }, 180000);
-
-                // Check if the window is closed manually
-                const checkWindowClosed = setInterval(function () {
-                    if (signWindow.closed) {
-                        clearInterval(checkWindowClosed);
-                        clearInterval(countdownTimer);
-                        clearTimeout(autoCloseTimer);
-                        timerDisplay.textContent = "Signing window has closed.";
-                        fetchUpdatedData();
-                    }
-                }, 500);
-            } else {
-                alert('No document link is available.');
-            }
-        });
-
-        // fetch updated data using xhr call
-        function fetchUpdatedData() {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', `/providers/serviceprovider/ordersdetailsupdateapi/${order_id}`, true);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        console.log("XHR Success");
-                        const response = JSON.parse(xhr.responseText);
-                        const updatedAdminFileSigningStatus = response.admin_signing_status;
-                        console.log("Updated Status", updatedAdminFileSigningStatus);
-                        const adminFileLink = response.admin_file_link;
-                        updateDOM(updatedAdminFileSigningStatus, adminFileLink);
-                    } else {
-                        console.error('Failed to fetch updated data. Status:', xhr.status);
-                    }
-                }
-            };
-            xhr.send();
-        }
-
-        // update DOM
-        function updateDOM(status, link) {
-            fileStatusOfAdmin.textContent = status;
-            setFileStatusColor(status);
-            const signDocumentBtnOfAdmin = document.querySelector('#signDocumentBtnOfAdmin');
-            signDocumentBtnOfAdmin.setAttribute('data-order_customer_file_link', link);
-            signDocumentBtnOfAdmin.disabled = !link || status === 'Signed';
-            timerDisplay.textContent = '';
-        }
-
-        // set file status color
-        function setFileStatusColor(status) {
-            if (status === 'Pending') {
-                fileStatusOfAdmin.style.color = 'red';
-            } else if (status === 'Signed') {
-                fileStatusOfAdmin.style.color = 'green';
-            } else {
-                fileStatusOfAdmin.style.color = 'black'; 
-            }
-        }
     </script>
     <script>
         function goBack() {

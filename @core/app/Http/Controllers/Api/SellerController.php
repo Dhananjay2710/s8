@@ -38,7 +38,8 @@ use Modules\Wallet\Entities\WalletHistory;
 use App\Day;
 use App\Schedule;
 use Illuminate\Support\Facades\Validator;
-
+use App\Helpers\TokenGenrateHelper;
+use App\Penalty;
 
 class SellerController extends Controller
 {
@@ -1175,4 +1176,67 @@ class SellerController extends Controller
         return response()->json(["services" => $services ]);
     }
     
+    public function serviceProviderRequests(Request $request) {
+        $serviceProviderId = $request->serviceproviderId;
+        $token = $request->token;
+        $finalToken = TokenGenrateHelper::genrateToken($serviceProviderId);
+        if($token !== $finalToken){
+            abort(401);
+        }
+
+        \Log::debug("Token Matched");
+        if(!empty($request->order_id || $request->order_date|| $request->payment_status || $request->order_status || $request->total || $request->seller_name || $request->service_title)){
+            $orders_query = Order::with('online_order_ticket')->where('seller_id', $serviceProviderId)->where('job_post_id', NULL);
+            // search by order ID
+            if (!empty($request->order_id)){
+                $orders_query->where('id', $request->order_id);
+            }
+            // search by order create date
+            if (!empty($request->order_date)){
+                $start_date = \Str::of($request->order_date)->before('to');
+                $end_date = \Str::of($request->order_date)->after('to');
+                $orders_query->whereBetween('created_at', [$start_date,$end_date]);
+            }
+            // search by payment status
+            if (!empty($request->payment_status)){
+                $orders_query->where('payment_status', $request->payment_status);
+            }
+            // search by order status
+            if (!empty($request->order_status)){
+                if ($request->order_status == 'pending'){
+                    $orders_query->where('status', 0);
+                }else{
+                    $orders_query->where('status', $request->order_status);
+                }
+            }
+            // search by order amount
+            if (!empty($request->total)){
+                $orders_query->where('payment_status', $request->total);
+            }
+            // search by service title
+            if (!empty($request->service_title)){
+                $service_id = Service::select('id', 'title')->where('title',  'LIKE', "%{$request->service_title}%")->pluck('id')->toArray();
+                $orders_query->whereIn('service_id', $service_id);
+            }
+            // search by buyer name
+            if (!empty($request->buyer_name)){
+                $buyer_id = User::select('id', 'name')->where('name',  'LIKE', "%{$request->buyer_name}%")->pluck('id')->toArray();
+                $orders_query->whereIn('buyer_id', $buyer_id);
+            }
+            $all_orders = $orders_query->latest()->paginate(10);
+        } else {
+            $all_orders = Order::with('online_order_ticket')->where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->latest()->paginate(10);
+        }
+
+        $orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->get();
+        $pending_orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->where('status',0);
+        $active_orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->where('status',1);
+        $complete_orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->where('status',2);
+        $deliver_orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->where('status',3);
+        $cancel_orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->where('status',4);
+        $incompetent_orders = Order::where('seller_id',  $serviceProviderId)->where('job_post_id', NULL)->where('status',5);
+        $isHideSideBarAndHeader = false;
+        $penalties = Penalty::all();
+        return view('frontend.user.seller.order.orders', compact('orders','active_orders','complete_orders','deliver_orders','cancel_orders', 'incompetent_orders', 'all_orders', 'pending_orders', 'isHideSideBarAndHeader', 'serviceProviderId', 'token', 'penalties'));
+    }
 }

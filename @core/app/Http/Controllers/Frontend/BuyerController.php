@@ -35,6 +35,8 @@ use App\Helpers\FlashMsg;
 use Illuminate\Support\Facades\Mail;
 use Modules\JobPost\Entities\BuyerJob;
 use App\Events\UpdateTicket;
+use App\Pipeline;
+use App\Stage;
 
 class BuyerController extends Controller
 {
@@ -203,19 +205,28 @@ class BuyerController extends Controller
 
     public function orderCompleteRequestApprove($id=null)
     {
+        $pipelineData = Pipeline::all();
+        $stageData = Stage::all();
         $orderDetails  = Order::where('id',$id)->first();
         $orderDetails->update(['order_complete_request'=>2,'status'=>2]);
         $seller = User::select(['id','email','name'])->where('id',$orderDetails->seller_id)->first();
         toastr_success(__('Service complete requested successfully approved.'));
         // update ticket stage to approved and closed
-        event(new UpdateTicket([
-            'sr_id' => $id,
-            'stage_name' => 'Approved And Closed',
-            'service_ticket_id' => $orderDetails->service_ticket_id,
-            'service_provider_id' => $orderDetails->seller_id,
-            'service_provider_email' => $seller->email,
-            'service_provider_name' => $seller->name,
-        ]));
+        foreach($pipelineData as $pipeline){
+            foreach($stageData as $stage){
+                if ($stage->stage_action_key == "closed" && $pipeline->id == $stage->pipeline_id && $orderDetails->ticket_pipeline_name == $pipeline->pipeline_name) {
+                    event(new UpdateTicket([
+                        'sr_id' => $id,
+                        'stage_name' => $stage->stage_name,
+                        'service_ticket_id' => $orderDetails->service_ticket_id,
+                        'service_provider_id' => $orderDetails->seller_id,
+                        'service_provider_email' => $seller->email,
+                        'service_provider_name' => $seller->name,
+                        'ticket_pipeline_name' => $orderDetails->ticket_pipeline_name
+                    ]));
+                }
+            }
+        }
         \Session::flash('open_review_modal', 'yes');
         \Session::flash('CompleteOrderId', $id);
         \Session::flash('seller_id', $orderDetails->seller_id);

@@ -22,7 +22,9 @@ class SignzyAPI extends Model
             ["name" => "FetchPAN", "method" => "POST", "url" => "https://api.signzy.app/api/v3/panv2-fetch/no-cache"],
             ["name" => "getOkycOtp", "method" => "POST", "url" => "https://api.signzy.app/api/v3/getOkycOtp"],
             ["name" => "fetchOkycData", "method" => "POST", "url" => "https://api.signzy.app/api/v3/fetchOkycData"],
-            ["name" => "bankaccountverification", "method" => "POST", "url" => "https://api.signzy.app/api/v3/bankaccountverification/bankaccountverifications"]
+            ["name" => "bankaccountverification", "method" => "POST", "url" => "https://api.signzy.app/api/v3/bankaccountverification/bankaccountverifications"],
+            ["name" => "getokycotpsample", "method" => "POST", "url" => "https://bank.ariticapp.com/verification/getokycotp.php"],
+            ["name" => "fetchokycotpsample", "method" => "POST", "url" => "https://bank.ariticapp.com/verification/fetchokycotp.php"],
         ];
 
         \Log::debug("Make $name API Start");

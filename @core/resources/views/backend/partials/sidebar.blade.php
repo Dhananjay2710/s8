@@ -277,7 +277,7 @@
                     @canany(['penalty-list', 'penalty-create'])
                         <li class="{{ active_menu('admin-home/penalty') }}
                         @if (request()->is('admin-home/penalty/*')) active @endif">
-                            <a href="javascript:void(0)" aria-expanded="true"><i class="ti-view-list"></i>
+                            <a href="javascript:void(0)" aria-expanded="true"><i class="ti-list-ol"></i>
                                 <span>{{ __('Penalties') }}</span></a>
                             <ul class="collapse">
                                 @can('penalty-list')
@@ -287,6 +287,42 @@
                                 @can('penalty-create')
                                     <li class="{{ active_menu('admin-home/penalty/new') }}"><a
                                             href="{{ route('admin.penalty.new') }}">{{ __('Add New Penalty') }}</a></li>
+                                @endcan
+                            </ul>
+                        </li>
+                    @endcan
+
+                    @canany(['pipeline-list', 'pipeline-create'])
+                        <li class="{{ active_menu('admin-home/pipeline') }}
+                        @if (request()->is('admin-home/pipeline/*')) active @endif">
+                            <a href="javascript:void(0)" aria-expanded="true"><i class="ti-list-ol"></i>
+                                <span>{{ __('Piepelines') }}</span></a>
+                            <ul class="collapse">
+                                @can('pipeline-list')
+                                    <li class="{{ active_menu('admin-home/pipeline') }} @if (request()->is('admin-home/pipeline/edit/*')) active @endif"><a
+                                            href="{{ route('admin.pipeline') }}">{{ __('All Piepelines') }}</a></li>
+                                @endcan
+                                @can('pipeline-create')
+                                    <li class="{{ active_menu('admin-home/pipeline/new') }}"><a
+                                            href="{{ route('admin.pipeline.new') }}">{{ __('Add New pipeline') }}</a></li>
+                                @endcan
+                            </ul>
+                        </li>
+                    @endcan
+
+                    @canany(['stage-list', 'stage-create'])
+                        <li class="{{ active_menu('admin-home/stage') }}
+                        @if (request()->is('admin-home/stage/*')) active @endif">
+                            <a href="javascript:void(0)" aria-expanded="true"><i class="ti-list-ol"></i>
+                                <span>{{ __('Stages') }}</span></a>
+                            <ul class="collapse">
+                                @can('stage-list')
+                                    <li class="{{ active_menu('admin-home/stage') }} @if (request()->is('admin-home/stage/edit/*')) active @endif"><a
+                                            href="{{ route('admin.stage') }}">{{ __('All Stages') }}</a></li>
+                                @endcan
+                                @can('stage-create')
+                                    <li class="{{ active_menu('admin-home/stage/new') }}"><a
+                                            href="{{ route('admin.stage.new') }}">{{ __('Add New stage') }}</a></li>
                                 @endcan
                             </ul>
                         </li>

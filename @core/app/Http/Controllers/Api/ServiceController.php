@@ -911,6 +911,8 @@ class ServiceController extends Controller
         $phone = $request->phone;
         $service8TicketId = $request->service_ticket_id;
         $problemTitle = $request->problem_title;
+        $ticketPipelineId = $request->ticket_pipeline_id;
+        $ticketPipelineName = $request->ticket_pipeline_name;
         $responseResult = [];
 
         if ($request->category_id != "" || $serviceProviderId !="" || $request->post_code != ""){
@@ -1121,7 +1123,7 @@ class ServiceController extends Controller
                                 $userData->choose_service_city, $userData->choose_service_area,
                                 $userData->choose_service_country, $serviceIncludesData->id,
                                 $serviceIncludesData->include_service_quantity, $schedulesData->schedule,
-                                $order_note, $name, $email, $phone, $service8TicketId, $problemTitle
+                                $order_note, $name, $email, $phone, $service8TicketId, $problemTitle, $ticketPipelineId, $ticketPipelineName
                             );
                             $responseResult[] = json_decode($createServiceRequestResult, true);
                         }
@@ -1173,7 +1175,7 @@ class ServiceController extends Controller
         return $selectedUsers;
     }
 
-    public function createServiceRequest($serviceId, $sellerId, $isServiceOnline, $online_service_package_fee_final, $choose_service_city_final, $choose_service_area_final, $choose_service_country_final, $serviceIncludesDataId, $final_include_service_quantity, $schedule_final, $order_note_final, $finalaName, $finalEmail, $finalPhone, $service8TicketId, $problemTitle) {
+    public function createServiceRequest($serviceId, $sellerId, $isServiceOnline, $online_service_package_fee_final, $choose_service_city_final, $choose_service_area_final, $choose_service_country_final, $serviceIncludesDataId, $final_include_service_quantity, $schedule_final, $order_note_final, $finalaName, $finalEmail, $finalPhone, $service8TicketId, $problemTitle, $ticketPipelineId, $ticketPipelineName) {
         header('Content-type: application/json');
         date_default_timezone_set('Asia/Kolkata');
         $createdDate = date('Y-m-d H:i:s');
@@ -1395,6 +1397,8 @@ class ServiceController extends Controller
                 'admin_signing_status' => 'Pending', 
                 'service_ticket_id' => $service8TicketId,
                 'problem_title' => $problemTitle,
+                'ticket_pipeline_id' => $ticketPipelineId,
+                'ticket_pipeline_name' => $ticketPipelineName,
                 'created_at' => $createdDate,
             ]);
         }else{
@@ -1434,6 +1438,8 @@ class ServiceController extends Controller
                     'admin_signing_status' => 'Pending',
                     'service_ticket_id' => $service8TicketId,
                     'problem_title' =>  $problemTitle,
+                    'ticket_pipeline_id' => $ticketPipelineId,
+                    'ticket_pipeline_name' => $ticketPipelineName,
                     'created_at' => $createdDate,
                 ]);
             }else{
@@ -1475,6 +1481,8 @@ class ServiceController extends Controller
                     'admin_signing_status' => 'Pending', 
                     'service_ticket_id' => $service8TicketId,
                     'problem_title' =>  $problemTitle,
+                    'ticket_pipeline_id' => $ticketPipelineId,
+                    'ticket_pipeline_name' => $ticketPipelineName,
                     'created_at' => $createdDate,
                 ]);
             }

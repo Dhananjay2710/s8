@@ -22,6 +22,8 @@ use Yajra\DataTables\Facades\DataTables;
 use App\Helpers\DataTableHelpers\General;
 use App\Events\UpdateTicket;
 use App\Helpers\TokenGenrateHelper;
+use App\Pipeline;
+use App\Stage;
 
 class OrdersController extends Controller
 {
@@ -232,19 +234,28 @@ class OrdersController extends Controller
     public function orderCompleteRequest(Request $request, $id=null)
     {
         \Log::debug("Inside orderCompleteRequest start");
+        $pipelineData = Pipeline::all();
+        $stageData = Stage::all();
         if($request->isMethod('post')){
             $orderDetails  = Order::where('id',$id)->first();
             Order::where('id',$id)->update(['order_complete_request'=>2,'status'=>2]);
             $seller = User::select(['id','email','name'])->where('id',$orderDetails->seller_id)->first(); 
             // update ticket stage to approved and closed
-            event(new UpdateTicket([
-                'sr_id' => $id,
-                'stage_name' => 'Approved And Closed',
-                'service_ticket_id' => $orderDetails->service_ticket_id,
-                'service_provider_id' => $orderDetails->seller_id,
-                'service_provider_email' => $seller->email,
-                'service_provider_name' => $seller->name,
-            ]));
+            foreach($pipelineData as $pipeline){
+                foreach($stageData as $stage){
+                    if ($stage->stage_action_key == "closed" && $pipeline->id == $stage->pipeline_id && $orderDetails->ticket_pipeline_name == $pipeline->pipeline_name) {
+                        event(new UpdateTicket([
+                            'sr_id' => $id,
+                            'stage_name' => $stage->stage_name,
+                            'service_ticket_id' => $orderDetails->service_ticket_id,
+                            'service_provider_id' => $orderDetails->seller_id,
+                            'service_provider_email' => $seller->email,
+                            'service_provider_name' => $seller->name,
+                            'ticket_pipeline_name' => $orderDetails->ticket_pipeline_name,
+                        ]));
+                    }
+                }
+		    }
             \Log::debug("Inside orderCompleteRequest end");
             return redirect()->back()->with(FlashMsg::item_new('Service Request Status Change to Complete'));
         }

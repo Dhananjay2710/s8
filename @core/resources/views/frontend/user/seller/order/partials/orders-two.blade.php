@@ -455,7 +455,7 @@
                                         @elseif($order->status == 4 && $order->payment_status == '')
                                             {{-- <span class="mx-1 cancel"> {{ __('Request Cancelled') }}</span> --}}
                                         @elseif($order->status == 5 && $order->payment_status == '')
-                                            <span class="mx-1 cancel"> {{ __('Incompetent') }}</span>
+                                            {{-- <span class="mx-1 cancel"> {{ __('Incompetent') }}</span> --}}
                                         @else
                                             <a href="#0"
                                             data-bs-toggle="modal"

@@ -132,6 +132,30 @@ Route::group(['prefix'=>'penalty'],function(){
 });
 
 /*----------------------------------------------------------------------------------------------------------------------------
+| PIPELINE ROUTES
+|----------------------------------------------------------------------------------------------------------------------------*/
+Route::group(['prefix'=>'pipeline'],function(){
+    Route::get('/','PipelineController@index')->name('admin.pipeline');
+    Route::match(['get','post'],'/add-new-pipeline','PipelineController@add_new_pipeline')->name('admin.pipeline.new');
+    Route::match(['get','post'],'/edit-pipeline/{id?}','PipelineController@edit_pipeline')->name('admin.pipeline.edit');
+    Route::post('/change-status/{id}','PipelineController@change_status')->name('admin.pipeline.status');
+    Route::post('/delete/{id}','PipelineController@delete_pipeline')->name('admin.pipeline.delete');
+    Route::post('/bulk-action', 'PipelineController@bulk_action')->name('admin.pipeline.bulk.action');
+});
+
+/*----------------------------------------------------------------------------------------------------------------------------
+| STAGES ROUTES
+|----------------------------------------------------------------------------------------------------------------------------*/
+Route::group(['prefix'=>'stage'],function(){
+    Route::get('/','StageController@index')->name('admin.stage');
+    Route::match(['get','post'],'/add-new-stage','StageController@add_new_stage')->name('admin.stage.new');
+    Route::match(['get','post'],'/edit-stage/{id?}','StageController@edit_stage')->name('admin.stage.edit');
+    Route::post('/change-status/{id}','StageController@change_status')->name('admin.stage.status');
+    Route::post('/delete/{id}','StageController@delete_stage')->name('admin.stage.delete');
+    Route::post('/bulk-action', 'StageController@bulk_action')->name('admin.stage.bulk.action');
+});
+
+/*----------------------------------------------------------------------------------------------------------------------------
 | CATEGORY ROUTES
 |----------------------------------------------------------------------------------------------------------------------------*/
 Route::group(['prefix'=>'category'],function(){

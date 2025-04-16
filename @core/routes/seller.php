@@ -289,4 +289,6 @@ Route::group(['prefix'=>'serviceprovider','middleware'=>['auth','inactiveuser','
     Route::match(['get','post'],'/verify-aadhaar-number','Frontend\SellerController@sellerVerifyAadhaarNumber')->name('seller.profile.verify.aadhaar');
     Route::match(['get','post'],'/verify-aadhaar-otp','Frontend\SellerController@sellerVerifyAadhaarOTP')->name('seller.profile.verify.otp');
     Route::match(['get','post'],'/verify-account-number','Frontend\SellerController@sellerVerifyAccountNumber')->name('seller.profile.verify.bankaccount');
+    // Route::match(['get','post'],'/verify-aadhaar-number','Frontend\SellerController@sellerVerifyAadhaarNumberSample')->name('seller.profile.verify.aadhaar');
+    // Route::match(['get','post'],'/verify-aadhaar-otp','Frontend\SellerController@sellerVerifyAadhaarOTPSample')->name('seller.profile.verify.otp');
 });

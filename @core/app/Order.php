@@ -56,6 +56,8 @@ class Order extends Model
         'admin_signing_status',
         'service_ticket_id',
         'problem_title',
+        'ticket_pipeline_id',
+        'ticket_pipeline_name',
     ];
     
     protected $casts = [

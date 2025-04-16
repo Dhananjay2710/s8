@@ -60,6 +60,9 @@ use App\Helpers\StringMatchHelper;
 use App\Helpers\TokenGenrateHelper;
 use App\Company;
 use App\Penalty;
+use App\CurlCall;
+use App\Pipeline;
+use App\Stage;
 
 class SellerController extends Controller
 {
@@ -1962,6 +1965,8 @@ class SellerController extends Controller
     public function orderStatus(Request $request,$id=null)
     {
 
+        $pipelineData = Pipeline::all();
+        $stageData = Stage::all();
         if($request->status == ''){
             toastr_error(__('Please select status first.'));
             return redirect()->back();
@@ -1977,7 +1982,7 @@ class SellerController extends Controller
 
         if($payment_status->status !=2){
             if($payment_status->payment_status =='complete'){
-                $order_details = Order::select(['id','seller_id','buyer_id','service_id'])->where('id',$request->order_id)->first();
+                $order_details = Order::select(['id','seller_id','buyer_id','service_id','ticket_pipeline_id','ticket_pipeline_name'])->where('id',$request->order_id)->first();
                 $seller = User::select(['id','email','name'])->where('id',$order_details->seller_id)->first();
                 if($request->status==2){
                     Order::where('id',$request->order_id)->update(['order_complete_request'=>1]);
@@ -1990,15 +1995,25 @@ class SellerController extends Controller
                         'decline_reason'=>'Not decline yet',
                         'image' => $request->image,
                     ]);
-                   // update ticket stage to completion needs approval
-                    event(new UpdateTicket([
-                        'sr_id' => $order_details->id,
-                        'stage_name' => 'Completion Needs Approval',
-                        'service_ticket_id' => $order_details->service_ticket_id,
-                        'service_provider_id' => $order_details->seller_id,
-                        'service_provider_email' => $seller->email,
-                        'service_provider_name' => $seller->name,
-                    ]));
+                    \Log::debug("Pipeline Id" . $order_details->ticket_pipeline_id);
+                    \Log::debug("Pipeline Name" . $order_details->ticket_pipeline_name);
+                    // update ticket stage to completion needs approval
+                    foreach($pipelineData as $pipeline){
+                        foreach($stageData as $stage){
+                            if ($stage->stage_action_key == "completion" && $pipeline->id == $stage->pipeline_id && $order_details->ticket_pipeline_name == $pipeline->pipeline_name) {
+                                event(new UpdateTicket([
+                                    'sr_id' => $order_details->id,
+                                    'stage_name' => $stage->stage_name,
+                                    'service_ticket_id' => $order_details->service_ticket_id,
+                                    'service_provider_id' => $order_details->seller_id,
+                                    'service_provider_email' => $seller->email,
+                                    'service_provider_name' => $seller->name,
+                                    'ticket_pipeline_name' => $order_details->ticket_pipeline_name,
+                                ]));
+                                break;
+                            }
+                        }
+                    }
 
                     //Send email after change status
                     try {
@@ -2021,40 +2036,52 @@ class SellerController extends Controller
                     \Log::debug("Insinde SLM selected");
                     \Log::debug("Progress Type : " . $request->progress_type);
                     if ($request->progress_type == 'SLM') {
-                        event(new UpdateTicket([
-                            'sr_id' => $order_details->id,
-                            'stage_name' => 'Assigned to SLM',
-                            'service_ticket_id' => $order_details->service_ticket_id,
-                            'service_provider_id' => $order_details->seller_id,
-                            'service_provider_email' => $seller->email,
-                            'service_provider_name' => $seller->name,
-                        ]));
+                        foreach($pipelineData as $pipeline){
+                            foreach($stageData as $stage){
+                                if ($stage->stage_action_key == "escalate_to_slm" && $pipeline->id == $stage->pipeline_id) {
+                                    event(new UpdateTicket([
+                                        'sr_id' => $order_details->id,
+                                        'stage_name' => $stage->stage_name,
+                                        'service_ticket_id' => $order_details->service_ticket_id,
+                                        'service_provider_id' => $order_details->seller_id,
+                                        'service_provider_email' => $seller->email,
+                                        'service_provider_name' => $seller->name,
+                                        'ticket_pipeline_name' => $order_details->ticket_pipeline_name,
+                                    ]));
+                                    break;
+                                }
+                            }
+                        }
+                        Order::where('id',$request->order_id)->update(['payment_status'=>'','status'=>5]);
+                        toastr_success(__('Your request submitted. Assign to SLM'));
                     } elseif($request->progress_type == "Spares Required") {
                         event(new UpdateTicket([
                             'sr_id' => $order_details->id,
-                            'stage_name' => 'Assigned to SLM',
+                            'stage_name' => 'SPARES REQUIRED',
                             'service_ticket_id' => $order_details->service_ticket_id,
                             'service_provider_id' => $order_details->seller_id,
                             'service_provider_email' => $seller->email,
                             'service_provider_name' => $seller->name,
                         ]));
+                        toastr_success(__('Your request submitted. Ask for spare parts'));
                     }
                     
                     //Send email after change status
-                    // try {
-                    //     $message_body_buyer =__('Hello, ').$payment_status->name. __(' A new request is created for complete an service request.').'</br>' . ' <span class="verify-code">'.__('Service Request ID is: ') . $payment_status->id. '</span>';
-                    //     $message_body_admin =__('Hello Admin A new request is created for complete an service request.').'</br>' . ' <span class="verify-code">'.__('Service Request ID is: ') . $payment_status->id. '</span>';
-                    //     Mail::to($payment_status->email)->send(new BasicMail([
-                    //         'subject' => __('New Request For Complete an Service Request'),
-                    //         'message' => $message_body_buyer
-                    //     ]));
-                    //     Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
-                    //         'subject' => __('New Request For Complete an Service Request'),
-                    //         'message' => $message_body_admin
-                    //     ]));
-                    // } catch (\Exception $e) {
-                    //     return redirect()->back()->with(FlashMsg::item_new($e->getMessage()));
-                    // }
+                    try {
+                        $message_body_buyer =__('Hello, ').$payment_status->name. __(' A new request is created for complete an service request.').'</br>' . ' <span class="verify-code">'.__('Service Request ID is: ') . $payment_status->id. '</span>';
+                        $message_body_admin =__('Hello Admin A new request is created for complete an service request.').'</br>' . ' <span class="verify-code">'.__('Service Request ID is: ') . $payment_status->id. '</span>';
+                        Mail::to($payment_status->email)->send(new BasicMail([
+                            'subject' => __('New Request For Complete an Service Request'),
+                            'message' => $message_body_buyer
+                        ]));
+                        Mail::to(get_static_option('site_global_email'))->send(new BasicMail([
+                            'subject' => __('New Request For Complete an Service Request'),
+                            'message' => $message_body_admin
+                        ]));
+                    } catch (\Exception $e) {
+                        return redirect()->back()->with(FlashMsg::item_new($e->getMessage()));
+                    }
+                    return redirect()->back();
                 }
             }else{
 
@@ -2065,13 +2092,12 @@ class SellerController extends Controller
             toastr_error(__('You can not change service request status because this service request already completed.'));
             return redirect()->back();
         }
-
-
-
     }
 
     public function orderCancel($id=null)
     {
+        $pipelineData = Pipeline::all();
+        $stageData = Stage::all();
         Order::where('id',$id)->update(['payment_status'=>'','status'=>4]);
         $orderData = Order::where('id',$id)->get();
         $order_info_decode = json_decode($orderData, true);
@@ -2080,14 +2106,21 @@ class SellerController extends Controller
         $seller = User::select(['id','email','name'])->where('id',$order_info_decode[0]['seller_id'])->first();
         if ($statusValue == 4){
             // update ticket stage to Waiting to Assign 
-            event(new UpdateTicket([
-                'sr_id' => $SR_ID,
-                'stage_name' => 'Waiting to Assign',
-                'service_ticket_id' => $order_info_decode[0]['service_ticket_id'],
-                'service_provider_id' => $order_info_decode[0]['seller_id'],
-                'service_provider_email' => $seller->email,
-                'service_provider_name' => $seller->name,
-            ]));
+            foreach($pipelineData as $pipeline){
+                foreach($stageData as $stage){
+                    if ($stage->stage_action_key == "assign" && $pipeline->id == $stage->pipeline_id && $order_info_decode[0]['ticket_pipeline_name'] == $pipeline->pipeline_name) {
+                        event(new UpdateTicket([
+                            'sr_id' => $SR_ID,
+                            'stage_name' => $stage->name,
+                            'service_ticket_id' => $order_info_decode[0]['service_ticket_id'],
+                            'service_provider_id' => $order_info_decode[0]['seller_id'],
+                            'service_provider_email' => $seller->email,
+                            'service_provider_name' => $seller->name,
+                            'ticket_pipeline_name' => $order_info_decode[0]['ticket_pipeline_name'],
+                        ]));
+                    }
+                }
+            }
         }
         toastr_success(__('Service Request successfully cancelled.'));
         return redirect()->back();
@@ -2095,6 +2128,8 @@ class SellerController extends Controller
 
     public function orderAccept($id=null)
     {
+        $pipelineData = Pipeline::all();
+        $stageData = Stage::all();
         Order::where('id',$id)->update(['status'=>1]);
         $orderData = Order::where('id',$id)->get();
         $order_info_decode = json_decode($orderData, true);
@@ -2103,14 +2138,22 @@ class SellerController extends Controller
         $seller = User::select(['id','email','name'])->where('id',$order_info_decode[0]['seller_id'])->first();
         if ($statusValue == 1){
             // update ticket stage to accepted by service provider
-            event(new UpdateTicket([
-                'sr_id' => $SR_ID,
-                'stage_name' => 'Accepted by Service Provider',
-                'service_ticket_id' => $order_info_decode[0]['service_ticket_id'],
-                'service_provider_id' => $order_info_decode[0]['seller_id'],
-                'service_provider_email' => $seller->email,
-                'service_provider_name' => $seller->name,
-            ]));
+            foreach($pipelineData as $pipeline){
+                foreach($stageData as $stage){
+                    if ($stage->stage_action_key == "accept" && $pipeline->id == $stage->pipeline_id && $order_info_decode[0]['ticket_pipeline_name'] == $pipeline->pipeline_name) {
+                        event(new UpdateTicket([
+                            'sr_id' => $SR_ID,
+                            'stage_name' => $stage->stage_name,
+                            'service_ticket_id' => $order_info_decode[0]['service_ticket_id'],
+                            'service_provider_id' => $order_info_decode[0]['seller_id'],
+                            'service_provider_email' => $seller->email,
+                            'service_provider_name' => $seller->name,
+                            'ticket_pipeline_name' => $order_info_decode[0]['ticket_pipeline_name'],
+                        ]));
+                        break;
+                    }
+                }
+            }
         }
         toastr_success(__('Service Request successfully accepted.'));
         return redirect()->back();
@@ -2118,6 +2161,8 @@ class SellerController extends Controller
 
     public function orderIncompetent(Request $request, $id=null)
     {
+        $pipelineData = Pipeline::all();
+        $stageData = Stage::all();
         $penaltyId = $request->input('penalty_reason_id');
         $penaltyReason = $request->input('penalty_reason_text');
         Order::where('id',$id)->update(['payment_status'=>'','status'=>5]);
@@ -2139,14 +2184,21 @@ class SellerController extends Controller
         $seller = User::select(['id','email','name'])->where('id',$order_info_decode[0]['seller_id'])->first();
         if ($statusValue == 5){
             // update ticket stage to Waiting to Assign 
-            event(new UpdateTicket([
-                'sr_id' => $SR_ID,
-                'stage_name' => 'Waiting to Assign',
-                'service_ticket_id' => $order_info_decode[0]['service_ticket_id'],
-                'service_provider_id' => $order_info_decode[0]['seller_id'],
-                'service_provider_email' => $seller->email,
-                'service_provider_name' => $seller->name,
-            ]));
+            foreach($pipelineData as $pipeline){
+                foreach($stageData as $stage){
+                    if ($stage->stage_action_key == "assign" && $pipeline->id == $stage->pipeline_id && $order_info_decode[0]['ticket_pipeline_name'] == $pipeline->pipeline_name) {
+                        event(new UpdateTicket([
+                            'sr_id' => $SR_ID,
+                            'stage_name' => $stage->stage_name,
+                            'service_ticket_id' => $order_info_decode[0]['service_ticket_id'],
+                            'service_provider_id' => $order_info_decode[0]['seller_id'],
+                            'service_provider_email' => $seller->email,
+                            'service_provider_name' => $seller->name,
+                            'ticket_pipeline_name' => $order_info_decode[0]['ticket_pipeline_name'],
+                        ]));
+                    }
+                }
+            }
         }
         toastr_success(__('Service Request successfully Incompetent.'));
         return redirect()->back();
@@ -3802,4 +3854,129 @@ class SellerController extends Controller
         return redirect()->back();
     }
 
+    /*
+     * Send OTP to Service Provider based on Aadhaar Number (Sample API)
+     */
+    public function sellerVerifyAadhaarNumberSample(Request $request){
+        $user = Auth::guard('web')->user()->id;
+        if($request->isMethod('post')){
+            // Fetch data of verification_data column
+            $verificationData = SellerVerify::select('verification_data')->where('seller_id',$user)->first();
+            $verificationDataArray = [];
+            if ($verificationData) {
+                $verificationDataArray = json_decode($verificationData->verification_data, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    $verificationDataArray = [];
+                }
+            }
+            $aadhaarNumber = $request->aadhaar_number ?? ($verificationDataArray['aadhaar_number'] ?? '');
+            if(is_null($verificationData)){
+                $verificationDataArray = [
+                    "aadhaar_number" =>  $aadhaarNumber,
+                    "is_aadhaar_verified" => "",
+                    "request_id" => "",
+                    "provided_address" => "",
+                    "address_as_per_aadhaar" => "",
+                    "aadhaar_address_match_status" => "",
+                    "provided_name" => "",
+                    "name_as_per_aadhaar" => "",
+                    "aadhaar_name_match_status" => "",
+                    "pan_number" => "",
+                    "is_pan_verified" => "",
+                    "name_as_per_pan" => "",
+                    "pan_name_match_status" => "",
+                    "account_number" => "",
+                    "ifsc_number" => "",
+                    "mobile_number" => "",
+                    "name_as_per_bank_account_number" => "",
+                    "is_account_verified" => ""
+                ];
+                $verificationAadhaarData = json_encode($verificationDataArray);
+                $createResult = SellerVerify::create([
+                    'seller_id' => $user,
+                    'verification_data' => $verificationAadhaarData,
+                ]);
+                $responseMessage = 'Data added successfully';
+            }else{
+                $verificationDataArray['aadhaar_number'] = $aadhaarNumber;
+                $verificationAadhaarData = json_encode($verificationDataArray);
+                $updateResult = SellerVerify::where('seller_id', $user)->update([
+                    'verification_data' => $verificationAadhaarData,
+                ]);
+                $responseMessage = 'Data updated successfully';
+            }
+            $userData = User::where('id',$user)->first();
+            \Log::debug("Phone Number : " . $userData->phone);
+
+            $aadhaardata = json_encode(array(
+                "aadhaarNumber" => $request->aadhaar_number,
+                "phoneNumber" => $userData->phone,
+            ));
+            $aadhaarResponse = SignzyAPI::fetchData("getokycotpsample", $aadhaardata);
+            $apiResponse = json_decode($aadhaarResponse, true);
+            \Log::debug("Response Data : " . print_r($apiResponse,true) );
+            if ($apiResponse && isset($apiResponse['status']) && ($apiResponse['status'] == 'success')) {
+                $response = [
+                    "status" => "success",
+                    "message" => "OTP is send to your mobile number",
+                ];
+                toastr_success(__('OTP send successfully'));
+            } else {
+                $response = [
+                    "status" => "error",
+                    "message" => "Error : " . $aadhaarResponse,
+                ];
+                toastr_error(__('OTP send failed'));
+            }
+            return response()->json($response);
+        }
+    }
+
+    /*
+     * Verify OTP of Service Provider (Sample API)
+     */
+    public function sellerVerifyAadhaarOTPSample(Request $request){
+        $user = Auth::guard('web')->user()->id;
+        if($request->isMethod('post')){
+            $verificationData = SellerVerify::select('verification_data')->where('seller_id',$user)->first();
+            $verificationDataArray = [];
+            if ($verificationData) {
+                $verificationDataArray = json_decode($verificationData->verification_data, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    $verificationDataArray = [];
+                }
+            }
+
+            $userData = User::find($user);
+            $otpData = json_encode(array(
+                "otp" => $request->otp
+            ));
+            $otpVerifyResponse = SignzyAPI::fetchData("fetchokycotpsample", $otpData);
+            $otpVerifyResponseJsonData = json_decode($otpVerifyResponse, true);
+            \Log::debug("Response Of Data : " . print_r($otpVerifyResponseJsonData, true));
+            $messageStatus = $otpVerifyResponseJsonData['status'];
+            if ($messageStatus == "success") {
+                $verificationDataArray['is_aadhaar_verified'] = 1;
+                $verificationDataArray['provided_name'] =  $userData->name;
+                $verificationDataArray['name_as_per_aadhaar'] = $userData->name;
+                $verificationDataArray['aadhaar_name_match_status'] = 1;
+                $verificationAadhaarOTPData = json_encode($verificationDataArray);
+                $updateRequestIdResult =SellerVerify::where('seller_id', $user)->update([
+                    'verification_data' => $verificationAadhaarOTPData,
+                ]);
+                $response = [
+                    "status" => "success",
+                    "message" => "OTP Verified",
+                ];
+                toastr_success(__('OTP verify successfully'));
+            } else {
+                $response = [
+                    "status" => "error",
+                    "message" => "OTP Verification Failed",
+                ];
+                toastr_error(__('Data Not Match or OTP Verification failed'));
+            }
+            return response()->json($response);
+        }
+    }
 }
